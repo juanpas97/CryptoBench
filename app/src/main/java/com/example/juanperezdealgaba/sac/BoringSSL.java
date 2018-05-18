@@ -10,7 +10,7 @@ public class BoringSSL {
 
     public native int AES();
 
-    //public native int DH();
+    public native int DH();
 
     public native int MD5();
 }

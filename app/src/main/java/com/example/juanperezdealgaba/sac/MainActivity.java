@@ -144,13 +144,13 @@ public  class  MainActivity extends AppCompatActivity {
                 FileWriter writer = new FileWriter(report);
 
 
-                WolfCrypt prueba = new WolfCrypt();
+                BoringSSL prueba = new BoringSSL();
 
                 //prueba.AES();
 
                 //prueba.RSA();
 
-                prueba.MD5();
+                prueba.DH();
 
                 //prueba.AES();
 
