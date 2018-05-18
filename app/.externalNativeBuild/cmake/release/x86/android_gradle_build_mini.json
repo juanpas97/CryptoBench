@@ -1,0 +1,46 @@
+{
+  "buildFiles": [
+    "/Users/juanperezdealgaba/Desktop/CryptoBench/app/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target clean"
+  ],
+  "libraries": {
+    "OpenSSL-Release-x86": {
+      "artifactName": "OpenSSL",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target OpenSSL",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libOpenSSL.so"
+    },
+    "wolfssl-Release-x86": {
+      "artifactName": "wolfssl",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target wolfssl",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libwolfssl.so"
+    },
+    "mbedTLS-Release-x86": {
+      "artifactName": "mbedTLS",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target mbedTLS",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libmbedTLS.so"
+    },
+    "native-lib-Release-x86": {
+      "artifactName": "native-lib",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target native-lib",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libnative-lib.so"
+    },
+    "wolfssljni-Release-x86": {
+      "artifactName": "wolfssljni",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target wolfssljni",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libwolfssljni.so"
+    },
+    "BoringSSL-Release-x86": {
+      "artifactName": "BoringSSL",
+      "buildCommand": "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/x86 --target BoringSSL",
+      "abi": "x86",
+      "output": "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/x86/libBoringSSL.so"
+    }
+  }
+}

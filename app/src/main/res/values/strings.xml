@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">EncryptApp</string>
+    <string name="Accept">Accept</string>
+    <string name="Cancel">Cancel</string>
+    <string name="TestFinished">Test finished</string>
+    <string name="RealizeTest">Realize Test</string>
+    <string name="please_wait">Please wait</string>
+    <string name="Executing_tests">Executing test</string>
+</resources>

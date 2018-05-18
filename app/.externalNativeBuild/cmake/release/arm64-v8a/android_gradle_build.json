@@ -1,0 +1,47 @@
+
+{
+	"buildFiles" : [ "/Users/juanperezdealgaba/Desktop/CryptoBench/app/CMakeLists.txt" ],
+	"cleanCommands" : 
+	[
+		"/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/arm64-v8a --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"OpenSSL-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "OpenSSL",
+			"buildCommand" : "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/arm64-v8a --target OpenSSL",
+			"buildType" : "release",
+			"output" : "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/arm64-v8a/libOpenSSL.so",
+			"toolchain" : "11152723410004750239"
+		},
+		"native-lib-Release-arm64-v8a" : 
+		{
+			"abi" : "arm64-v8a",
+			"artifactName" : "native-lib",
+			"buildCommand" : "/Users/juanperezdealgaba/Library/Android/sdk/cmake/3.6.4111459/bin/cmake --build /Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/arm64-v8a --target native-lib",
+			"buildType" : "release",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=aarch64-none-linux-android --gcc-toolchain=/Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64 --sysroot=/Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/sysroot  -Dnative_lib_EXPORTS -I../../../../OpenSSL/openssl-armeabi-v7a/include -I../../../../OpenSSL/x86/include -isystem /Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -isystem /Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/sources/android/support/include -isystem /Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include  -isystem /Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/sysroot/usr/include/aarch64-linux-android -D__ANDROID_API__=21 -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11  -O2 -DNDEBUG  -fPIC    -c ",
+					"src" : "/Users/juanperezdealgaba/Desktop/CryptoBench/app/src/main/cpp/native-lib.cpp",
+					"workingDirectory" : "/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/arm64-v8a"
+				}
+			],
+			"output" : "/Users/juanperezdealgaba/Desktop/CryptoBench/app/build/intermediates/cmake/release/obj/arm64-v8a/libnative-lib.so",
+			"toolchain" : "11152723410004750239"
+		}
+	},
+	"toolchains" : 
+	{
+		"11152723410004750239" : 
+		{
+			"cCompilerExecutable" : "/Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/Users/juanperezdealgaba/Library/Android/sdk/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+		}
+	}
+}

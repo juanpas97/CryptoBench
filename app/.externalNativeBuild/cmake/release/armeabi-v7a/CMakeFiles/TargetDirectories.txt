@@ -1,0 +1,8 @@
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/mbedTLS.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/OpenSSL.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/wolfssl.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/native-lib.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/BoringSSL.dir
+/Users/juanperezdealgaba/Desktop/CryptoBench/app/.externalNativeBuild/cmake/release/armeabi-v7a/CMakeFiles/wolfssljni.dir
