@@ -169,9 +169,12 @@ public  class  MainActivity extends AppCompatActivity {
 
                 myTask.execute(params);
 
+                OpenSSLParamsTest prueba = new OpenSSLParamsTest(input,writer,results,MainActivity.this,repetitions);
+                AsyncOpenSSL Open = new AsyncOpenSSL();
+                Open.execute(prueba);
 
 
-                //Show Alert
+            //Show Alert
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.setMessage("Test finished successfully!");
                 builder1.setCancelable(true);

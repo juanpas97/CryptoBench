@@ -7,7 +7,7 @@ public class OpenSSL {
     }
 
 
-    public native int RSA();
+    public native long[] RSA(int size);
 
     public native int AES();
 

@@ -31,11 +31,11 @@ public class AsyncTest extends AsyncTask<MyTaskParamsTest,Void,TextView> {
             FileWriter writer = paramsTests[0].writer;
             TextView results = paramsTests[0].results;
             Context context = paramsTests[0].context;
-            int repetetitions = paramsTests[0].repetitions;
+            int repetitions = paramsTests[0].repetitions;
             try {
                 SuperTest test = new SuperTest();
 
-                test.startTest(randomString, context, results, writer, repetetitions);
+                test.startTest(randomString, context, results, writer, repetitions);
 
             } catch (Exception i) {
                 Log.e("Test", i.getMessage(), i);

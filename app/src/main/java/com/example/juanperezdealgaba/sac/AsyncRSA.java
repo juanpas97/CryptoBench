@@ -71,12 +71,15 @@ class AsyncRSA extends AsyncTask<MyTaskParams, Void, TextView> {
                 results.append("Time to decrypt:" + durationDecrypt + "ms\n");
                 System.out.println("Decrypted[" + decryptedMessage.length() + "]: " + decryptedMessage);
                 System.out.println("Time to decrypt:" + durationDecrypt + "ms");
+
+                writer.write("\n");
+                results.append("\n");
             }
 
             System.out.println("********************************");
             writer.write("********************************\n");
             results.append("********************************\n");
-            writer.close();
+
         } catch (Exception i) {
             Log.e("RSA", i.getMessage(), i);
         }
@@ -87,10 +90,6 @@ class AsyncRSA extends AsyncTask<MyTaskParams, Void, TextView> {
     protected void onPostExecute(TextView report) {
 
             super.onPostExecute(report);
-            String magia = "Test finished successfully!";
-            report.append(magia);
-
-
     }
 }
 

@@ -19,6 +19,8 @@
 #include <openssl/rand.h>
 #include <openssl/engine.h>
 
+#include <sys/time.h>
+
 #define KEY_LENGTH  2048
 #define PUB_EXP     3
 #define PRINT_KEYS
@@ -27,9 +29,24 @@
 
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
+
+long diff_micro(struct timespec *start, struct timespec *end)
+{
+    /* us */
+    return ((end->tv_sec * (1000000)) + (end->tv_nsec / 1000)) -
+           ((start->tv_sec * 1000000) + (start->tv_nsec / 1000));
+}
+
+
 extern "C"
-JNIEXPORT jint JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance) {
+JNIEXPORT jlongArray JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance, jint size) {
+
+    jlongArray result;
+    result = env->NewLongArray(size);
+    jlong fill[size];
+    struct timespec start, end;
+    struct timespec start1, end1;
 
     size_t pri_len;            // Length of private key
     size_t pub_len;            // Length of public key
@@ -79,9 +96,14 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     encrypt = static_cast<char *>(malloc(RSA_size(keypair)));
     int encrypt_len;
     err = static_cast<char *>(malloc(130));
+
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
                                          keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
+        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
+        long delta_us = diff_micro(&start, &end);
+        fill[0] = delta_us;
         ERR_error_string(ERR_get_error(), err);
         LOGD("Error");
         fprintf(stderr, "Error encrypting message: %s\n", err);
@@ -100,9 +122,13 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 
     // Decrypt it
     decrypt = static_cast<char *>(malloc(encrypt_len));
+
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start1);
     if(RSA_private_decrypt(encrypt_len, (unsigned char*)encrypt, (unsigned char*)decrypt,
                            keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
-
+        clock_gettime(CLOCK_MONOTONIC_RAW, &end1);
+        long delta_us = diff_micro(&start1, &end1);
+        fill[1] = delta_us;
         ERR_error_string(ERR_get_error(), err);
         fprintf(stderr, "Error decrypting message: %s\n", err);
         goto free_stuff;
@@ -119,11 +145,9 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     free(decrypt);
     free(err);
 
+    env->SetLongArrayRegion(result, 0, size, fill);
 
-
-    return 0;
-
-
+    return result;
 }
 
 void print_data(const char *tittle, const void* data, int len);
@@ -273,3 +297,4 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
     return 0;
 
 }
+
