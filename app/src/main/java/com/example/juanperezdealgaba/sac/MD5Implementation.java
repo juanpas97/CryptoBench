@@ -20,9 +20,7 @@ public class MD5Implementation {
 
         byte[] inputBytes = input.getBytes();
 
-        System.out.println("***********MD5**************");
-        writer.write("**********MD5***************\n");
-        results.append("**********MD5************\n");
+
 
         MD5Digest examplemd5 = new MD5Digest();
         examplemd5.update(inputBytes, 0, inputBytes.length);
@@ -40,9 +38,7 @@ public class MD5Implementation {
         writer.write("Time to generate Hash:" + timeHash + "ms\n");
         results.append("Time to generate Hash:" + timeHash + "ms\n");
 
-        System.out.println("********************************");
-        writer.write("********************************\n");
-        results.append("********************************\n");
+
     }
 
     public void testmd5(String input){

@@ -11,4 +11,6 @@ public class mbedTLS {
     public native int AES();
 
     public native void MD5();
+
+    //public native void DH();
 }

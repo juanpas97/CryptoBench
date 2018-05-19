@@ -26,18 +26,14 @@ public class DiffieHellmanImplementation {
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
 
-        System.out.println("***********DH/ Key Agreement**************");
-        writer.write("\n**********DH/ Key Agreement********\n");
-        results.append("*******DH/ Key Agreement******\n");
+
         long startKeyAgreement = System.nanoTime();
         System.out.println(GenerateAgreement());
         long endKeyAgreement = System.nanoTime();
         long timeKeyAgreement = (endKeyAgreement - startKeyAgreement);
         writer.write("Time to generate key agreement :" + timeKeyAgreement+ "\n");
         results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
-        System.out.println("***********************\n");
-        writer.write("********************************\n");
-        results.append("**********************************\n");
+
 
     }
 

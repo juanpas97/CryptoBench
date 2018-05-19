@@ -27,7 +27,7 @@ public class SuperTest {
      *
      * The function returns a file which will be used after to send the E-mail
      */
-        public Void startTest(String input,Context context, TextView results,FileWriter writer) {
+        public Void startTest(String input,Context context, TextView results,FileWriter writer, int repetitions) {
             try {
 
                 /**
@@ -65,53 +65,83 @@ public class SuperTest {
                 writer.write("\n");
                 writer.write("\n");
 
+                System.out.println("***********Bouncy Castle**************");
+                writer.write("**********Bouncy Castle***************\n");
+                results.append("**********Bouncy Castle************\n");
 
 
                 /**
                  * AES/CBC
                  */
+                System.out.println("***********AES/CBC**************");
+                writer.write("**********AES/CBC***************\n");
+                results.append("**********AES/CBC************\n");
 
-                AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
-                test.AESCBC(input, writer, results);
-                results.append("\n");
+                for(int i = 0;i < repetitions; i++) {
+                    AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
+                    test.AESCBC(input, writer, results);
+                    results.append("\n");
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                results.append("********************************\n");
 
                 /**
                  * AES/EBC
                  */
 
-                AESBouncyCastleImplementation testAES = new AESBouncyCastleImplementation();
-                testAES.AES(input, writer, results);
-                results.append("\n");
+                //AESBouncyCastleImplementation testAES = new AESBouncyCastleImplementation();
+                //testAES.AES(input, writer, results);
+                //results.append("\n");
 
 
                 /**
                  * Diffie Hellman
                  */
+                System.out.println("***********DH/ Key Agreement**************");
+                writer.write("\n**********DH/ Key Agreement********\n");
+                results.append("*******DH/ Key Agreement******\n");
 
-                DiffieHellmanImplementation testDH = new DiffieHellmanImplementation();
-                testDH.startDiffieHellman(writer, results);
+                for(int i = 0;i < repetitions; i++) {
+                    DiffieHellmanImplementation testDH = new DiffieHellmanImplementation();
+                    testDH.startDiffieHellman(writer, results);
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                results.append("**********************************\n");
 
                 /**
                  * DSA(Digital Signature Algorithm)
                  */
 
-                DSAImplementation testDSA = new DSAImplementation();
-                testDSA.testDSA(input,writer, results);
+               // DSAImplementation testDSA = new DSAImplementation();
+               // testDSA.testDSA(input,writer, results);
 
 
                 /**
                  * MD5
                  */
 
-                MD5Implementation testMD5 = new MD5Implementation();
-                testMD5.testmd5(input,writer, results);
+                System.out.println("***********MD5**************");
+                writer.write("**********MD5***************\n");
+                results.append("**********MD5************\n");
 
+                for(int i = 0;i < repetitions; i++) {
+                    MD5Implementation testMD5 = new MD5Implementation();
+                    testMD5.testmd5(input, writer, results);
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                results.append("********************************\n");
                 /**
                  * SHA3
                  */
 
-                SHA3Implementation testSHA3 = new SHA3Implementation();
-                testSHA3.testSHA3(input, writer, results);
+               // SHA3Implementation testSHA3 = new SHA3Implementation();
+               // testSHA3.testSHA3(input, writer, results);
 
                 return null;
 

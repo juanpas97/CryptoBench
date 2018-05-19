@@ -50,9 +50,7 @@ import org.spongycastle.util.encoders.Hex;
             AESCBCBouncyCastle cabc = new AESCBCBouncyCastle();
             cabc.setKey(key);
 
-            System.out.println("***********AES/CBC**************");
-            writer.write("**********AES/CBC***************\n");
-            results.append("**********AES/CBC************\n");
+
             System.out.println("Input[" + input.length() + "]: " + input);
 
             byte[] plain = input.getBytes("UTF-8");
@@ -84,9 +82,7 @@ import org.spongycastle.util.encoders.Hex;
             String output = new String(decr, "UTF-8");
             System.out.println("Output[" + output.length() + "]: " + output);
 
-            System.out.println("********************************");
-            writer.write("********************************\n");
-            results.append("********************************\n");
+
 
         }
 
