@@ -7,13 +7,13 @@ public class OpenSSL {
     }
 
 
-    public native long[] RSA(int size);
+    public native double[] RSA(int size);
 
-    public native int AES();
+    public native double[] AES(int size);
 
     public native int DH();
 
-    public native int MD5();
+    public native void MD5();
 
 
 }

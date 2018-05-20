@@ -41,19 +41,58 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,TextView> {
 
             OpenSSL test = new OpenSSL();
 
+            System.out.println("***********AES**************");
+            writer.write("**********AES***************\n");
+            results.append("**********AES************\n");
+
+            for(int i = 0; i < repetitions; i++) {
+                double[] timesAES = test.AES(3);
+
+                System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                results.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                results.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                results.append("\n");
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            results.append("**********************************\n");
+
 
             System.out.println("***********RSA**************");
             writer.write("**********RSA***************\n");
             results.append("**********RSA************\n");
 
-            System.out.println("RSA OpenSSL");
-            long[] times = test.RSA(2);
+            for(int i = 0; i < repetitions; i++) {
+                double[] timesRSA = test.RSA(3);
 
-            System.out.println("Time to encrypt:" + times[0] + "ms\n");
-            writer.write("Time to encrypt:" + times[0] + "ms\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
 
-            System.out.println("Time to decrypt:" + times[1] + "ms\n");
-            writer.write("Time to decrypt:" + times[1] + "ms\n");
+
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                results.append("\n");
+            }
+
+            System.out.println("***********MD5**************");
+            writer.write("**********MD5***************\n");
+            results.append("**********MD5************\n");
+
+
+                test.MD5();
+                //System.out.println("Time to generate hash:" + timesMD5[0] + "ns\n");
+                //writer.write("Time to generate hash:" + timesMD5[0] + "ns\n");
+                //results.append("Time to generate hash:" + timesMD5[0] + "ns\n");
+                results.append("\n");
+
 
             System.out.println("***********************\n");
             writer.write("********************************\n");

@@ -158,16 +158,16 @@ public  class  MainActivity extends AppCompatActivity {
                 int repetitions = 5;
 
 
-                MyTaskParamsTest paramsTest = new MyTaskParamsTest(input,writer,results,MainActivity.this, repetitions);
-                AsyncTest superTest = new AsyncTest();
+                //MyTaskParamsTest paramsTest = new MyTaskParamsTest(input,writer,results,MainActivity.this, repetitions);
+                //AsyncTest superTest = new AsyncTest();
 
-                superTest.execute(paramsTest);
+               // superTest.execute(paramsTest);
 
 
-                MyTaskParams params = new MyTaskParams(input, writer, results,repetitions);
-                AsyncRSA myTask = new AsyncRSA();
+               // MyTaskParams params = new MyTaskParams(input, writer, results,repetitions);
+                //AsyncRSA myTask = new AsyncRSA();
 
-                myTask.execute(params);
+                //myTask.execute(params);
 
                 OpenSSLParamsTest prueba = new OpenSSLParamsTest(input,writer,results,MainActivity.this,repetitions);
                 AsyncOpenSSL Open = new AsyncOpenSSL();

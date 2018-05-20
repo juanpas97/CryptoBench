@@ -21,6 +21,7 @@
 
 #include <sys/time.h>
 
+
 #define KEY_LENGTH  2048
 #define PUB_EXP     3
 #define PRINT_KEYS
@@ -37,14 +38,19 @@ long diff_micro(struct timespec *start, struct timespec *end)
            ((start->tv_sec * 1000000) + (start->tv_nsec / 1000));
 }
 
+long timediff(clock_t t1, clock_t t2) {
+    long elapsed;
+    elapsed = ((double)t2 - t1) / CLOCKS_PER_SEC * 1000;
+    return elapsed;
+}
 
 extern "C"
-JNIEXPORT jlongArray JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance, jint size) {
 
-    jlongArray result;
-    result = env->NewLongArray(size);
-    jlong fill[size];
+    jdoubleArray result;
+    result = env->NewDoubleArray(size);
+    jdouble fill[size];
     struct timespec start, end;
     struct timespec start1, end1;
 
@@ -97,13 +103,14 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     int encrypt_len;
     err = static_cast<char *>(malloc(130));
 
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start);
+    clock_t begin = clock();
     if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
                                          keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+        clock_t end = clock();
 
-        long delta_us = diff_micro(&start, &end);
-        fill[0] = delta_us;
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+        fill[0] =time_spent;
         ERR_error_string(ERR_get_error(), err);
         LOGD("Error");
         fprintf(stderr, "Error encrypting message: %s\n", err);
@@ -123,12 +130,15 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     // Decrypt it
     decrypt = static_cast<char *>(malloc(encrypt_len));
 
-    clock_gettime(CLOCK_MONOTONIC_RAW, &start1);
+     begin = clock();
     if(RSA_private_decrypt(encrypt_len, (unsigned char*)encrypt, (unsigned char*)decrypt,
                            keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
-        clock_gettime(CLOCK_MONOTONIC_RAW, &end1);
-        long delta_us = diff_micro(&start1, &end1);
-        fill[1] = delta_us;
+        clock_t end = clock();
+
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+
+        fill[1] = time_spent;
         ERR_error_string(ERR_get_error(), err);
         fprintf(stderr, "Error decrypting message: %s\n", err);
         goto free_stuff;
@@ -145,7 +155,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     free(decrypt);
     free(err);
 
-    env->SetLongArrayRegion(result, 0, size, fill);
+    env->SetDoubleArrayRegion(result, 0, size, fill);
 
     return result;
 }
@@ -153,8 +163,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 void print_data(const char *tittle, const void* data, int len);
 
 extern "C"
-JNIEXPORT jint JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AES(JNIEnv *env, jobject instance) {
+JNIEXPORT jdoubleArray JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AES(JNIEnv *env, jobject instance, jint size) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(size);
+    jdouble fill[size];
 
     unsigned char aes_key[16], iv[16];
 
@@ -175,13 +189,22 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AES(JNIEnv *env, jobject instance
 
     /* AES-128 bit CBC Encryption */
     AES_KEY enc_key, dec_key;
+
+    clock_t begin = clock();
     AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
     AES_cbc_encrypt(aes_input, enc_out, sizeof(aes_input), &enc_key, iv, AES_ENCRYPT);
+    clock_t end = clock();
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+    fill[0] = time_spent_encryption;
+
     /* AES-128 bit CBC Decryption */
+    clock_t begin1 = clock();
     memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
     AES_set_decrypt_key(aes_key, sizeof(aes_key)*8, &dec_key); // Size of key is in bits
     AES_cbc_encrypt(enc_out, dec_out, sizeof(aes_input), &dec_key, iv, AES_DECRYPT);
-
+    clock_t end1 = clock();
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    fill[1] = time_spent_decryption;
     /* Printing and Verifying */
     print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
 
@@ -189,7 +212,9 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AES(JNIEnv *env, jobject instance
 
     print_data("\n Decrypted",dec_out, sizeof(dec_out));
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, size, fill);
+
+    return result;
 
 }
 
@@ -262,9 +287,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 
     return 0;
 
-}extern "C"
-JNIEXPORT jint JNICALL
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance) {
+
 
     unsigned char c[MD5_DIGEST_LENGTH];
 
@@ -274,7 +302,9 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
 
     int bytes, ret;
 
+
     unsigned char data[1024] = "asdAFASDFASDFjyhdfcasdasdasd";
+
 
     ret = MD5_Update (&ctx, data, bytes);
 
@@ -287,14 +317,15 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
         LOGD("Error final");
     }
 
-    //LOGD("Here starts:");
-    //for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
-    //    LOGD("%x", c[i]);
-    //}
+    LOGD("Here starts:");
+    for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+        LOGD("%x", c[i]);
+    }
 
     LOGD("MD5 finished succesfully");
 
-    return 0;
+
+    return;
 
 }
 
