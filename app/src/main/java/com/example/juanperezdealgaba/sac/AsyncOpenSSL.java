@@ -101,6 +101,23 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             System.out.println("***********************\n");
             writer.write("********************************\n");
             text.append("**********************************\n");
+
+            System.out.println("***********DH**************");
+            writer.write("**********DH***************\n");
+            text.append("**********DH************\n");
+
+            for (int i = 0; i < repetitions; i++) {
+                double[] testDH = test.DH();
+                System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                text.append("Time to key agreement:" + testDH[1] + "ns\n");
+                text.append("\n");
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
             writer.close();
         } catch (Exception i) {
             Log.e("Test", i.getMessage(), i);

@@ -11,7 +11,7 @@ public class OpenSSL {
 
     public native double[] AES(int size);
 
-    public native int DH();
+    public native double[] DH();
 
     public native double[] MD5();
 

@@ -231,8 +231,12 @@ void print_data(const char *tittle, const void* data, int len)
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     EVP_PKEY *params;
     EVP_PKEY_CTX *kctx,*secretctx;
@@ -267,8 +271,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
     if (EVP_PKEY_derive_set_peer(secretctx, dhkey2) <= 0)
     {LOGD("Error at derive set peer");}
 
+    clock_t begin1 = clock();
     if (EVP_PKEY_derive(secretctx, NULL, &keylen) <= 0){LOGD("Error at derive");}
-
+    clock_t end1 = clock();
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    fill[1] = time_spent_decryption;
 
     //skey stores the shared secret
     skey = static_cast<unsigned char *>(OPENSSL_malloc(keylen));
@@ -285,7 +292,9 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 
     LOGD("Diffie Hellman finished");
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+
+    return result;
 
 }
 
