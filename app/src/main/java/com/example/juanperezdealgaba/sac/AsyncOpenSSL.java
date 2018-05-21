@@ -118,7 +118,6 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             writer.write("********************************\n");
             text.append("**********************************\n");
 
-            writer.close();
         } catch (Exception i) {
             Log.e("Test", i.getMessage(), i);
         }

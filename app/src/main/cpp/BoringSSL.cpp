@@ -30,10 +30,12 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instance) {
 
-    // TODO
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     size_t pri_len;            // Length of private key
     size_t pub_len;            // Length of public key
@@ -83,8 +85,16 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
     encrypt = static_cast<char *>(malloc(RSA_size(keypair)));
     int encrypt_len;
     err = static_cast<char *>(malloc(130));
+
+    clock_t begin = clock();
     if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
                                          keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
+
+        clock_t end = clock();
+
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+        fill[0] =time_spent;
 
         ERR_error_string(ERR_get_error(), err);
         LOGD("Error");
@@ -103,9 +113,16 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
     LOGD("%d",encrypt_len);
 
     // Decrypt it
+    begin = clock();
     decrypt = static_cast<char *>(malloc(encrypt_len));
     if(RSA_private_decrypt(encrypt_len, (unsigned char*)encrypt, (unsigned char*)decrypt,
                            keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
+        clock_t end = clock();
+
+        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+        fill[1] = time_spent;
+
 
         ERR_error_string(ERR_get_error(), err);
         fprintf(stderr, "Error decrypting message: %s\n", err);
@@ -125,7 +142,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 
 
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+
+    return result;
 
 }
 

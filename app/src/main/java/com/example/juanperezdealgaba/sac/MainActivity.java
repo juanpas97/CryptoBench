@@ -175,6 +175,12 @@ public  class  MainActivity extends AppCompatActivity {
                 String texttoappend = Open.execute(prueba).get();
                 results.append(texttoappend);
 
+            BoringSSLParamsTest boringsslparams = new BoringSSLParamsTest(input,writer,results,MainActivity.this,repetitions);
+            AsyncBoringSSL Open_boring = new AsyncBoringSSL();
+
+            String boringresults = Open_boring.execute(boringsslparams).get();
+            results.append(boringresults);
+
             //Show Alert
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.setMessage("Test finished successfully!");

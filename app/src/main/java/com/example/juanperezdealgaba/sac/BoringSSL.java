@@ -6,7 +6,7 @@ public class BoringSSL {
         System.loadLibrary("BoringSSL");
     }
 
-    public native int RSA();
+    public native double[] RSA();
 
     public native int AES();
 
