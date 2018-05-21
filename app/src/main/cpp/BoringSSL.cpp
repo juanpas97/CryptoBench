@@ -151,8 +151,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 void print_data(const char *tittle, const void* data, int len);
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     unsigned char aes_key[16], iv[16];
 
@@ -174,11 +178,24 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instan
     /* AES-128 bit CBC Encryption */
     AES_KEY enc_key, dec_key;
     AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
+    clock_t begin = clock();
     AES_cbc_encrypt(aes_input, enc_out, sizeof(aes_input), &enc_key, iv, AES_ENCRYPT);
+
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    fill[0] = time_spent;
+
     /* AES-128 bit CBC Decryption */
     memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
+
     AES_set_decrypt_key(aes_key, sizeof(aes_key)*8, &dec_key); // Size of key is in bits
+    clock_t begin1 = clock();
     AES_cbc_encrypt(enc_out, dec_out, sizeof(aes_input), &dec_key, iv, AES_DECRYPT);
+    clock_t end1 = clock();
+
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_decryption;
 
     /* Printing and Verifying */
     print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
@@ -187,7 +204,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instan
 
     print_data("\n Decrypted",dec_out, sizeof(dec_out));
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+
+    return result;
 
 }
 
@@ -241,10 +260,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instance) {
 
-    // TODO
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     LOGD("Starting");
     DH *privkey;
@@ -277,7 +298,13 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
 
 /* Compute the shared secret */
     unsigned char *secret;
+
+    clock_t begin = clock();
     if(NULL == (secret = static_cast<unsigned char *>(malloc(sizeof(unsigned char) * (DH_size(privkey)))))) LOGD("Error at secret");
+
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    fill[1] = time_spent;
 
     if(0 > (secret_size = DH_compute_key(secret, pubkey, privkey))) LOGD("Error at checking number");
 
@@ -291,5 +318,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
     BN_free(pubkey);
     DH_free(privkey);
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+
+    return result;
 }

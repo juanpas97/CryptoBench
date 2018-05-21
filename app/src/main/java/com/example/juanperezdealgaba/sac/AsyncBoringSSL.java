@@ -67,6 +67,44 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             writer.write("********************************\n");
             text.append("**********************************\n");
 
+            System.out.println("***********AES**************");
+            writer.write("**********AES***************\n");
+            text.append("**********AES************\n");
+
+            for(int i = 0; i < repetitions; i++) {
+                double[] timesAES = test.AES();
+
+                System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                text.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("\n");
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
+            System.out.println("***********DH**************");
+            writer.write("**********DH***************\n");
+            text.append("**********DH************\n");
+
+            for (int i = 0; i < repetitions; i++) {
+                double[] testDH = test.DH();
+                System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                text.append("Time to key agreement:" + testDH[1] + "ns\n");
+                text.append("\n");
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
             writer.close();
         } catch (Exception i) {
             Log.e("Test", i.getMessage(), i);

@@ -8,9 +8,9 @@ public class BoringSSL {
 
     public native double[] RSA();
 
-    public native int AES();
+    public native double[] AES();
 
-    public native int DH();
+    public native double[] DH();
 
     public native int MD5();
 }

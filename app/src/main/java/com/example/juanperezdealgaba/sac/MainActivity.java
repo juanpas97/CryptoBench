@@ -173,6 +173,7 @@ public  class  MainActivity extends AppCompatActivity {
                 AsyncOpenSSL Open = new AsyncOpenSSL();
 
                 String texttoappend = Open.execute(prueba).get();
+
                 results.append(texttoappend);
 
             BoringSSLParamsTest boringsslparams = new BoringSSLParamsTest(input,writer,results,MainActivity.this,repetitions);
