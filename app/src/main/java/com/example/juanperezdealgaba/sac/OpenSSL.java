@@ -13,7 +13,7 @@ public class OpenSSL {
 
     public native int DH();
 
-    public native void MD5();
+    public native double[] MD5();
 
 
 }

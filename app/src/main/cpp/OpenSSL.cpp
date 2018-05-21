@@ -290,42 +290,51 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance) {
 
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
-    unsigned char c[MD5_DIGEST_LENGTH];
+        unsigned char c[MD5_DIGEST_LENGTH];
 
-    MD5_CTX ctx;
+        MD5_CTX ctx;
 
-    MD5_Init(&ctx);
+        MD5_Init(&ctx);
 
-    int bytes, ret;
+        int ret;
+
+        size_t bytes = 16;
+
+        unsigned char data[1024] = "asdsdasd";
+
+        clock_t begin = clock();
+
+        ret = MD5_Update(&ctx, data, bytes);
+
+        if (ret != 1) {
+            LOGD("Error updating");
+        }
+
+        ret = MD5_Final(c, &ctx);
+        if (ret != 1) {
+            LOGD("Error final");
+        }
+
+        clock_t end = clock();
+        double time_spent_encryption = (double) (end - begin) / CLOCKS_PER_SEC;
+        fill[1] = time_spent_encryption;
+
+        /*LOGD("Here starts:");
+        for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+            LOGD("%x", c[i]);
+        }*/
+
+        LOGD("MD5 finished succesfully");
 
 
-    unsigned char data[1024] = "asdAFASDFASDFjyhdfcasdasdasd";
-
-
-    ret = MD5_Update (&ctx, data, bytes);
-
-    if(ret!=1){
-        LOGD("Error updating");
-    }
-
-    ret = MD5_Final (c,&ctx);
-    if(ret != 1){
-        LOGD("Error final");
-    }
-
-    LOGD("Here starts:");
-    for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
-        LOGD("%x", c[i]);
-    }
-
-    LOGD("MD5 finished succesfully");
-
-
-    return;
-
+        env->SetDoubleArrayRegion(result, 0, 3, fill);
+        return result;
 }
 

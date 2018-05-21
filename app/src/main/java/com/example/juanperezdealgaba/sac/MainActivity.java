@@ -36,7 +36,7 @@ import java.io.File;
 
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.concurrent.ExecutionException;
 
 
 public  class  MainActivity extends AppCompatActivity {
@@ -158,21 +158,22 @@ public  class  MainActivity extends AppCompatActivity {
                 int repetitions = 5;
 
 
-                //MyTaskParamsTest paramsTest = new MyTaskParamsTest(input,writer,results,MainActivity.this, repetitions);
-                //AsyncTest superTest = new AsyncTest();
+                MyTaskParamsTest paramsTest = new MyTaskParamsTest(input,writer,results,MainActivity.this, repetitions);
+                AsyncTest superTest = new AsyncTest();
 
-               // superTest.execute(paramsTest);
+                superTest.execute(paramsTest);
 
 
-               // MyTaskParams params = new MyTaskParams(input, writer, results,repetitions);
-                //AsyncRSA myTask = new AsyncRSA();
+                 MyTaskParams params = new MyTaskParams(input, writer, results,repetitions);
+                  AsyncRSA myTask = new AsyncRSA();
 
-                //myTask.execute(params);
+                 myTask.execute(params);
 
                 OpenSSLParamsTest prueba = new OpenSSLParamsTest(input,writer,results,MainActivity.this,repetitions);
                 AsyncOpenSSL Open = new AsyncOpenSSL();
-                Open.execute(prueba);
 
+                String texttoappend = Open.execute(prueba).get();
+                results.append(texttoappend);
 
             //Show Alert
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
@@ -220,7 +221,11 @@ public  class  MainActivity extends AppCompatActivity {
 
             }catch(IOException i){
                     throw new RuntimeException(i);
-                }
+            }catch (InterruptedException o){
+            throw new RuntimeException(o);
+        }catch (ExecutionException u){
+            throw new RuntimeException(u);
+        }
 
             }
         });
