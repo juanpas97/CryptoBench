@@ -149,3 +149,9 @@
 563	693	0	../../../../build/intermediates/cmake/debug/obj/x86/libwolfssljni.so	33b96a98242fc2b2
 7	971	0	CMakeFiles/wolfssljni.dir/Users/juanperezdealgaba/Desktop/CryptoBench/wolfssljni/native/WolfCrypt.c.o	1cd742ac8a749634
 973	1114	0	../../../../build/intermediates/cmake/debug/obj/x86/libwolfssljni.so	33b96a98242fc2b2
+1	930	0	CMakeFiles/mbedTLS.dir/src/main/cpp/mbedTLS.cpp.o	a9315a4f541e1761
+930	1048	0	../../../../build/intermediates/cmake/debug/obj/x86/libmbedTLS.so	ef79eeaf90ab2019
+2	855	0	CMakeFiles/mbedTLS.dir/src/main/cpp/mbedTLS.cpp.o	a9315a4f541e1761
+856	970	0	../../../../build/intermediates/cmake/debug/obj/x86/libmbedTLS.so	ef79eeaf90ab2019
+2	984	0	CMakeFiles/mbedTLS.dir/src/main/cpp/mbedTLS.cpp.o	a9315a4f541e1761
+984	1088	0	../../../../build/intermediates/cmake/debug/obj/x86/libmbedTLS.so	ef79eeaf90ab2019

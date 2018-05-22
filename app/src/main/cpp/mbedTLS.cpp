@@ -48,8 +48,12 @@ static int devId = INVALID_DEVID;
 
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance) {
+
+    jdoubleArray resultArray;
+    resultArray = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     int ret;
     int return_val;
@@ -97,9 +101,17 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     LOGD( "\n  . Generating the RSA encrypted value" );
 
+    clock_t begin = clock();
+
     return_val = mbedtls_rsa_pkcs1_encrypt( &rsa, mbedtls_ctr_drbg_random,
                                             &ctr_drbg, MBEDTLS_RSA_PUBLIC,
                                             strlen( argv[1] ), input, buf );
+
+    clock_t end = clock();
+
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fill[0] = time_spent_encryption;
 
     if( return_val != 0 )
     {
@@ -115,9 +127,17 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     LOGD( "\n  . Decrypting the encrypted data" );
 
+    clock_t begin1 = clock();
+
     return_val = mbedtls_rsa_pkcs1_decrypt( &rsa, mbedtls_ctr_drbg_random,
                                             &ctr_drbg, MBEDTLS_RSA_PRIVATE, &i,
                                             buf, result, 1024 );
+    clock_t end1 = clock();
+
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_decryption;
+
     if( return_val != 0 )
     {
         LOGD( " failed\n  ! mbedtls_rsa_pkcs1_decrypt returned %d\n\n",
@@ -134,13 +154,18 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
     mbedtls_entropy_free( &entropy );
 
 
-    return 0;
+    env->SetDoubleArrayRegion(resultArray, 0, 3, fill);
+    return resultArray;
 
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_AES(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     const uint8_t Plaintext[64] =
             {
@@ -199,7 +224,14 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AES(JNIEnv *env, jobject instance
     {
         LOGD("\n mbedtls Encrypt set key failed");
     }
+
+    clock_t begin = clock();
     status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_ENCRYPT, 64, iv, Plaintext, OutputMessage );
+    clock_t end = clock();
+
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fill[0] = time_spent_encryption;
     if(status != 0)
     {
         LOGD("\n mbedtls encryption failed");
@@ -218,7 +250,14 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AES(JNIEnv *env, jobject instance
     {
         LOGD("\n mbedtls decryption set key failed");
     }
+
+    clock_t begin1 = clock();
     status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_DECRYPT, 64, iv2, OutputMessage,compare);
+    clock_t end1 = clock();
+
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_decryption;
     if(status != 0)
     {
         LOGD("\n mbedtls encryption failed");
@@ -231,12 +270,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AES(JNIEnv *env, jobject instance
     }
     mbedtls_aes_free( &ctx );
 
-    return 0;
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    return result;
 }
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
+
+    jdoubleArray error[1];
 
     int i, ret;
     unsigned char digest[16];
@@ -244,13 +290,22 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
     LOGD( "\n  MD5('%s') = ", str );
 
+    clock_t begin = clock();
     if(  (ret = mbedtls_md5_ret( (unsigned char *) str, 13, digest ))  != 0 ) {
-        return;
+        return error[1];
     }
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    fill[1] = time_spent;
+
     for( i = 0; i < 16; i++ )
         LOGD( "%02x", digest[i] );
 
     LOGD( "Finished!" );
+
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+
+    return result;
 
 }
 

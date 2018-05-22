@@ -188,6 +188,13 @@ public  class  MainActivity extends AppCompatActivity {
             String wolfcryptresults = Open_wolfcrypt.execute(wolfcryptparams).get();
             results.append(wolfcryptresults);
 
+            MbedTLSParamsTest mbedparams = new MbedTLSParamsTest(input,writer,results,MainActivity.this,repetitions);
+            AsyncMbedTLS Open_mbed = new AsyncMbedTLS();
+
+            String mbedresults = Open_mbed.execute(mbedparams).get();
+            results.append(mbedresults);
+
+
             writer.close();
 
             //Show Alert
