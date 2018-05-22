@@ -7,14 +7,14 @@ import android.widget.TextView;
 
 import java.io.FileWriter;
 
-class BoringSSLParamsTest {
+class WolfCryptParamsTest {
     String randomString;
     FileWriter writer;
     TextView results;
     Context  context;
     int repetitions;
 
-    BoringSSLParamsTest(String randomString, FileWriter writer, TextView results, Context context, int repetitions) {
+    WolfCryptParamsTest(String randomString, FileWriter writer, TextView results, Context context, int repetitions) {
         this.randomString = randomString;
         this.writer = writer;
         this.results = results;
@@ -23,10 +23,10 @@ class BoringSSLParamsTest {
     }
 }
 
-public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
+public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
 
     @Override
-    protected String doInBackground(BoringSSLParamsTest... paramsTests) {
+    protected String doInBackground(WolfCryptParamsTest... paramsTests) {
         String randomString = paramsTests[0].randomString;
         FileWriter writer = paramsTests[0].writer;
         TextView results = paramsTests[0].results;
@@ -39,33 +39,11 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
         try {
 
 
-            System.out.println("***********BoringSSL**************");
-            writer.write("**********BoringSSL***************\n");
-            text.append("**********BoringSSL************\n");
+            System.out.println("***********WolfCrypt**************");
+            writer.write("**********WolfCrypt***************\n");
+            text.append("**********WolfCrypt************\n");
 
-            BoringSSL test = new BoringSSL();
-
-            System.out.println("***********RSA**************");
-            writer.write("**********RSA***************\n");
-            text.append("**********RSA************\n");
-
-            for(int i = 0; i < repetitions; i++) {
-                double[] timesRSA = test.RSA();
-
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                text.append("Time to encrypt:" + timesRSA[0] + "ns\n");
-
-
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                text.append("Time to decrypt:" + timesRSA[1] + "ns\n");
-                text.append("\n");
-            }
-
-            System.out.println("***********************\n");
-            writer.write("********************************\n");
-            text.append("**********************************\n");
+            WolfCrypt test = new WolfCrypt();
 
             System.out.println("***********AES**************");
             writer.write("**********AES***************\n");
@@ -84,7 +62,6 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
                 text.append("Time to decrypt:" + timesAES[1] + "ns\n");
                 text.append("\n");
             }
-
             System.out.println("***********************\n");
             writer.write("********************************\n");
             text.append("**********************************\n");
@@ -92,7 +69,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             System.out.println("***********DH**************");
             writer.write("**********DH***************\n");
             text.append("**********DH************\n");
-/*
+
 
             for (int i = 0; i < repetitions; i++) {
                 double[] testDH = test.DH();
@@ -101,7 +78,6 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
                 text.append("Time to key agreement:" + testDH[1] + "ns\n");
                 text.append("\n");
             }
-*/
 
             System.out.println("***********************\n");
             writer.write("********************************\n");
@@ -122,7 +98,6 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             System.out.println("***********************\n");
             writer.write("********************************\n");
             text.append("**********************************\n");
-
 
         } catch (Exception i) {
             Log.e("Test", i.getMessage(), i);

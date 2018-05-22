@@ -182,6 +182,14 @@ public  class  MainActivity extends AppCompatActivity {
             String boringresults = Open_boring.execute(boringsslparams).get();
             results.append(boringresults);
 
+            WolfCryptParamsTest wolfcryptparams = new WolfCryptParamsTest(input,writer,results,MainActivity.this,repetitions);
+            AsyncWolfCrypt Open_wolfcrypt = new AsyncWolfCrypt();
+
+            String wolfcryptresults = Open_wolfcrypt.execute(wolfcryptparams).get();
+            results.append(wolfcryptresults);
+
+            writer.close();
+
             //Show Alert
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
                 builder1.setMessage("Test finished successfully!");

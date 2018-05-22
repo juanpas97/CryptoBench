@@ -12,5 +12,5 @@ public class BoringSSL {
 
     public native double[] DH();
 
-    public native int MD5();
+    public native double[] MD5();
 }

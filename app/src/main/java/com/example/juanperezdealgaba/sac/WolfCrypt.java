@@ -8,7 +8,7 @@ public class WolfCrypt {
     }
 
 
-    public native void DH();
-    public native void AES();
-    public native void MD5();
+    public native double[] DH();
+    public native double[] AES();
+    public native double[] MD5();
 }

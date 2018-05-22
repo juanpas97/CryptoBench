@@ -24,8 +24,14 @@ static int devId = INVALID_DEVID;
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
 
-JNIEXPORT void JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = (*env)->NewDoubleArray(env,3);
+    jdouble fill[3];
+
+    jdouble error[1];
 
     int ret;
     word32 bytes;
@@ -71,13 +77,13 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
     int retrng = wc_InitRng(&rng);
     if (retrng != 0) {
         LOGD("Error at RNG"); //init of rng failed!
-        return;
+        return error;
     }
 
     ret = wc_RNG_GenerateBlock(&rng, g, sizeof(g));
     if (ret != 0) {
         LOGD("Error generating block for key"); //generating block failed!
-        return;
+        return error;
     }
 
     int sizeofg = sizeof(g);
@@ -87,50 +93,55 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
     ret = wc_InitDhKey_ex(&key, HEAP_HINT, devId);
     if (ret != 0) {
         LOGD("Error at InitDHKey 1");
-        return;
+        return error;
     }
 
     ret = wc_InitDhKey_ex(&key2, HEAP_HINT, devId);
     if (ret != 0) {
         LOGD("Error at InitDHKey 2");
-        return;
+        return error;
     }
 
 
     ret = wc_DhSetKey(&key, p, sizeof(p), g, sizeof(g));
     if (ret != 0) {
         LOGD("Error setting key 1");
-        return;
+        return error;
     }
 
     ret = wc_DhSetKey(&key2, p, sizeof(p), g, sizeof(g));
     if (ret != 0) {
         LOGD("Error setting key 2");
-        return;
+        return error;
     }
 
     ret = wc_InitRng_ex(&rng, HEAP_HINT, devId);
     if (ret != 0) {
         LOGD("Error initialising RNG");
-        return;
+        return error;
     }
 
     ret = wc_DhGenerateKeyPair(&key, &rng, priv, &privSz, pub, &pubSz);
     if (ret != 0) {
         LOGD("Error generating 1st keypair");
-        return;
+        return error;
     }
 
     ret = wc_DhGenerateKeyPair(&key2, &rng, priv2, &privSz2, pub2, &pubSz2);
     if (ret != 0) {
         LOGD("Error generating 2nd keypair");
-        return;
+        return error;
     }
 
+    clock_t begin = clock();
     ret = wc_DhAgree(&key, agree, &agreeSz, priv, privSz, pub2, pubSz2);
+    clock_t end = clock();
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_encryption;
     if (ret != 0) {
         LOGD("Error agreeing");
-        return;
+        return error;
     } else {
         LOGD("Success at 1st agreeing");
     }
@@ -147,10 +158,20 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
     }
 
     LOGD("Diffie Hellman Finished");
+
+    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+
+    return result;
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = (*env)->NewDoubleArray(env,3);
+    jdouble fill[3];
+
+    jdouble error[1];
 
     Aes enc;
     byte cipher[AES_BLOCK_SIZE];
@@ -212,14 +233,14 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
 
     if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init enc");
-        return;
+        return error;
     }else{
         LOGD("No problem at init enc");
     }
 
     if (wc_AesInit(&dec, HEAP_HINT, devId) != 0){
         LOGD("Error in aes init dec");
-        return;
+        return error;
     }else{
         LOGD("No problem at init dec");
     }
@@ -238,14 +259,25 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
         LOGD("No problem at AesSetKey Dec ");
     }
 
+    clock_t begin = clock();
     ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
+    clock_t end = clock();
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fill[0] = time_spent_encryption;
     if (ret != 0){
         LOGD("Error encrypting");
     }else{
         LOGD("Encryption finished");
     }
 
+    clock_t begin1 = clock();
     ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
+    clock_t end1 = clock();
+
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_decryption;
     if(ret != 0){
         LOGD("Error Decrypting");
     }else{
@@ -261,10 +293,20 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
 
     LOGD("Finished AES/CBC 256");
 
+    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+
+    return result;
+
 }
 
-JNIEXPORT void JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = (*env)->NewDoubleArray(env,3);
+    jdouble fill[3];
+
+    jdouble error[1];
 
     Md5 md5;
     byte *hash[MD5_DIGEST_SIZE];
@@ -303,6 +345,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
         LOGD("wc_Initmd5 failed");
 
     } else {
+        clock_t begin1 = clock();
 
         ret = wc_Md5Update(&md5, data, len);
 
@@ -319,8 +362,17 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
             /* Md5 Final Failure Case. */
             LOGD("Error in Md5Final");
         }
-        LOGD("Hash finished");
 
+        clock_t end1 = clock();
+
+        double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+        fill[1] = time_spent_decryption;
+        LOGD("Hash finished");
     }
+
+    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+
+    return result;
 
 }

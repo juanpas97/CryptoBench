@@ -224,8 +224,12 @@ void print_data(const char *tittle, const void* data, int len)
 
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instance) {
+
+    jdoubleArray result;
+    result = env->NewDoubleArray(3);
+    jdouble fill[3];
 
     unsigned char c[MD5_DIGEST_LENGTH];
 
@@ -233,29 +237,39 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 
     MD5_Init(&ctx);
 
-    int bytes, ret;
+    int ret;
 
-    unsigned char data[1024] = "asdAFASDFASDFjyhdfcasdasdasd";
+    size_t bytes = 16;
 
-    ret = MD5_Update (&ctx, data, bytes);
+    unsigned char data[1024] = "asdsdasd";
 
-    if(ret!=1){
+    clock_t begin = clock();
+
+    ret = MD5_Update(&ctx, data, bytes);
+
+    if (ret != 1) {
         LOGD("Error updating");
     }
 
-    ret = MD5_Final (c,&ctx);
-    if(ret != 1){
+    ret = MD5_Final(c, &ctx);
+    if (ret != 1) {
         LOGD("Error final");
     }
 
-    //LOGD("Here starts:");
-    //for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
-    //    LOGD("%x", c[i]);
-    //}
+    clock_t end = clock();
+    double time_spent_encryption = (double) (end - begin) / CLOCKS_PER_SEC;
+    fill[1] = time_spent_encryption;
+
+    /*LOGD("Here starts:");
+    for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+        LOGD("%x", c[i]);
+    }*/
 
     LOGD("MD5 finished succesfully");
 
-    return 0;
+
+    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    return result;
 
 }
 
