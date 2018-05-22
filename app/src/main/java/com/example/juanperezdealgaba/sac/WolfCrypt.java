@@ -11,4 +11,5 @@ public class WolfCrypt {
     public native double[] DH();
     public native double[] AES();
     public native double[] MD5();
+    public native double[] RSA();
 }

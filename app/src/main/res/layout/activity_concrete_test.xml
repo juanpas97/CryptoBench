@@ -6,4 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".ConcreteTest">
 
+    <Spinner
+        android:id="@+id/spinner_library"
+        android:layout_width="161dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner_algo"
+        android:layout_width="114dp"
+        android:layout_height="39dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toEndOf="@+id/spinner_library"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_special_test"
+        android:layout_width="228dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/test_algo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_algo" />
+
 </android.support.constraint.ConstraintLayout>

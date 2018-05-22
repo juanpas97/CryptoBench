@@ -12,5 +12,5 @@ public class mbedTLS {
 
     public native double[] MD5();
 
-    //public native void DH();
+    public native double[] DH();
 }

@@ -309,4 +309,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
 }
 
+extern "C"
+JNIEXPORT jdoubleArray JNICALL
+Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance) {
 
+    LOGD("DH to be done");
+
+}

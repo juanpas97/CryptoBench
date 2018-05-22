@@ -7,4 +7,22 @@
     <string name="please_wait">Please wait</string>
     <string name="Executing_tests">Executing test</string>
     <string name="Special_test">Special Test</string>
+    <string name="test_algo">Start special Test</string>
+
+    <string-array name="libraries_array">
+        <item>Library</item>
+        <item>Bouncy Castle</item>
+        <item>WolfCrypt</item>
+        <item>OpenSSL</item>
+        <item>BoringSSL</item>
+        <item>mbedTLS</item>
+    </string-array>
+
+    <string-array name="algo_array">
+        <item>Algorithms</item>
+        <item>RSA</item>
+        <item>MD5</item>
+        <item>AES</item>
+        <item>MD-5</item>
+    </string-array>
 </resources>

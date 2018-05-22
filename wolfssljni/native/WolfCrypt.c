@@ -376,3 +376,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
     return result;
 
 }
+
+JNIEXPORT jdoubleArray JNICALL
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance) {
+
+    LOGD("RSA NOT DONE");
+
+}
