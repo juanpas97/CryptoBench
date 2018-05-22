@@ -1,0 +1,13 @@
+package com.example.juanperezdealgaba.sac;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class ConcreteTest extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_concrete_test);
+    }
+}

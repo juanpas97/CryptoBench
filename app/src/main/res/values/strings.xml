@@ -6,4 +6,5 @@
     <string name="RealizeTest">Realize Test</string>
     <string name="please_wait">Please wait</string>
     <string name="Executing_tests">Executing test</string>
+    <string name="Special_test">Special Test</string>
 </resources>
