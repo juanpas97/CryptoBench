@@ -135,5 +135,46 @@ import org.spongycastle.util.encoders.Hex;
 
     }
 
+    public void AESCBC() throws UnsupportedEncodingException, DataLengthException,
+            InvalidCipherTextException{
+
+        RandomStringGenerator string = new RandomStringGenerator();
+        String input = string.generateRandomString();
+        SecureRandom random = new SecureRandom();
+        byte[] key = new byte[32];
+        random.nextBytes(key);
+
+
+        AESCBCBouncyCastle cabc = new AESCBCBouncyCastle();
+        cabc.setKey(key);
+
+        System.out.println("************AES/CBC*************");
+        System.out.println("Input[" + input.length() + "]: " + input);
+
+        byte[] plain = input.getBytes("UTF-8");
+        System.out.println("Plaintext[" + plain.length + "]: " + new String(Hex.encode(plain)));
+
+        long startTimeEncrypt = System.nanoTime();
+        byte[] encr = cabc.encrypt(plain);
+        long endTimeEncrypt = System.nanoTime();
+        long durationEncrypt = (endTimeEncrypt - startTimeEncrypt);
+
+        System.out.println("Encrypted[" + encr.length + "]: " + new String(Hex.encode(encr)));
+        System.out.println("Time to encrypt:" + durationEncrypt + "ms");
+
+        long startTimeDecrypt = System.nanoTime();
+        byte[] decr = cabc.decrypt(encr);
+        long endTimeDecrypt = System.nanoTime();
+        long durationDecrypt = (endTimeDecrypt - startTimeDecrypt);
+
+        System.out.println("Decrypted[" + decr.length + "]: " + new String(Hex.encode(decr)));
+        System.out.println("Time to decrypt:" + durationDecrypt + "ms");
+
+        String output = new String(decr, "UTF-8");
+        System.out.println("Output[" + output.length() + "]: " + output);
+
+        System.out.println("**********************************");
+
+    }
 
     }

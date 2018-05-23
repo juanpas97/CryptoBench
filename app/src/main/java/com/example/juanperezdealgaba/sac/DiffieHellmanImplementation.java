@@ -47,7 +47,6 @@ public class DiffieHellmanImplementation {
         Security.addProvider(new BouncyCastleProvider());
 
         GetTimestamp("Key Generation started: ");
-        System.out.println("Pene");
         System.out.println(GenerateAgreement());
 //		System.out.println(keys.getPublic().toString());
 //		System.out.println(keys.getPrivate().toString());

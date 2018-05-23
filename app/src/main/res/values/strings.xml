@@ -23,6 +23,6 @@
         <item>RSA</item>
         <item>MD5</item>
         <item>AES</item>
-        <item>MD-5</item>
+        <item>DH</item>
     </string-array>
 </resources>

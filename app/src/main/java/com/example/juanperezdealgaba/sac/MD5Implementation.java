@@ -64,4 +64,31 @@ public class MD5Implementation {
         System.out.println("********************************");
 
     }
+
+    public void testmd5(){
+
+            RandomStringGenerator string = new RandomStringGenerator();
+            String input = string.generateRandomString();
+
+        byte[] inputBytes = input.getBytes();
+
+        System.out.println("***********MD5**************");
+
+
+        MD5Digest md5 = new MD5Digest();
+        md5.update(inputBytes, 0, inputBytes.length);
+
+        byte[] hash = new byte[md5.getDigestSize()];
+        long StartHash =System.nanoTime();
+        md5.doFinal(hash, 0);
+        long endHash =System.nanoTime();
+        long timeHash = (endHash - StartHash);
+
+        System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
+        System.out.println("Output (hex): " + new String(Hex.encode(hash)));
+
+        System.out.println("Time to generate Hash:" + timeHash + "ms\n");
+        System.out.println("********************************");
+
+    }
 }

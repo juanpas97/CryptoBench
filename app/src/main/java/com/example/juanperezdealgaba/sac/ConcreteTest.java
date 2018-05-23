@@ -199,6 +199,33 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
         }
 
+        if(library.equals("Bouncy Castle") && algo.equals("AES") ){
+            AESCBCBouncyCastleImplementation test= new AESCBCBouncyCastleImplementation();
+            try {
+                test.AESCBC();
+            }catch(Exception i){
+                throw new RuntimeException(i);
+            }
+        }
+
+        if(library.equals("Bouncy Castle") && algo.equals("MD5") ){
+            MD5Implementation test= new MD5Implementation();
+            try {
+                test.testmd5();
+            }catch(Exception i){
+                throw new RuntimeException(i);
+            }
+        }
+
+        if(library.equals("Bouncy Castle") && algo.equals("DH") ){
+            DiffieHellmanImplementation test= new DiffieHellmanImplementation();
+            try {
+                test.startDiffieHellman();
+            }catch(Exception i){
+                throw new RuntimeException(i);
+            }
+        }
+
     }
 
     @Override
