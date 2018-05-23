@@ -85,6 +85,9 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
                 text.append("Time to decrypt:" + timesRSA[1] + "ns\n");
                 text.append("\n");
             }
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
 
             System.out.println("***********MD5**************");
             writer.write("**********MD5***************\n");

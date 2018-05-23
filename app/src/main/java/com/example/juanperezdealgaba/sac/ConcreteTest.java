@@ -2,10 +2,12 @@ package com.example.juanperezdealgaba.sac;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -141,7 +143,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void createAlgo (String library, String algo, TextView textview,File report){
+    public void createAlgo (String library, String algo, TextView textview, final File report){
         int repetitions = 5;
 
 
@@ -154,7 +156,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             String device = Build.DEVICE;
             String model = Build.MODEL;
 
-            String model_cpu = System.getProperty("os.arch");
+            final String model_cpu = System.getProperty("os.arch");
 
 
             writer.write("Super Test Results\n");
@@ -176,55 +178,247 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
 
             if (library.equals("BoringSSL") && algo.equals("RSA")) {
-                BoringSSL test = new BoringSSL();
-                test.RSA();
+                System.out.println("***********BoringSSL/RSA**************");
+                writer.write("**********BoringSSL/RSA***************\n");
+                textview.append("**********BoringSSL/RSA************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    BoringSSL test = new BoringSSL();
+                    double[] timesRSA = test.RSA();
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");;
             }
 
             if (library.equals("BoringSSL") && algo.equals("AES")) {
-                BoringSSL test = new BoringSSL();
-                test.AES();
+                System.out.println("***********BoringSSL/AES**************");
+                writer.write("**********BoringSSL/AES***************\n");
+                textview.append("**********BoringSSL/AES************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    BoringSSL test = new BoringSSL();
+                    double[] timesAES = test.AES();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
             if (library.equals("BoringSSL") && algo.equals("MD5")) {
-                BoringSSL test = new BoringSSL();
-                test.MD5();
+                System.out.println("***********BoringSSL/MD5**************");
+                writer.write("**********BoringSSL/MD5***************\n");
+                textview.append("**********BoringSSL/MD5************\n");
+
+                for (int i = 0; i < repetitions; i++) {
+                    BoringSSL test = new BoringSSL();
+                    double[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
+                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("BoringSSL") && algo.equals("DH")) {
-                BoringSSL test = new BoringSSL();
-                test.DH();
+                System.out.println("***********BoringSSL/DH**************");
+                writer.write("**********BoringSSL/DH***************\n");
+                textview.append("**********BoringSSL/DH************\n");
+
+
+            for (int i = 0; i < repetitions; i++) {
+                OpenSSL test = new OpenSSL();
+                double[] testDH = test.DH();
+                System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                textview.append("\n");
+            }
+
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+
             }
 
             if (library.equals("OpenSSL") && algo.equals("RSA")) {
-                OpenSSL test = new OpenSSL();
-                test.RSA(2);
+                System.out.println("***********OpenSSL/RSA**************");
+                writer.write("**********OpenSSL/RSA***************\n");
+                textview.append("**********OpenSSL/RSA************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    OpenSSL test = new OpenSSL();
+                    double[] timesRSA = test.RSA(3);
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("\n");
+                }
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("OpenSSL") && algo.equals("AES")) {
-                OpenSSL test = new OpenSSL();
-                test.AES(2);
+                System.out.println("***********OpenSSL/AES**************");
+                writer.write("**********OpenSSL/AES***************\n");
+                textview.append("**********OpenSSL/AES************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    OpenSSL test = new OpenSSL();
+                    double[] timesAES = test.AES(3);
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
             if (library.equals("OpenSSL") && algo.equals("MD5")) {
-                OpenSSL test = new OpenSSL();
-                test.MD5();
+                System.out.println("***********OpenSSL/MD5**************");
+                writer.write("**********OpenSSL/MD5***************\n");
+                textview.append("**********OpenSSL/MD5************\n");
+
+                for (int i = 0; i < repetitions; i++) {
+                    OpenSSL test = new OpenSSL();
+                    double[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
+                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("OpenSSL") && algo.equals("DH")) {
-                OpenSSL test = new OpenSSL();
-                test.DH();
+                System.out.println("***********OpenSSL/DH**************");
+                writer.write("**********OpenSSL/DH***************\n");
+                textview.append("**********OpenSSL/DH************\n");
+
+                for (int i = 0; i < repetitions; i++) {
+                    OpenSSL test = new OpenSSL();
+                    double[] testDH = test.DH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("mbedTLS") && algo.equals("RSA")) {
-                mbedTLS test = new mbedTLS();
-                test.RSA();
+                System.out.println("***********mbedTLS/RSA**************");
+                writer.write("**********mbedTLS/RSA***************\n");
+                textview.append("**********mbedTLS/RSA************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    mbedTLS test = new mbedTLS();
+                    double[] timesRSA = test.RSA();
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+
             }
 
             if (library.equals("mbedTLS") && algo.equals("AES")) {
-                mbedTLS test = new mbedTLS();
-                test.AES();
+                System.out.println("***********mbedTLS/AES**************");
+                writer.write("**********mbedTLS/AES***************\n");
+                textview.append("**********mbedTLS/AES************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    mbedTLS test = new mbedTLS();
+                    double[] timesAES = test.AES();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                }
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
             if (library.equals("mbedTLS") && algo.equals("MD5")) {
-                mbedTLS test = new mbedTLS();
-                test.MD5();
+                System.out.println("***********mbedTLS/MD5**************");
+                writer.write("**********mbedTLS/MD5***************\n");
+                textview.append("**********mbedTLS/MD5************\n");
+
+                for (int i = 0; i < repetitions; i++) {
+                    mbedTLS test = new mbedTLS();
+                    double[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
+                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("\n");
+                }
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("mbedTLS") && algo.equals("DH")) {
@@ -341,6 +535,26 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             writer.close();
+
+            final String titel = System.getProperty("os.arch");
+            final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
+                    "EncryptAppReport");
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                public Void doInBackground(Void... arg) {
+                    try {
+                        sender.sendMail("Report",
+                                "Special Test",
+                                "encryptapp.report@gmail.com",
+                                "encryptapp.report@gmail.com",
+                                report);
+                    } catch (Exception e) {
+                        Log.e("SendMail", e.getMessage(), e);
+                    }
+                    return null;
+                }
+            }.execute();
+
 
         }catch (IOException i){
             throw new RuntimeException(i);
