@@ -37,21 +37,26 @@ public class DiffieHellmanImplementation {
 
     }
 
-    public void startDiffieHellman(FileWriter writer, TextView results, int repetitions) throws NoSuchAlgorithmException, NoSuchProviderException,
+    public void startDiffieHellman(FileWriter writer, TextView results, long result_time) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
         System.out.println("***********Bouncy Castle/DH/ Key Agreement**************");
         writer.write("\n**********Bouncy Castle/DH/ Key Agreement********\n");
         results.append("*******Bouncy Castle/DH/ Key Agreement******\n");
-
-        for(int i = 0; i < repetitions; i++) {
+        int algo_repet = 0;
+        while (System.currentTimeMillis() < result_time) {
             long startKeyAgreement = System.nanoTime();
             System.out.println(GenerateAgreement());
             long endKeyAgreement = System.nanoTime();
             long timeKeyAgreement = (endKeyAgreement - startKeyAgreement);
             writer.write("Time to generate key agreement :" + timeKeyAgreement + "\n");
             results.append("Time to generate key agreement :" + timeKeyAgreement + "\n");
+            algo_repet += 1;
         }
+
+        System.out.println("Times executed:" + algo_repet + "\n");
+        writer.write("Times executed:" + algo_repet + "\n");
+        results.append("Times executed:" + algo_repet + "\n");
 
         System.out.println("***********************\n");
         writer.write("********************************\n");

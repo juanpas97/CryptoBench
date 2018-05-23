@@ -135,16 +135,17 @@ import org.spongycastle.util.encoders.Hex;
 
     }
 
-    public void AESCBC(FileWriter writer, TextView results, int repetitions) throws UnsupportedEncodingException, DataLengthException,
+    public void AESCBC(FileWriter writer, TextView results, long result_time) throws DataLengthException,
             InvalidCipherTextException,IOException{
 
         System.out.println("************Bouncy Castle/AES/CBC**************");
         results.append("\n************Bouncy Castle/AES/CBC***************\n");
         writer.write("\n************Bouncy Castle/AES/CBC***************\n");
+        int algo_repet = 0;
 
-        for(int i =0; i < repetitions; i++) {
+        while (System.currentTimeMillis() < result_time) {
             RandomStringGenerator string = new RandomStringGenerator();
-            String input = string.generateRandomString();
+            String input = RandomStringGenerator.generateRandomString();
             SecureRandom random = new SecureRandom();
             byte[] key = new byte[32];
             random.nextBytes(key);
@@ -184,7 +185,12 @@ import org.spongycastle.util.encoders.Hex;
 
             String output = new String(decr, "UTF-8");
             System.out.println("Output[" + output.length() + "]: " + output);
+            algo_repet += 1;
         }
+
+        System.out.println("Times executed:" + algo_repet + "\n");
+        writer.write("Times executed:" + algo_repet + "\n");
+        results.append("Times executed:" + algo_repet + "\n");
 
         System.out.println("***********************\n");
         writer.write("********************************\n");

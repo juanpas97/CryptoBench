@@ -62,7 +62,7 @@ public class GMailSender extends javax.mail.Authenticator {
     }
 
     public synchronized void sendMail(String subject, String body, String sender, String recipients,
-                                      File attachment) throws Exception {
+                                      File attachment) {
         try{
             MimeMessage message = new MimeMessage(session);
             message.setSender(new InternetAddress(sender));
@@ -118,7 +118,7 @@ public class GMailSender extends javax.mail.Authenticator {
                 return type;
         }
 
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             return new ByteArrayInputStream(data);
         }
 

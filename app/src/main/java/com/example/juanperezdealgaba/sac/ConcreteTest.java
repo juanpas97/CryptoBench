@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -21,7 +22,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ConcreteTest extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -35,7 +35,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_concrete_test);
 
-            final TextView results_special_test = (TextView) findViewById(R.id.special_test_results);
+            final TextView results_special_test = findViewById(R.id.special_test_results);
+
+            final EditText minutes_repetition = findViewById(R.id.minutes_text);
 
             results_special_test.setMovementMethod(new ScrollingMovementMethod());
 
@@ -52,7 +54,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 report.delete();
 
 
-            Spinner spinner_algo = (Spinner) findViewById(R.id.spinner_algo);
+            Spinner spinner_algo = findViewById(R.id.spinner_algo);
 // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                     R.array.algo_array, android.R.layout.simple_spinner_item);
@@ -90,7 +92,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 }
             });
 
-            Spinner spinner_library = (Spinner) findViewById(R.id.spinner_library);
+            Spinner spinner_library = findViewById(R.id.spinner_library);
 // Create an ArrayAdapter using the string array and a default spinner layout
             ArrayAdapter<CharSequence> adapterlibrary = ArrayAdapter.createFromResource(this,
                     R.array.libraries_array, android.R.layout.simple_spinner_item);
@@ -131,11 +133,12 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 }
             });
 
-            final Button start_test = (Button) findViewById(R.id.button_special_test);
+            final Button start_test = findViewById(R.id.button_special_test);
             start_test.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        createAlgo(library, algo, results_special_test,report);
+                    int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
+                    createAlgo(library, algo, results_special_test,report,repetitions);
                 }
             });
 
@@ -143,9 +146,13 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void createAlgo (String library, String algo, TextView textview, final File report){
-        int repetitions = 5;
+    public void createAlgo (String library, String algo, TextView textview, final File report,int repetitions){
 
+        long startTime = System.currentTimeMillis();
+        long maxDurationInMilliseconds = repetitions * 60 * 1000;
+
+        long resulttime = startTime + maxDurationInMilliseconds;
+        int algo_repet = 0;
 
 
         try {
@@ -182,7 +189,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********BoringSSL/RSA***************\n");
                 textview.append("**********BoringSSL/RSA************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     BoringSSL test = new BoringSSL();
                     double[] timesRSA = test.RSA();
 
@@ -199,7 +206,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
-                textview.append("**********************************\n");;
+                textview.append("**********************************\n");
             }
 
             if (library.equals("BoringSSL") && algo.equals("AES")) {
@@ -207,7 +214,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********BoringSSL/AES***************\n");
                 textview.append("**********BoringSSL/AES************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds){
                     BoringSSL test = new BoringSSL();
                     double[] timesAES = test.AES();
 
@@ -220,7 +229,12 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -231,14 +245,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********BoringSSL/MD5***************\n");
                 textview.append("**********BoringSSL/MD5************\n");
 
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     BoringSSL test = new BoringSSL();
                     double[] testMD5 = test.MD5();
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -251,14 +270,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********BoringSSL/DH************\n");
 
 
-            for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                 OpenSSL test = new OpenSSL();
                 double[] testDH = test.DH();
                 System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                 writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                 textview.append("Time to key agreement:" + testDH[1] + "ns\n");
                 textview.append("\n");
-            }
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
 
                 System.out.println("***********************\n");
@@ -272,7 +296,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********OpenSSL/RSA***************\n");
                 textview.append("**********OpenSSL/RSA************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
                     double[] timesRSA = test.RSA(3);
 
@@ -285,7 +309,13 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
                 textview.append("**********************************\n");
@@ -296,7 +326,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********OpenSSL/AES***************\n");
                 textview.append("**********OpenSSL/AES************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
                     double[] timesAES = test.AES(3);
 
@@ -309,7 +339,12 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -320,14 +355,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********OpenSSL/MD5***************\n");
                 textview.append("**********OpenSSL/MD5************\n");
 
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
                     double[] testMD5 = test.MD5();
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -339,14 +379,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********OpenSSL/DH***************\n");
                 textview.append("**********OpenSSL/DH************\n");
 
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
                     double[] testDH = test.DH();
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -358,7 +403,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********mbedTLS/RSA***************\n");
                 textview.append("**********mbedTLS/RSA************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
                     double[] timesRSA = test.RSA();
 
@@ -371,7 +416,12 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -384,7 +434,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********mbedTLS/AES***************\n");
                 textview.append("**********mbedTLS/AES************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
                     double[] timesAES = test.AES();
 
@@ -397,7 +447,13 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
                 textview.append("**********************************\n");
@@ -407,14 +463,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("**********mbedTLS/MD5***************\n");
                 textview.append("**********mbedTLS/MD5************\n");
 
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
                     double[] testMD5 = test.MD5();
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
@@ -430,10 +491,15 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 System.out.println("************WolfCrypt/RSA**************");
                 textview.append("\n************WolfCrypt/RSA***************\n");
                 writer.write("\n************WolfCrypt/RSA***************\n");
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
                     test.RSA();
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
 
                 System.out.println("********************************");
                 writer.write("********************************\n");
@@ -445,7 +511,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("\n************WolfCrypt/AES-CBC***************\n");
                 writer.write("\n************WolfCrypt/AES-CBC***************\n");
 
-                for(int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
                     double[] timesAES = test.AES();
 
@@ -458,7 +524,13 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
                 System.out.println("********************************");
                 writer.write("********************************\n");
                 textview.append("********************************\n");
@@ -468,14 +540,20 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("\n************WolfCrypt/MD5***************\n");
                 writer.write("\n************WolfCrypt/MD5***************\n");
 
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
                     double[] testMD5 = test.MD5();
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
                 System.out.println("********************************");
                 writer.write("********************************\n");
                 textview.append("********************************\n");
@@ -485,14 +563,20 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 System.out.println("************WolfCrypt/DH**************");
                 textview.append("\n************WolfCrypt/DH***************\n");
                 writer.write("\n************WolfCrypt/DH***************\n");
-                for (int i = 0; i < repetitions; i++) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
                     double[] testDH = test.DH();
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("\n");
+                    algo_repet += 1;
                 }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
                 System.out.println("********************************");
                 writer.write("********************************\n");
                 textview.append("********************************\n");
@@ -501,7 +585,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
                 RSAImplementation test = new RSAImplementation();
                 try {
-                    test.RSA(writer, textview, repetitions);
+                    test.RSA(writer, textview, resulttime);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -510,7 +594,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             if (library.equals("Bouncy Castle") && algo.equals("AES")) {
                 AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
                 try {
-                    test.AESCBC(writer, textview, repetitions);
+                    test.AESCBC(writer, textview, resulttime);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -519,7 +603,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             if (library.equals("Bouncy Castle") && algo.equals("MD5")) {
                 MD5Implementation test = new MD5Implementation();
                 try {
-                    test.testmd5(writer, textview, repetitions);
+                    test.testmd5(writer, textview, resulttime);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -528,7 +612,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             if (library.equals("Bouncy Castle") && algo.equals("DH")) {
                 DiffieHellmanImplementation test = new DiffieHellmanImplementation();
                 try {
-                    test.startDiffieHellman(writer, textview, repetitions);
+                    test.startDiffieHellman(writer, textview, resulttime);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }

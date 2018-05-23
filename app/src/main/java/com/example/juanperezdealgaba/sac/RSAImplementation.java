@@ -28,8 +28,7 @@ public class RSAImplementation {
      * @param results
      * @throws Exception
      */
-    public void RSA(String randomString, FileWriter writer, TextView results) throws
-             Exception{
+    public void RSA(String randomString, FileWriter writer, TextView results) {
 
         try {
             System.out.println("************RSA**************");
@@ -95,15 +94,16 @@ public class RSAImplementation {
 
     }
 
-    public void RSA(FileWriter writer,TextView results,int repetitions) throws Exception{
+    public void RSA(FileWriter writer,TextView results,long result_time) throws Exception{
 
         System.out.println("************Bouncy Castle/RSA**************");
         results.append("\n************Bouncy Castle/RSA***************\n");
         writer.write("\n************Bouncy Castle/RSA***************\n");
+        int algo_repet = 0;
 
-        for(int i = 0;i < repetitions; i++) {
+        while (System.currentTimeMillis() < result_time) {
             RandomStringGenerator string = new RandomStringGenerator();
-            String randomString = string.generateRandomString();
+            String randomString = RandomStringGenerator.generateRandomString();
             AsymmetricCipherKeyPair keyPair = GenerateKeys();
             String plainMessage = randomString;
             long startTimeEncrypt = System.nanoTime();
@@ -124,7 +124,12 @@ public class RSAImplementation {
             results.append("Time to decrypt:" + durationDecrypt + "ms\n");
             System.out.println("Decrypted[" + decryptedMessage.length() + "]: " + decryptedMessage);
             System.out.println("Time to decrypt:" + durationDecrypt + "ms");
+            algo_repet += 1;
         }
+
+        System.out.println("Times executed:" + algo_repet + "\n");
+        writer.write("Times executed:" + algo_repet + "\n");
+        results.append("Times executed:" + algo_repet + "\n");
         System.out.println("********************************");
         writer.write("********************************\n");
         results.append("********************************\n");

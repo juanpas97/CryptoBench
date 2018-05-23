@@ -24,7 +24,7 @@ import static com.example.juanperezdealgaba.sac.DiffieHellman.GetTimestamp;
 public class DSAImplementation {
 
     public void testDSA(String input, FileWriter writer, TextView results) throws NoSuchAlgorithmException, NoSuchProviderException,SignatureException,
-            InvalidAlgorithmParameterException,UnsupportedEncodingException,InvalidKeyException,
+            InvalidAlgorithmParameterException, InvalidKeyException,
             IOException{
 
         System.out.println("***********DSA**************");

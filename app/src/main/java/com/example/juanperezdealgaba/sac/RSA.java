@@ -36,7 +36,7 @@ public class RSA {
 
      */
 
-    public static String getHexString(byte[] b) throws Exception {
+    public static String getHexString(byte[] b) {
         String result = "";
         for (int i = 0; i < b.length; i++) {
             result +=

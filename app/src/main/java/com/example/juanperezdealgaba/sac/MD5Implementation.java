@@ -65,14 +65,15 @@ public class MD5Implementation {
 
     }
 
-    public void testmd5(FileWriter writer, TextView results,int repetitions) throws IOException{
+    public void testmd5(FileWriter writer, TextView results,long result_time) throws IOException{
 
         System.out.println("***********Bouncy Castle/MD-5**************");
         writer.write("\n**********Bouncy Castle/MD-5********\n");
         results.append("*******Bouncy Castle/MD-5******\n");
-            for (int i = 0; i< repetitions; i++) {
+        int algo_repet = 0;
+        while (System.currentTimeMillis() < result_time) {
                 RandomStringGenerator string = new RandomStringGenerator();
-                String input = string.generateRandomString();
+                String input = RandomStringGenerator.generateRandomString();
 
                 byte[] inputBytes = input.getBytes();
 
@@ -91,7 +92,12 @@ public class MD5Implementation {
                 System.out.println("Time to generate Hash:" + timeHash + "ms\n");
                 writer.write("Time to generate Hash:" + timeHash + "ms\n");
                 results.append("Time to generate Hash:" + timeHash + "ms\n");
-            }
+            algo_repet += 1;
+        }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                results.append("Times executed:" + algo_repet + "\n");
                 System.out.println("***********************\n");
                 writer.write("********************************\n");
                 results.append("**********************************\n");

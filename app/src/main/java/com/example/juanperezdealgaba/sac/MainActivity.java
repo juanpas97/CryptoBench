@@ -112,7 +112,7 @@ public  class  MainActivity extends AppCompatActivity {
         //TextView tv = (TextView) findViewById(R.id.sample_text);
         //tv.setText(stringFromJNI());
 
-        final Button special_test = (Button) findViewById(R.id.button_special_test);
+        final Button special_test = findViewById(R.id.button_special_test);
 
         special_test.setOnClickListener(new View.OnClickListener() {
             @Override

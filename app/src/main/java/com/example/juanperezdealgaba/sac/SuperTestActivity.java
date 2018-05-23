@@ -23,7 +23,7 @@ public class SuperTestActivity extends AppCompatActivity {
 
         try{
             //Initialize SuperTest
-            final TextView results = (TextView) findViewById(R.id.Results);
+            final TextView results = findViewById(R.id.Results);
             results.setMovementMethod(new ScrollingMovementMethod());
 
             String input = RandomStringGenerator.generateRandomString();
