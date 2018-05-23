@@ -138,9 +138,9 @@ import org.spongycastle.util.encoders.Hex;
     public void AESCBC(FileWriter writer, TextView results, int repetitions) throws UnsupportedEncodingException, DataLengthException,
             InvalidCipherTextException,IOException{
 
-        System.out.println("************AES/CBC**************");
-        results.append("\n************AES/CBC***************\n");
-        writer.write("\n************AES/CBC***************\n");
+        System.out.println("************Bouncy Castle/AES/CBC**************");
+        results.append("\n************Bouncy Castle/AES/CBC***************\n");
+        writer.write("\n************Bouncy Castle/AES/CBC***************\n");
 
         for(int i =0; i < repetitions; i++) {
             RandomStringGenerator string = new RandomStringGenerator();

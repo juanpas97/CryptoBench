@@ -67,9 +67,9 @@ public class MD5Implementation {
 
     public void testmd5(FileWriter writer, TextView results,int repetitions) throws IOException{
 
-        System.out.println("***********MD-5**************");
-        writer.write("\n**********MD-5********\n");
-        results.append("*******MD-5******\n");
+        System.out.println("***********Bouncy Castle/MD-5**************");
+        writer.write("\n**********Bouncy Castle/MD-5********\n");
+        results.append("*******Bouncy Castle/MD-5******\n");
             for (int i = 0; i< repetitions; i++) {
                 RandomStringGenerator string = new RandomStringGenerator();
                 String input = string.generateRandomString();

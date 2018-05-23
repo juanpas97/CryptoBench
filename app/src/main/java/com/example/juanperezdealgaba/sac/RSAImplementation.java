@@ -97,9 +97,9 @@ public class RSAImplementation {
 
     public void RSA(FileWriter writer,TextView results,int repetitions) throws Exception{
 
-        System.out.println("************RSA**************");
-        results.append("\n************RSA***************\n");
-        writer.write("\n************RSA***************\n");
+        System.out.println("************Bouncy Castle/RSA**************");
+        results.append("\n************Bouncy Castle/RSA***************\n");
+        writer.write("\n************Bouncy Castle/RSA***************\n");
 
         for(int i = 0;i < repetitions; i++) {
             RandomStringGenerator string = new RandomStringGenerator();

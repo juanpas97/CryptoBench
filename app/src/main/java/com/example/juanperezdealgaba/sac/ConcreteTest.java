@@ -2,6 +2,7 @@ package com.example.juanperezdealgaba.sac;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -28,7 +29,6 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        try {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_concrete_test);
@@ -48,8 +48,6 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             if (report.exists())
                 report.delete();
-
-            final FileWriter writer_special_test = new FileWriter(report);
 
 
             Spinner spinner_algo = (Spinner) findViewById(R.id.spinner_algo);
@@ -135,20 +133,48 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             start_test.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    createAlgo(library, algo,writer_special_test,results_special_test);
+                        createAlgo(library, algo, results_special_test,report);
                 }
             });
 
-        }catch(IOException i){
-            throw new RuntimeException(i);
-        }
+
 
     }
 
-    public void createAlgo (String library, String algo, FileWriter writer, TextView textview){
+    public void createAlgo (String library, String algo, TextView textview,File report){
         int repetitions = 5;
 
+
+
         try {
+            final FileWriter writer = new FileWriter(report);
+            String myVersion = android.os.Build.VERSION.RELEASE;
+            int sdkVersion = android.os.Build.VERSION.SDK_INT;
+            String manufacturer = Build.MANUFACTURER;
+            String device = Build.DEVICE;
+            String model = Build.MODEL;
+
+            String model_cpu = System.getProperty("os.arch");
+
+
+            writer.write("Super Test Results\n");
+            writer.write("-----------------------------------\n");
+            writer.write("CPU Model: " + model_cpu + "\n");
+            writer.write("Android Version: " + myVersion + "\n");
+            writer.write("SDK Version: " + sdkVersion + "\n");
+            writer.write("Manufacturer: " + manufacturer + "\n");
+            writer.write("Device: " + device + "\n");
+            writer.write("Model: " + model + "\n");
+            textview.setText("Super Test Results\n" + "*********************************\n"
+                    + "Model CPU: " + model_cpu + "\n" + "Android Version:"+myVersion+"\n"+
+                    "SDK Version: "+ sdkVersion + "\n" + "Manufacturer: " + manufacturer + "\n" +
+                    "Device: " + device + "\n" + "Model: " + model + "\n"
+                    + "********************************\n\n");
+            writer.write("\n");
+            writer.write("\n");
+            writer.write("\n");
+
+
             if (library.equals("BoringSSL") && algo.equals("RSA")) {
                 BoringSSL test = new BoringSSL();
                 test.RSA();
@@ -207,22 +233,75 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (library.equals("WolfCrypt") && algo.equals("RSA")) {
-                WolfCrypt test = new WolfCrypt();
-                test.RSA();
+                System.out.println("************WolfCrypt/RSA**************");
+                textview.append("\n************WolfCrypt/RSA***************\n");
+                writer.write("\n************WolfCrypt/RSA***************\n");
+                for(int i = 0; i < repetitions; i++) {
+                    WolfCrypt test = new WolfCrypt();
+                    test.RSA();
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("AES")) {
-                WolfCrypt test = new WolfCrypt();
-                test.AES();
+                System.out.println("************WolfCrypt/AES-CBC**************");
+                textview.append("\n************WolfCrypt/AES-CBC***************\n");
+                writer.write("\n************WolfCrypt/AES-CBC***************\n");
+
+                for(int i = 0; i < repetitions; i++) {
+                    WolfCrypt test = new WolfCrypt();
+                    double[] timesAES = test.AES();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                }
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
             }
             if (library.equals("WolfCrypt") && algo.equals("MD5")) {
-                WolfCrypt test = new WolfCrypt();
-                test.MD5();
+                System.out.println("************WolfCrypt/MD5**************");
+                textview.append("\n************WolfCrypt/MD5***************\n");
+                writer.write("\n************WolfCrypt/MD5***************\n");
+
+                for (int i = 0; i < repetitions; i++) {
+                    WolfCrypt test = new WolfCrypt();
+                    double[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
+                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    textview.append("\n");
+                }
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("DH")) {
-                WolfCrypt test = new WolfCrypt();
-                test.DH();
+                System.out.println("************WolfCrypt/DH**************");
+                textview.append("\n************WolfCrypt/DH***************\n");
+                writer.write("\n************WolfCrypt/DH***************\n");
+                for (int i = 0; i < repetitions; i++) {
+                    WolfCrypt test = new WolfCrypt();
+                    double[] testDH = test.DH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("\n");
+                }
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
@@ -262,6 +341,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             writer.close();
+
         }catch (IOException i){
             throw new RuntimeException(i);
         }
