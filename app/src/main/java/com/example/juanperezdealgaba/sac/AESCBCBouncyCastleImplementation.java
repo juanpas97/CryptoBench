@@ -135,45 +135,60 @@ import org.spongycastle.util.encoders.Hex;
 
     }
 
-    public void AESCBC() throws UnsupportedEncodingException, DataLengthException,
-            InvalidCipherTextException{
+    public void AESCBC(FileWriter writer, TextView results, int repetitions) throws UnsupportedEncodingException, DataLengthException,
+            InvalidCipherTextException,IOException{
 
-        RandomStringGenerator string = new RandomStringGenerator();
-        String input = string.generateRandomString();
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[32];
-        random.nextBytes(key);
+        System.out.println("************AES/CBC**************");
+        results.append("\n************AES/CBC***************\n");
+        writer.write("\n************AES/CBC***************\n");
+
+        for(int i =0; i < repetitions; i++) {
+            RandomStringGenerator string = new RandomStringGenerator();
+            String input = string.generateRandomString();
+            SecureRandom random = new SecureRandom();
+            byte[] key = new byte[32];
+            random.nextBytes(key);
 
 
-        AESCBCBouncyCastle cabc = new AESCBCBouncyCastle();
-        cabc.setKey(key);
+            AESCBCBouncyCastle cabc = new AESCBCBouncyCastle();
+            cabc.setKey(key);
 
-        System.out.println("************AES/CBC*************");
-        System.out.println("Input[" + input.length() + "]: " + input);
 
-        byte[] plain = input.getBytes("UTF-8");
-        System.out.println("Plaintext[" + plain.length + "]: " + new String(Hex.encode(plain)));
+            System.out.println("Input[" + input.length() + "]: " + input);
 
-        long startTimeEncrypt = System.nanoTime();
-        byte[] encr = cabc.encrypt(plain);
-        long endTimeEncrypt = System.nanoTime();
-        long durationEncrypt = (endTimeEncrypt - startTimeEncrypt);
+            byte[] plain = input.getBytes("UTF-8");
+            System.out.println("Plaintext[" + plain.length + "]: " + new String(Hex.encode(plain)));
 
-        System.out.println("Encrypted[" + encr.length + "]: " + new String(Hex.encode(encr)));
-        System.out.println("Time to encrypt:" + durationEncrypt + "ms");
+            long startTimeEncrypt = System.nanoTime();
+            byte[] encr = cabc.encrypt(plain);
+            long endTimeEncrypt = System.nanoTime();
+            long durationEncrypt = (endTimeEncrypt - startTimeEncrypt);
 
-        long startTimeDecrypt = System.nanoTime();
-        byte[] decr = cabc.decrypt(encr);
-        long endTimeDecrypt = System.nanoTime();
-        long durationDecrypt = (endTimeDecrypt - startTimeDecrypt);
+            System.out.println("Encrypted[" + encr.length + "]: " + new String(Hex.encode(encr)));
+            System.out.println("Time to encrypt:" + durationEncrypt + "ms");
 
-        System.out.println("Decrypted[" + decr.length + "]: " + new String(Hex.encode(decr)));
-        System.out.println("Time to decrypt:" + durationDecrypt + "ms");
+            results.append("Time to encrypt:" + durationEncrypt + "ms\n");
 
-        String output = new String(decr, "UTF-8");
-        System.out.println("Output[" + output.length() + "]: " + output);
+            writer.write("Time to encrypt:" + durationEncrypt + "ms\n");
 
-        System.out.println("**********************************");
+            long startTimeDecrypt = System.nanoTime();
+            byte[] decr = cabc.decrypt(encr);
+            long endTimeDecrypt = System.nanoTime();
+            long durationDecrypt = (endTimeDecrypt - startTimeDecrypt);
+
+            writer.write("Time to decrypt:" + durationDecrypt + "ms\n");
+            results.append("Time to decrypt:" + durationDecrypt + "ms\n");
+
+            System.out.println("Decrypted[" + decr.length + "]: " + new String(Hex.encode(decr)));
+            System.out.println("Time to decrypt:" + durationDecrypt + "ms");
+
+            String output = new String(decr, "UTF-8");
+            System.out.println("Output[" + output.length() + "]: " + output);
+        }
+
+        System.out.println("***********************\n");
+        writer.write("********************************\n");
+        results.append("**********************************\n");
 
     }
 
