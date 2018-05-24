@@ -19,9 +19,38 @@
 
 static int devId = INVALID_DEVID;
 
+#define BITS_TO_BYTES(b)                (b/8)
+#define MIN_OAEP_PADDING                (2*BITS_TO_BYTES(160)+2)
+
+#define RSA_LENGTH                      (BITS_TO_BYTES(2048))
+
+#define RSA_OAEP_DECRYPTED_DATA_LENGTH  (RSA_LENGTH-MIN_OAEP_PADDING)
+#define RSA_OAEP_ENCRYPTED_DATA_LENGTH  (RSA_LENGTH)
+
+#define MD5_DIGEST_SIZE WC_MD5_DIGEST_SIZE
+
+enum {
+    WC_MD5             =  0,      /* hash type unique */
+    WC_MD5_BLOCK_SIZE  = 64,
+    WC_MD5_DIGEST_SIZE = 16,
+    WC_MD5_PAD_SIZE    = 56
+};
+
 #define  LOG_TAG    "WolfCrypt"
 
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
+
+#define IN_BUFFER_LENGTH                (RSA_OAEP_DECRYPTED_DATA_LENGTH)
+#define PRIVATE_KEY_LENGTH              (1190)
+#define PUBLIC_KEY_LENGTH               (294)
+
+extern unsigned char private_key[PRIVATE_KEY_LENGTH];
+extern unsigned char public_key[PUBLIC_KEY_LENGTH];
+
+unsigned char in_buffer[IN_BUFFER_LENGTH];
+unsigned char encrypted_buffer[RSA_LENGTH];
+unsigned char decrypted_buffer[RSA_LENGTH];
+
 
 
 JNIEXPORT jdoubleArray JNICALL
@@ -380,6 +409,68 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
 JNIEXPORT jdoubleArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance) {
 
-    LOGD("RSA NOT DONE");
+    jdoubleArray result;
+    result = (*env)->NewDoubleArray(env,3);
+    jdouble fill[3];
 
+    RsaKey key;
+    RNG rng1;
+    word32 index;
+    int ret;
+    jdoubleArray error[1];
+    int encrypted_len;
+    int decrypted_len;
+
+
+    // encrypt data.
+    index = 0;
+    ret = wc_InitRng(&rng1);
+    if (ret != 0) { LOGD("Error at wc_InitRng: %i.", ret); return error[0]; }
+    ret = wc_InitRsaKey(&key, NULL);
+    if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return error[0]; }
+    ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
+    if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return error[0]; }
+    clock_t begin = clock();
+    ret = wc_RsaPublicEncrypt_ex((const byte *)in_buffer, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+    clock_t end = clock();
+
+    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    fill[0] = time_spent_encryption;
+    if (ret < 0) { LOGD("Error at wc_RsaPublicEncrypt_ex: %i.", ret); return error[0]; }
+    encrypted_len = ret;
+    LOGD("%i",encrypted_len);
+
+    LOGD("Finished encryption");
+
+    // decrypt data.
+    index = 0;
+    ret = wc_InitRsaKey(&key, NULL);
+    if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return error[0]; }
+    ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index, &key, PRIVATE_KEY_LENGTH);
+    clock_t begin1 = clock();
+    if (ret != 0) { LOGD("Error at wc_RsaPrivateKeyDecode: %i.", ret); return error[0]; }
+    ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+    clock_t end1 = clock();
+
+    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+    fill[1] = time_spent_decryption;
+    if (ret < 0) { LOGD("Error at wc_RsaPrivateDecrypt_ex: %i.", ret); return error[0]; }
+    decrypted_len = ret;
+    wc_FreeRsaKey(&key);
+
+    // compare data.
+    if (decrypted_len != IN_BUFFER_LENGTH) { LOGD("Decrypted length should be %i but it is %i.", IN_BUFFER_LENGTH, decrypted_len); return error[0]; }
+    for (int i = 0; i < IN_BUFFER_LENGTH; i++)
+    {
+        if (decrypted_buffer[i] != in_buffer[i]) { LOGD("Byte at index %i should be %i but it is %i.", i, 0xFF & in_buffer[i], 0xFF & decrypted_buffer[i]); return error[0]; }
+    }
+
+    // got here means no error.
+    LOGD("All went O.K.");
+
+    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+
+    return result;
 }

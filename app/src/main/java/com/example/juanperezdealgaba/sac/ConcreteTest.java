@@ -493,7 +493,17 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/RSA***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    test.RSA();
+                    double[] timesRSA = test.RSA();
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    textview.append("\n");
                     algo_repet += 1;
                 }
 
