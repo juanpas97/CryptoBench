@@ -31,7 +31,7 @@ public class SuperTestActivity extends AppCompatActivity {
 
             String path = storage.getExternalStorageDirectory();
 
-            final String newDir = path + File.separator + "Encryptapp";
+            final String newDir = path + File.separator + "CryptoBench";
 
             final File report = new File(newDir, "Report.txt");
             report.mkdirs();

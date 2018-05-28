@@ -639,9 +639,11 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     try {
                         sender.sendMail("Report",
                                 "Special Test",
-                                "encryptapp.report@gmail.com",
+                                "encr" +
+                                        "yptapp.report@gmail.com",
                                 "encryptapp.report@gmail.com",
                                 report);
+                        System.out.println("E-mail sent");
                     } catch (Exception e) {
                         Log.e("SendMail", e.getMessage(), e);
                     }

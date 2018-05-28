@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EncryptApp</string>
+    <string name="app_name">CryptoBench</string>
     <string name="Accept">Accept</string>
     <string name="Cancel">Cancel</string>
     <string name="TestFinished">Test finished</string>
