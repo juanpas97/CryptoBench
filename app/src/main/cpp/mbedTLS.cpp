@@ -354,6 +354,9 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
     uint8_t enc_out[64];
     memset(enc_out, 0, sizeof(enc_out));
 
+    uint8_t plain_out[64];
+    memset(plain_out, 0, sizeof(plain_out));
+
     mbedtls_aes_context aes;
     mbedtls_aes_init(&aes);
     mbedtls_aes_setkey_enc( &aes, key, 128);
@@ -366,10 +369,21 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
     if (ret == 0){
-        LOGD("Success");
+        LOGD("Success encrypting");
     }
 
     fill[0] = encryption_time;
+
+    gettimeofday(&st,NULL);
+    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, ctr, stream_block, enc_out, plain_out);
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    if (ret == 0){
+        LOGD("Success decrypting");
+    }
+
+    fill[1] = decryption_time;
 
 
     mbedtls_aes_free(&aes);

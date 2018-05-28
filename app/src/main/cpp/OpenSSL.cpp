@@ -164,7 +164,7 @@ void print_data(const char *tittle, const void* data, int len);
 
 extern "C"
 JNIEXPORT jdoubleArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AES(JNIEnv *env, jobject instance, jint size) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject instance, jint size) {
 
     jdoubleArray result;
     result = env->NewDoubleArray(size);

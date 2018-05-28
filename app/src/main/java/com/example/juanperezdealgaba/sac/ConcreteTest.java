@@ -321,14 +321,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********************************\n");
             }
 
-            if (library.equals("OpenSSL") && algo.equals("AES")) {
-                System.out.println("***********OpenSSL/AES**************");
-                writer.write("**********OpenSSL/AES***************\n");
-                textview.append("**********OpenSSL/AES************\n");
+            if (library.equals("OpenSSL") && algo.equals("AES-CBC")) {
+                System.out.println("***********OpenSSL/AES-CBC**************");
+                writer.write("**********OpenSSL/AES-CBC***************\n");
+                textview.append("**********OpenSSL/AES-CBC************\n");
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    double[] timesAES = test.AES(3);
+                    double[] timesAES = test.AESCBC(3);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");

@@ -9,7 +9,7 @@ public class OpenSSL {
 
     public native double[] RSA(int size);
 
-    public native double[] AES(int size);
+    public native double[] AESCBC(int size);
 
     public native double[] DH();
 
