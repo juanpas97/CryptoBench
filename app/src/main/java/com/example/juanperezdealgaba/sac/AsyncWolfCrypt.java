@@ -45,12 +45,54 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
 
             WolfCrypt test = new WolfCrypt();
 
-            System.out.println("***********AES**************");
-            writer.write("**********AES***************\n");
-            text.append("**********AES************\n");
+            System.out.println("***********AES-CBC**************");
+            writer.write("**********AES-CBC***************\n");
+            text.append("**********AES-CBC************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                double[] timesAES = test.AES();
+                int[] timesAES = test.AESCBC();
+
+                System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                text.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                text.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                text.append("\n");
+            }
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
+            System.out.println("***********AES-CTR**************");
+            writer.write("**********AES-CTR***************\n");
+            text.append("**********AES-CTR************\n");
+
+            for(int i = 0; i < repetitions; i++) {
+                int[] timesAES = test.AESCTR();
+
+                System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                text.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("\n");
+            }
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
+            System.out.println("***********AES-GCM**************");
+            writer.write("**********AES-GCM***************\n");
+            text.append("**********AES-GCM************\n");
+
+            for(int i = 0; i < repetitions; i++) {
+                int[] timesAES = test.AESGCM();
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");

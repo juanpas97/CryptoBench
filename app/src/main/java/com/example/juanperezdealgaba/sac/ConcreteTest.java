@@ -429,14 +429,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             }
 
-            if (library.equals("mbedTLS") && algo.equals("AES")) {
+            if (library.equals("mbedTLS") && algo.equals("AES-CBC")) {
                 System.out.println("***********mbedTLS/AES**************");
                 writer.write("**********mbedTLS/AES***************\n");
                 textview.append("**********mbedTLS/AES************\n");
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    double[] timesAES = test.AES();
+                    double[] timesAES = test.AESCBC();
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -458,6 +458,36 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("********************************\n");
                 textview.append("**********************************\n");
             }
+            if (library.equals("mbedTLS") && algo.equals("AES-CTR")) {
+                System.out.println("***********mbedTLS/AES**************");
+                writer.write("**********mbedTLS/AES***************\n");
+                textview.append("**********mbedTLS/AES************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    mbedTLS test = new mbedTLS();
+                    int[] timesAES = test.AESCTR();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
             if (library.equals("mbedTLS") && algo.equals("MD5")) {
                 System.out.println("***********mbedTLS/MD5**************");
                 writer.write("**********mbedTLS/MD5***************\n");
@@ -516,14 +546,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("********************************\n");
             }
 
-            if (library.equals("WolfCrypt") && algo.equals("AES")) {
+            if (library.equals("WolfCrypt") && algo.equals("AES-CBC")) {
                 System.out.println("************WolfCrypt/AES-CBC**************");
                 textview.append("\n************WolfCrypt/AES-CBC***************\n");
                 writer.write("\n************WolfCrypt/AES-CBC***************\n");
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    double[] timesAES = test.AES();
+                    int[] timesAES = test.AESCBC();
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -545,6 +575,67 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("********************************\n");
                 textview.append("********************************\n");
             }
+
+            if (library.equals("WolfCrypt") && algo.equals("AES-GCM")) {
+                System.out.println("************WolfCrypt/AES-GCM**************");
+                textview.append("\n************WolfCrypt/AES-GCM***************\n");
+                writer.write("\n************WolfCrypt/AES-GCM***************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    WolfCrypt test = new WolfCrypt();
+                    int[] timesAES = test.AESGCM();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
+            if (library.equals("WolfCrypt") && algo.equals("AES-CTR")) {
+                System.out.println("************WolfCrypt/AES-CTR**************");
+                textview.append("\n************WolfCrypt/AES-CTR***************\n");
+                writer.write("\n************WolfCrypt/AES-CTR***************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    WolfCrypt test = new WolfCrypt();
+                    int[] timesAES = test.AESCTR();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
             if (library.equals("WolfCrypt") && algo.equals("MD5")) {
                 System.out.println("************WolfCrypt/MD5**************");
                 textview.append("\n************WolfCrypt/MD5***************\n");

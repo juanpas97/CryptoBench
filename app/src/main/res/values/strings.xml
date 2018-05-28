@@ -22,7 +22,9 @@
         <item>Algorithms</item>
         <item>RSA</item>
         <item>MD5</item>
-        <item>AES</item>
+        <item>AES-CBC</item>
+        <item>AES-GCM</item>
+        <item>AES-CTR</item>
         <item>DH</item>
     </string-array>
 </resources>

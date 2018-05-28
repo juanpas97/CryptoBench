@@ -193,14 +193,16 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
     return result;
 }
 
-JNIEXPORT jdoubleArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instance) {
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = (*env)->NewDoubleArray(env,3);
-    jdouble fill[3];
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
 
-    jdouble error[1];
+    jint error[1];
+
+    struct timeval st,et;
 
     Aes enc;
     byte cipher[AES_BLOCK_SIZE];
@@ -212,7 +214,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
 
     RNG  rng;
 
-    int  szkey = 32;
+    int  szkey = 16;
     byte key[szkey];
 
     int  sziv = 16;
@@ -244,7 +246,146 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
 
     LOGD("Begin of key");
 
-    for (int i = 0; i < 32 ; ++i) {
+    for (int i = 0; i < 16 ; ++i) {
+        LOGD("%x",key[i]);
+    }
+
+    LOGD("Begin of IV");
+
+    for (int i = 0; i < 16 ; ++i) {
+        LOGD("%x",iv[i]);
+    }
+
+    LOGD("Begin of msg");
+
+    for (int i = 0; i < 16 ; ++i) {
+        LOGD("%x",msg[i]);
+    }
+
+    if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
+        LOGD("Error in aes init enc");
+        return 0;
+    }else{
+        LOGD("No problem at init enc");
+    }
+
+    if (wc_AesInit(&dec, HEAP_HINT, devId) != 0){
+        LOGD("Error in aes init dec");
+        return 0;
+    }else{
+        LOGD("No problem at init dec");
+    }
+
+    ret = wc_AesSetKey(&enc, key, (int) sizeof(key), iv, AES_ENCRYPTION);
+    if (ret != 0){
+        LOGD("Error in AesSetKey Enc");
+    }else{
+        LOGD("No problem at AesSetKey Enc");
+    }
+
+    ret = wc_AesSetKey(&dec, key, (int) sizeof(key), iv, AES_DECRYPTION);
+    if (ret != 0){
+        LOGD("Error in AesSetKey Dec");
+    }   else{
+        LOGD("No problem at AesSetKey Dec ");
+    }
+
+    gettimeofday(&st,NULL);
+    ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    if (ret != 0){
+        LOGD("Error encrypting");
+    }else{
+        LOGD("Encryption finished");
+    }
+
+    gettimeofday(&st,NULL);
+    ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
+    gettimeofday(&et,NULL);
+
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret != 0){
+        LOGD("Error Decrypting");
+    }else{
+        LOGD("Decryption finished");
+    }
+
+    if (XMEMCMP(plain, msg, (int) sizeof(plain))) {
+        LOGD("Error comparing XMEMCMP");
+    }
+
+    wc_AesFree(&enc);
+    wc_AesFree(&dec);
+
+    LOGD("Finished AES/CBC 256");
+
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+
+    return result;
+
+}
+
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
+
+    jdouble error[1];
+
+    Aes enc;
+    byte cipher[AES_BLOCK_SIZE];
+
+    Aes dec;
+    byte plain[AES_BLOCK_SIZE];
+
+    int ret = 0;
+
+    struct timeval st, et;
+
+    RNG  rng;
+
+    int  szkey = 16;
+    byte key[szkey];
+
+    int  sziv = 16;
+    byte iv[sziv];
+
+    int szmsg = 16;
+    byte msg[szmsg];
+
+    int retrng = wc_InitRng(&rng);
+    if (retrng != 0) {
+        LOGD("Error at RNG"); //init of rng failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, key, sizeof(key));
+    if (ret != 0) {
+        LOGD("Error generating block at key"); //generating block failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, iv, sizeof(iv));
+    if (ret != 0) {
+        LOGD("Error generating block at iv"); //generating block failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, msg, sizeof(msg));
+    if (ret != 0) {
+        LOGD("Error generating block at msg"); //generating block failed!
+    }
+
+
+    LOGD("Begin of key");
+
+    for (int i = 0; i < 16 ; ++i) {
         LOGD("%x",key[i]);
     }
 
@@ -288,30 +429,22 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
         LOGD("No problem at AesSetKey Dec ");
     }
 
-    clock_t begin = clock();
-    ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
-    clock_t end = clock();
-    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    fill[0] = time_spent_encryption;
-    if (ret != 0){
-        LOGD("Error encrypting");
-    }else{
-        LOGD("Encryption finished");
-    }
+    gettimeofday(&st,NULL);
+    wc_AesCtrEncrypt(&enc, cipher, msg, (int) sizeof(msg));
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    clock_t begin1 = clock();
-    ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
-    clock_t end1 = clock();
+    fill[0] = encryption_time;
 
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    gettimeofday(&st,NULL);
+    wc_AesCtrEncrypt(&dec, plain, cipher, (int) sizeof(cipher));
+    gettimeofday(&et,NULL);
 
-    fill[1] = time_spent_decryption;
-    if(ret != 0){
-        LOGD("Error Decrypting");
-    }else{
-        LOGD("Decryption finished");
-    }
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
 
     if (XMEMCMP(plain, msg, (int) sizeof(plain))) {
         LOGD("Error comparing XMEMCMP");
@@ -320,9 +453,9 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AES(JNIEnv *env, jobject instan
     wc_AesFree(&enc);
     wc_AesFree(&dec);
 
-    LOGD("Finished AES/CBC 256");
+    LOGD("Finished AES/CTR");
 
-    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 
     return result;
 
@@ -473,4 +606,169 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
 
     return result;
+}
+
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject instance) {
+
+    LOGD("Starting AESGCM");
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
+
+    byte large_output[1024];
+
+    jint error[1];
+
+    struct timeval st,et;
+
+    Aes enc;
+    byte cipher[AES_BLOCK_SIZE];
+
+    Aes dec;
+    byte plain[AES_BLOCK_SIZE];
+
+    int ret = 0;
+
+    RNG  rng;
+
+    int  szkey = 16;
+    byte key[szkey];
+
+    int  sziv = 16;
+    byte iv[sziv];
+
+    int szmsg = 16;
+    byte msg[szmsg];
+
+    const byte p[] =
+            {
+                    0xd9, 0x31, 0x32, 0x25, 0xf8, 0x84, 0x06, 0xe5,
+                    0xa5, 0x59, 0x09, 0xc5, 0xaf, 0xf5, 0x26, 0x9a,
+                    0x86, 0xa7, 0xa9, 0x53, 0x15, 0x34, 0xf7, 0xda,
+                    0x2e, 0x4c, 0x30, 0x3d, 0x8a, 0x31, 0x8a, 0x72,
+                    0x1c, 0x3c, 0x0c, 0x95, 0x95, 0x68, 0x09, 0x53,
+                    0x2f, 0xcf, 0x0e, 0x24, 0x49, 0xa6, 0xb5, 0x25,
+                    0xb1, 0x6a, 0xed, 0xf5, 0xaa, 0x0d, 0xe6, 0x57,
+                    0xba, 0x63, 0x7b, 0x39
+            };
+
+    byte resultP[sizeof(p)];
+
+    const byte t1[] =
+            {
+                    0x76, 0xfc, 0x6e, 0xce, 0x0f, 0x4e, 0x17, 0x68,
+                    0xcd, 0xdf, 0x88, 0x53, 0xbb, 0x2d, 0x55, 0x1b
+            };
+
+    byte resultT[sizeof(t1)];
+
+    const byte a[] =
+            {
+                    0xfe, 0xed, 0xfa, 0xce, 0xde, 0xad, 0xbe, 0xef,
+                    0xfe, 0xed, 0xfa, 0xce, 0xde, 0xad, 0xbe, 0xef,
+                    0xab, 0xad, 0xda, 0xd2
+            };
+
+    int retrng = wc_InitRng(&rng);
+    if (retrng != 0) {
+        LOGD("Error at RNG"); //init of rng failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, key, sizeof(key));
+    if (ret != 0) {
+        LOGD("Error generating block at key"); //generating block failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, iv, sizeof(iv));
+    if (ret != 0) {
+        LOGD("Error generating block at iv"); //generating block failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, msg, sizeof(msg));
+    if (ret != 0) {
+        LOGD("Error generating block at msg"); //generating block failed!
+    }
+
+
+    LOGD("Begin of key");
+
+    for (int i = 0; i < 16 ; ++i) {
+        LOGD("%x",key[i]);
+    }
+
+    LOGD("Begin of IV");
+
+    for (int i = 0; i < 16 ; ++i) {
+        LOGD("%x",iv[i]);
+    }
+
+    XMEMSET(resultP, 0, sizeof(resultP));
+
+    if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
+        LOGD("Error in aes init enc");
+        return 0;
+    }else{
+        LOGD("No problem at init enc");
+    }
+
+    if (wc_AesInit(&dec, HEAP_HINT, devId) != 0){
+        LOGD("Error in aes init dec");
+        return 0;
+    }else{
+        LOGD("No problem at init dec");
+    }
+
+    ret = wc_AesGcmSetKey(&enc, key, (int) sizeof(key));
+    if (ret != 0){
+        LOGD("Error in AesSetKey Enc");
+    }else{
+        LOGD("No problem at AesSetKey Enc");
+    }
+
+    ret = wc_AesSetKey(&dec, key, (int) sizeof(key), iv, AES_DECRYPTION);
+    if (ret != 0){
+        LOGD("Error in AesSetKey Dec");
+    }   else{
+        LOGD("No problem at AesSetKey Dec ");
+    }
+
+    gettimeofday(&st,NULL);
+    ret = wc_AesGcmEncrypt(&enc, cipher, msg, (int) sizeof(msg),iv, sizeof(iv),resultT, sizeof(resultT),a,
+                           sizeof(a));
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    if (ret != 0){
+        LOGD("Error encrypting");
+    }else{
+        LOGD("Encryption finished");
+    }
+
+    gettimeofday(&st,NULL);
+    ret = wc_AesGcmDecrypt(&enc, resultP, cipher, (int) sizeof(cipher),iv, sizeof(iv),resultT, sizeof(resultT),a,
+                           sizeof(a));
+    gettimeofday(&et,NULL);
+
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret != 0){
+        LOGD("Error Decrypting");
+    }else{
+        LOGD("Decryption finished");
+    }
+
+    wc_AesFree(&enc);
+    wc_AesFree(&dec);
+
+    LOGD("Finished AES/GCM");
+
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+
+    return result;
+
 }

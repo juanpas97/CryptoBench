@@ -8,9 +8,11 @@ public class mbedTLS {
 
     public native double[] RSA();
 
-    public native double[] AES();
+    public native double[] AESCBC();
 
     public native double[] MD5();
 
     public native double[] DH();
+
+    public native int[] AESCTR();
 }
