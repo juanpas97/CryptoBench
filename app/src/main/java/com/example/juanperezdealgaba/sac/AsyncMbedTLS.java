@@ -50,7 +50,7 @@ public class AsyncMbedTLS extends AsyncTask<MbedTLSParamsTest,Void,String> {
             text.append("**********AES************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                double[] timesAES = test.AESCBC();
+                int[] timesAES = test.AESCBC();
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");

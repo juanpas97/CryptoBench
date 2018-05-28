@@ -162,12 +162,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
 
     const uint8_t Plaintext[64] =
             {
@@ -207,7 +207,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
                     0xd9, 0x20, 0xa9, 0xe6, 0x4f, 0x56, 0x15, 0xcd,
             };
 
-
+    struct timeval st,et;
     uint8_t OutputMessage[64];
     uint8_t compare[64];
     uint32_t i=0,status = 0;
@@ -225,13 +225,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
         LOGD("\n mbedtls Encrypt set key failed");
     }
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_ENCRYPT, 64, iv, Plaintext, OutputMessage );
-    clock_t end = clock();
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
-
-    fill[0] = time_spent_encryption;
+    fill[0] = encryption_time;
     if(status != 0)
     {
         LOGD("\n mbedtls encryption failed");
@@ -251,13 +250,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
         LOGD("\n mbedtls decryption set key failed");
     }
 
-    clock_t begin1 = clock();
+    gettimeofday(&st,NULL);
     status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_DECRYPT, 64, iv2, OutputMessage,compare);
-    clock_t end1 = clock();
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
-
-    fill[1] = time_spent_decryption;
+    fill[1] = decryption_time;
     if(status != 0)
     {
         LOGD("\n mbedtls encryption failed");
@@ -270,7 +268,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
     }
     mbedtls_aes_free( &ctx );
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
     return result;
 }
 
