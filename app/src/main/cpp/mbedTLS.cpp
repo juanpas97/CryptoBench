@@ -182,12 +182,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
             };
 
 
-    uint8_t key[32] =
+    uint8_t key[16] =
             {
                     0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52,
                     0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
-                    0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b,
-                    0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b,
             };
 
     uint8_t iv[16] =
@@ -221,7 +219,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
 
     mbedtls_aes_context ctx;
     mbedtls_aes_init( &ctx );
-    status = mbedtls_aes_setkey_enc( &ctx, key, 256 );
+    status = mbedtls_aes_setkey_enc( &ctx, key, 128 );
     if(status != 0)
     {
         LOGD("\n mbedtls Encrypt set key failed");
@@ -247,7 +245,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
             };
 
     mbedtls_aes_init( &ctx );
-    status = mbedtls_aes_setkey_dec(&ctx, key, 256);
+    status = mbedtls_aes_setkey_dec(&ctx, key, 128);
     if(status != 0)
     {
         LOGD("\n mbedtls decryption set key failed");

@@ -465,6 +465,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
+
                     int[] timesAES = test.AESCTR();
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
