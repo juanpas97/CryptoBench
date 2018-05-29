@@ -528,3 +528,91 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
     return result;
 
 }
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    EVP_CIPHER_CTX *ctx;
+    int len;
+
+    int ciphertext_len;
+    int plaintext_len;
+
+    struct timeval st,et;
+    unsigned char aes_key[16], iv[16];
+
+    if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error creating CTX");
+
+    RAND_bytes(aes_key, sizeof(aes_key));
+    RAND_bytes(iv, sizeof(iv));
+
+    /* Input data to encrypt */
+    unsigned char aes_input[32];
+    RAND_bytes(aes_input, sizeof(aes_input));
+
+    /* Init vector */
+    //unsigned char iv[AES_BLOCK_SIZE];
+    memset(iv, 0x00, AES_BLOCK_SIZE);
+
+    /* Buffers for Encryption and Decryption */
+    unsigned char enc_out[sizeof(aes_input)];
+    unsigned char dec_out[sizeof(aes_input)];
+
+    /* AES-128 bit CBC Encryption */
+    AES_KEY enc_key, dec_key;
+
+
+    AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
+
+    gettimeofday(&st,NULL);
+
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_ofb(), NULL, aes_key, iv))
+        LOGD("Error encrypting");
+    if(1 != EVP_EncryptUpdate(ctx, enc_out, &len, aes_input, sizeof(aes_input))) {
+        LOGD("Error updating encryption");
+    }
+    ciphertext_len = len;
+
+    if(1 != EVP_EncryptFinal_ex(ctx, enc_out + len, &len)) LOGD("Error encrypt final");
+    ciphertext_len += len;
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+
+    //memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
+    gettimeofday(&st,NULL);
+    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_128_ofb(), NULL, aes_key, iv))
+        LOGD("Error statr decrypting");
+
+    if(1 != EVP_DecryptUpdate(ctx, dec_out, &len, enc_out, ciphertext_len))
+        LOGD("Error updating Decryption");
+    plaintext_len = len;
+
+    if(1 != EVP_DecryptFinal_ex(ctx, dec_out + len, &len))LOGD("Error final");
+    plaintext_len += len;
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    /* Printing and Verifying */
+    print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
+
+    print_data("\n Encrypted",enc_out, sizeof(enc_out));
+
+    print_data("\n Decrypted",dec_out, sizeof(dec_out));
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}

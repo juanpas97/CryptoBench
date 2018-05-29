@@ -111,6 +111,28 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             writer.write("********************************\n");
             text.append("**********************************\n");
 
+            System.out.println("***********AES-OFB**************");
+            writer.write("**********AES-OFB***************\n");
+            text.append("**********AES-OFB************\n");
+
+            for(int i = 0; i < repetitions; i++) {
+                int[] timesAES = test.AESOFB();
+
+                System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                text.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                text.append("\n");
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+            text.append("**********************************\n");
+
 
             System.out.println("***********RSA**************");
             writer.write("**********RSA***************\n");

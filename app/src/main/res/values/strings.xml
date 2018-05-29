@@ -25,6 +25,7 @@
         <item>AES-CBC</item>
         <item>AES-GCM</item>
         <item>AES-CTR</item>
+        <item>AES-OFB</item>
         <item>DH</item>
     </string-array>
 </resources>

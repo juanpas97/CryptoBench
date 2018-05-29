@@ -330,14 +330,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     OpenSSL test = new OpenSSL();
                     int[] timesAES = test.AESCBC(3);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -360,14 +360,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     OpenSSL test = new OpenSSL();
                     int[] timesAES = test.AESCTR();
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -390,14 +390,44 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     OpenSSL test = new OpenSSL();
                     int[] timesAES = test.AESGCM();
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
+            if (library.equals("OpenSSL") && algo.equals("AES-OFB")) {
+                System.out.println("***********OpenSSL/AES-OFB**************");
+                writer.write("**********OpenSSL/AES-OFB***************\n");
+                textview.append("**********OpenSSL/AES-OFB************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    OpenSSL test = new OpenSSL();
+                    int[] timesAES = test.AESGCM();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }

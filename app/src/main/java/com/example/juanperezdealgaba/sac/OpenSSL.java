@@ -19,6 +19,8 @@ public class OpenSSL {
 
     public native int[] AESGCM();
 
+    public native int[] AESOFB();
+
 }
 
 
