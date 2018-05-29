@@ -9,12 +9,15 @@ public class OpenSSL {
 
     public native double[] RSA(int size);
 
-    public native double[] AESCBC(int size);
+    public native int[] AESCBC(int size);
 
     public native double[] DH();
 
     public native double[] MD5();
 
+    public native int[] AESCTR();
+
+    public native int[] AESGCM();
 
 }
 

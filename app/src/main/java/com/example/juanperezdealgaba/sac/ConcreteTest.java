@@ -328,7 +328,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    double[] timesAES = test.AESCBC(3);
+                    int[] timesAES = test.AESCBC(3);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -350,6 +350,67 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("********************************\n");
                 textview.append("**********************************\n");
             }
+
+            if (library.equals("OpenSSL") && algo.equals("AES-CTR")) {
+                System.out.println("***********OpenSSL/AES-CTR**************");
+                writer.write("**********OpenSSL/AES-CTR***************\n");
+                textview.append("**********OpenSSL/AES-CTR************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    OpenSSL test = new OpenSSL();
+                    int[] timesAES = test.AESCTR();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
+            if (library.equals("OpenSSL") && algo.equals("AES-GCM")) {
+                System.out.println("***********OpenSSL/AES-GCM**************");
+                writer.write("**********OpenSSL/AES-GCM***************\n");
+                textview.append("**********OpenSSL/AES-GCM************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    OpenSSL test = new OpenSSL();
+                    int[] timesAES = test.AESGCM();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
             if (library.equals("OpenSSL") && algo.equals("MD5")) {
                 System.out.println("***********OpenSSL/MD5**************");
                 writer.write("**********OpenSSL/MD5***************\n");
