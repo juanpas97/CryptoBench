@@ -151,12 +151,14 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 void print_data(const char *tittle, const void* data, int len);
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instance) {
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
 
     unsigned char aes_key[16], iv[16];
 
@@ -178,24 +180,25 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instan
     /* AES-128 bit CBC Encryption */
     AES_KEY enc_key, dec_key;
     AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
-    clock_t begin = clock();
+
+    gettimeofday(&st,NULL);
     AES_cbc_encrypt(aes_input, enc_out, sizeof(aes_input), &enc_key, iv, AES_ENCRYPT);
 
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    fill[0] = time_spent;
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = encryption_time;
 
     /* AES-128 bit CBC Decryption */
     memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
 
     AES_set_decrypt_key(aes_key, sizeof(aes_key)*8, &dec_key); // Size of key is in bits
-    clock_t begin1 = clock();
+    gettimeofday(&st,NULL);
     AES_cbc_encrypt(enc_out, dec_out, sizeof(aes_input), &dec_key, iv, AES_DECRYPT);
-    clock_t end1 = clock();
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
-
-    fill[1] = time_spent_decryption;
+    fill[1] = decryption_time;
 
     /* Printing and Verifying */
     print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
@@ -204,7 +207,211 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AES(JNIEnv *env, jobject instan
 
     print_data("\n Decrypted",dec_out, sizeof(dec_out));
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    EVP_CIPHER_CTX *ctx;
+    int len;
+
+    int ciphertext_len;
+    int plaintext_len;
+
+    struct timeval st,et;
+    unsigned char aes_key[16], iv[16];
+
+    if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error creating CTX");
+
+    RAND_bytes(aes_key, sizeof(aes_key));
+    RAND_bytes(iv, sizeof(iv));
+
+    /* Input data to encrypt */
+    unsigned char aes_input[32];
+    RAND_bytes(aes_input, sizeof(aes_input));
+
+    /* Init vector */
+    //unsigned char iv[AES_BLOCK_SIZE];
+    memset(iv, 0x00, AES_BLOCK_SIZE);
+
+    /* Buffers for Encryption and Decryption */
+    unsigned char enc_out[sizeof(aes_input)];
+    unsigned char dec_out[sizeof(aes_input)];
+
+    /* AES-128 bit CBC Encryption */
+    AES_KEY enc_key, dec_key;
+
+
+    AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
+
+    gettimeofday(&st,NULL);
+
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_ctr(), NULL, aes_key, iv))
+        LOGD("Error encrypting");
+    if(1 != EVP_EncryptUpdate(ctx, enc_out, &len, aes_input, sizeof(aes_input))) {
+        LOGD("Error updating encryption");
+    }
+    ciphertext_len = len;
+
+    if(1 != EVP_EncryptFinal_ex(ctx, enc_out + len, &len)) LOGD("Error encrypt final");
+    ciphertext_len += len;
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    EVP_CIPHER_CTX_set_padding(ctx, 0);
+    //memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
+    gettimeofday(&st,NULL);
+    if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_128_ctr(), NULL, aes_key, iv))
+        LOGD("Error statr decrypting");
+
+    if(1 != EVP_DecryptUpdate(ctx, dec_out, &len, enc_out, ciphertext_len))
+        LOGD("Error updating Decryption");
+    plaintext_len = len;
+
+    if(1 != EVP_DecryptFinal_ex(ctx, dec_out + len, &len))LOGD("Error final");
+    plaintext_len += len;
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    /* Printing and Verifying */
+    print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
+
+    print_data("\n Encrypted",enc_out, sizeof(enc_out));
+
+    print_data("\n Decrypted",dec_out, sizeof(dec_out));
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    EVP_CIPHER_CTX *ctx;
+
+    unsigned char aes_key[16], iv[16];
+    RAND_bytes(aes_key, sizeof(aes_key));
+    RAND_bytes(iv, sizeof(iv));
+
+    unsigned char plaintext[32];
+    RAND_bytes(plaintext, sizeof(plaintext));
+
+    unsigned char ciphertext[32];
+    unsigned char tag[16];
+
+    unsigned char decrypted[32];
+
+    int len;
+
+    int ciphertext_len;
+
+    struct timeval st,et;
+
+    /* Create and initialise the context */
+    if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error at ctx new");
+
+    /* Initialise the encryption operation. */
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL))
+        LOGD("Error at encryptInit");
+
+    /* Set IV length if default 12 bytes (96 bits) is not appropriate */
+    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
+        LOGD("Error at CTX Ctrl Encrypt");
+
+    /* Initialise key and IV */
+    if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, aes_key, iv)) LOGD("Error initializasing");
+
+    gettimeofday(&st,NULL);
+
+    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
+        LOGD("Error at encrypt updated");
+    ciphertext_len = len;
+
+    /* Finalise the encryption. Normally ciphertext bytes may be written at
+     * this stage, but this does not occur in GCM mode
+     */
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
+
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    ciphertext_len += len;
+
+    /* Get the tag */
+    if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
+        LOGD("Error getting tag");
+
+    LOGD("Finished encryption");
+
+    EVP_CIPHER_CTX *ctx_dec;
+    int len_dec;
+    int plaintext_len_dec;
+    int ret_dec;
+
+    if(!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
+
+    /* Initialise the decryption operation. */
+    if(!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_gcm(), NULL, NULL, NULL))
+        LOGD("Error at DecryptaInit");
+
+    if(!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
+        LOGD("Error at CTX control");
+
+    LOGD("We are good");
+
+    /* Initialise key and IV */
+    if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
+
+    gettimeofday(&st,NULL);
+    if(!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
+        LOGD("Error decryptupdate");
+    plaintext_len_dec = len_dec;
+
+    if(!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_TAG, 16, tag))
+        LOGD("Error at ctrl tag");
+
+    int ret = EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret > 0)
+    {
+        /* Success */
+        LOGD("Success");
+    }
+    else
+    {
+        /* Verify failed */
+        LOGD("FAIL");
+    }
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 
@@ -335,4 +542,98 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
     env->SetDoubleArrayRegion(result, 0, 3, fill);
 
     return result;
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    EVP_CIPHER_CTX *ctx;
+    unsigned char aes_key[16], iv[16];
+    RAND_bytes(aes_key, sizeof(aes_key));
+    RAND_bytes(iv, sizeof(iv));
+
+    unsigned char plaintext[32];
+    RAND_bytes(plaintext, sizeof(plaintext));
+
+    unsigned char ciphertext[32];
+
+    unsigned char decrypted[32];
+
+    int len;
+
+    int ciphertext_len;
+
+    struct timeval st,et;
+
+    /* Create and initialise the context */
+    if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error at ctx new");
+
+    /* Initialise the encryption operation. */
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_ofb(), NULL, aes_key, iv))
+        LOGD("Error at encryptInit");
+
+
+    gettimeofday(&st,NULL);
+
+    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
+        LOGD("Error at encrypt updated");
+    ciphertext_len = len;
+
+    /* Finalise the encryption. Normally ciphertext bytes may be written at
+     * this stage, but this does not occur in GCM mode
+     */
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
+
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    ciphertext_len += len;
+
+    LOGD("Finished encryption");
+
+    EVP_CIPHER_CTX *ctx_dec;
+    int len_dec;
+    int plaintext_len_dec;
+    int ret_dec;
+
+    if(!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
+
+    /* Initialise the decryption operation. */
+    LOGD("We are good");
+
+    /* Initialise key and IV */
+    if(!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv)) LOGD("Error at decryptinit");
+
+    gettimeofday(&st,NULL);
+    if(!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
+        LOGD("Error decryptupdate");
+    plaintext_len_dec = len_dec;
+
+
+    int ret = EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret > 0)
+    {
+        LOGD("Success");
+    }
+    else
+    {
+        LOGD("FAIL");
+    }
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
 }

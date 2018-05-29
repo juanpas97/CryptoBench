@@ -209,25 +209,25 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********************************\n");
             }
 
-            if (library.equals("BoringSSL") && algo.equals("AES")) {
-                System.out.println("***********BoringSSL/AES**************");
-                writer.write("**********BoringSSL/AES***************\n");
-                textview.append("**********BoringSSL/AES************\n");
+            if (library.equals("BoringSSL") && algo.equals("AES-CBC")) {
+                System.out.println("***********BoringSSL/AES-CBC**************");
+                writer.write("**********BoringSSL/AES-CBC***************\n");
+                textview.append("**********BoringSSL/AES-CBC************\n");
 
 
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds){
                     BoringSSL test = new BoringSSL();
-                    double[] timesAES = test.AES();
+                    int[] timesAES = test.AESCBC();
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -240,6 +240,103 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("********************************\n");
                 textview.append("**********************************\n");
             }
+
+            if (library.equals("BoringSSL") && algo.equals("AES-CTR")) {
+                System.out.println("***********BoringSSL/AES-CTR**************");
+                writer.write("**********BoringSSL/AES-CTR***************\n");
+                textview.append("**********BoringSSL/AES-CTR************\n");
+
+
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds){
+                    BoringSSL test = new BoringSSL();
+                    int[] timesAES = test.AESCTR();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
+            if (library.equals("BoringSSL") && algo.equals("AES-GCM")) {
+                System.out.println("***********BoringSSL/AES-GCM**************");
+                writer.write("**********BoringSSL/AES-GCM***************\n");
+                textview.append("**********BoringSSL/AES-GCM************\n");
+
+
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds){
+                    BoringSSL test = new BoringSSL();
+                    int[] timesAES = test.AESGCM();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
+            if (library.equals("BoringSSL") && algo.equals("AES-OFB")) {
+                System.out.println("***********BoringSSL/AES-OFB**************");
+                writer.write("**********BoringSSL/AES-OFB***************\n");
+                textview.append("**********BoringSSL/AES-OFB************\n");
+
+
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds){
+                    BoringSSL test = new BoringSSL();
+                    int[] timesAES = test.AESOFB();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
             if (library.equals("BoringSSL") && algo.equals("MD5")) {
                 System.out.println("***********BoringSSL/MD5**************");
                 writer.write("**********BoringSSL/MD5***************\n");
