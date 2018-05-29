@@ -567,12 +567,84 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
     jint fill[3];
 
     EVP_CIPHER_CTX *ctx;
+    unsigned char aes_key[16], iv[16];
+    RAND_bytes(aes_key, sizeof(aes_key));
+    RAND_bytes(iv, sizeof(iv));
+
+    unsigned char plaintext[32];
+    RAND_bytes(plaintext, sizeof(plaintext));
+
+    unsigned char ciphertext[32];
+
+    unsigned char decrypted[32];
+
     int len;
 
     int ciphertext_len;
-    int plaintext_len;
+
+    struct timeval st,et;
+
+    /* Create and initialise the context */
+    if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error at ctx new");
+
+    /* Initialise the encryption operation. */
+    if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_ofb(), NULL, aes_key, iv))
+        LOGD("Error at encryptInit");
 
 
+    gettimeofday(&st,NULL);
+
+    if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
+        LOGD("Error at encrypt updated");
+    ciphertext_len = len;
+
+    /* Finalise the encryption. Normally ciphertext bytes may be written at
+     * this stage, but this does not occur in GCM mode
+     */
+    if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
+
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
+
+    ciphertext_len += len;
+
+    LOGD("Finished encryption");
+
+    EVP_CIPHER_CTX *ctx_dec;
+    int len_dec;
+    int plaintext_len_dec;
+    int ret_dec;
+
+    if(!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
+
+    /* Initialise the decryption operation. */
+    LOGD("We are good");
+
+    /* Initialise key and IV */
+    if(!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv)) LOGD("Error at decryptinit");
+
+    gettimeofday(&st,NULL);
+    if(!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
+        LOGD("Error decryptupdate");
+    plaintext_len_dec = len_dec;
+
+
+    int ret = EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret > 0)
+    {
+        LOGD("Success");
+    }
+    else
+    {
+        LOGD("FAIL");
+    }
 
     env->SetIntArrayRegion(result, 0, 3, fill);
 
