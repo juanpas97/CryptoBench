@@ -677,6 +677,37 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********************************\n");
             }
 
+            if (library.equals("mbedTLS") && algo.equals("AES-GCM")) {
+                System.out.println("***********mbedTLS/AES-GCM**************");
+                writer.write("**********mbedTLS/AES-GCM***************\n");
+                textview.append("**********mbedTLS/AES-GCM************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    mbedTLS test = new mbedTLS();
+
+                    int[] timesAES = test.AESGCM();
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesAES[0] + "ms\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesAES[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
             if (library.equals("mbedTLS") && algo.equals("MD5")) {
                 System.out.println("***********mbedTLS/MD5**************");
                 writer.write("**********mbedTLS/MD5***************\n");

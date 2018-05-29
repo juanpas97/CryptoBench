@@ -12,21 +12,14 @@
 #include "mbedtls/rsa.h"
 #include "mbedtls/md5.h"
 #include "mbedtls/dhm.h"
+#include "mbedtls/cipher.h"
+#include <mbedtls/gcm.h>
 
-#include <wolfssl/wolfcrypt/rsa.h>
-#include <wolfssl/wolfcrypt/error-crypt.h>
-#include <wolfssl/options.h>
-#include <wolfssl/wolfcrypt/logging.h>
-#include <wolfssl/wolfcrypt/md5.h>
-#include <wolfssl/wolfcrypt/dh.h>
-#include <wolfssl/wolfcrypt/aes.h>
 
 #include <time.h>
 
 #define HEAP_HINT NULL
 
-
-static int devId = INVALID_DEVID;
 
 
 #define BITS_TO_BYTES(b)                (b/8)
@@ -372,3 +365,79 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
     return result;
 }
 
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
+
+    unsigned char key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+    };
+
+    const unsigned char plaintext[64] = {
+            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
+
+    unsigned char encrypted[64];
+    unsigned char decrypted[64];
+
+    unsigned char tag[16];
+
+    mbedtls_gcm_context ctx;
+
+    mbedtls_gcm_init(&ctx);
+
+    int ret = mbedtls_gcm_setkey(&ctx,MBEDTLS_CIPHER_ID_AES,key, 128);
+    if(ret != 0){
+        LOGD("%i",ret);
+    }
+
+    gettimeofday(&st,NULL);
+
+    //I use the "high-level" interface as explained in this post : https://tls.mbed.org/discussions/generic/aes-gcm-authenticated-encryption-example
+
+   ret = mbedtls_gcm_crypt_and_tag(&ctx,MBEDTLS_GCM_ENCRYPT, sizeof(plaintext),iv, sizeof(iv),NULL,0,plaintext,encrypted,
+                              sizeof(tag),tag);
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[0]=encryption_time;
+    if(ret != 0){
+        LOGD("Error encrypting");
+        LOGD("%i",ret);
+    }
+
+    gettimeofday(&st,NULL);
+
+    ret=mbedtls_gcm_auth_decrypt(&ctx,sizeof(encrypted),iv, sizeof(iv),NULL,0,tag, sizeof(tag),encrypted,decrypted);
+
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1]=decryption_time;
+
+    if(ret != 0){
+        LOGD("Error decrypting");
+        LOGD("%i",ret);
+    }
+
+    LOGD("We are good");
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}

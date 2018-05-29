@@ -31,18 +31,6 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
 
-long diff_micro(struct timespec *start, struct timespec *end)
-{
-    /* us */
-    return ((end->tv_sec * (1000000)) + (end->tv_nsec / 1000)) -
-           ((start->tv_sec * 1000000) + (start->tv_nsec / 1000));
-}
-
-long timediff(clock_t t1, clock_t t2) {
-    long elapsed;
-    elapsed = ((double)t2 - t1) / CLOCKS_PER_SEC * 1000;
-    return elapsed;
-}
 
 extern "C"
 JNIEXPORT jdoubleArray JNICALL

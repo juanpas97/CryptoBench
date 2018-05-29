@@ -15,4 +15,7 @@ public class mbedTLS {
     public native double[] DH();
 
     public native int[] AESCTR();
+
+    public native int[] AESGCM();
+
 }
