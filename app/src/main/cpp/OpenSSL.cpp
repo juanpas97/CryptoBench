@@ -639,3 +639,81 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
     return result;
 
 }
+
+
+
+/*Elliptic Curve Diffie-Hellman function*/
+int EC_DH(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub)
+{
+    int secretLen;
+
+    secretLen = EC_GROUP_get_degree(EC_KEY_get0_group(key));
+    secretLen = (secretLen + 7) / 8;
+
+    *secret = static_cast<unsigned char *>(malloc(secretLen));
+    if (!(*secret))
+        LOGD("Failed to allocate memory for secret.\n");
+    secretLen = ECDH_compute_key(*secret, secretLen, pPub, key, NULL);
+
+    return secretLen;
+}
+
+/*Key generation function for throwaway keys.*/
+EC_KEY* gen_key(void)
+{
+    EC_KEY *key;
+
+    key = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
+    if (key == NULL)
+        LOGD("Failed to create lKey object.\n");
+
+    if (!EC_KEY_generate_key(key))
+        LOGD("Failed to generate EC key.\n");
+
+    return key;
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_ECDH(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
+
+    EC_KEY *lKey, *pKey;
+    int lSecretLen, pSecretLen;
+    unsigned char *lSecret, *pSecret;
+
+    lKey = gen_key();
+    pKey = gen_key();
+
+    gettimeofday(&st,NULL);
+    lSecretLen = EC_DH(&lSecret, lKey, EC_KEY_get0_public_key(pKey));
+    pSecretLen = EC_DH(&pSecret, pKey, EC_KEY_get0_public_key(lKey));
+    gettimeofday(&et,NULL);
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = generation_time;
+
+    if (lSecretLen != pSecretLen)
+        LOGD("SecretLen mismatch.\n");
+
+    if (memcmp(lSecret, pSecret, lSecretLen))
+        LOGD("Secrets don't match.\n");
+
+    free(lSecret);
+    free(pSecret);
+    EC_KEY_free(lKey);
+    EC_KEY_free(pKey);
+    CRYPTO_cleanup_all_ex_data();
+
+    LOGD("Elliptic Curve Diffie Hellman finished");
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}

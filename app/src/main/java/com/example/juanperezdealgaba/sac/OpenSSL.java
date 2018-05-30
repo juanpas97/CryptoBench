@@ -13,6 +13,8 @@ public class OpenSSL {
 
     public native double[] DH();
 
+    public native int[] ECDH();
+
     public native double[] MD5();
 
     public native int[] AESCTR();

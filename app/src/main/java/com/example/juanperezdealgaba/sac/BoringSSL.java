@@ -19,4 +19,6 @@ public class BoringSSL {
     public native int[] AESGCM();
 
     public native int[] AESOFB();
+
+    public native int[] ECDH();
 }

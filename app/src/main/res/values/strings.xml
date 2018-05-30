@@ -27,5 +27,6 @@
         <item>AES-CTR</item>
         <item>AES-OFB</item>
         <item>DH</item>
+        <item>ECDH</item>
     </string-array>
 </resources>

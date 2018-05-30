@@ -388,6 +388,33 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             }
 
+            if (library.equals("BoringSSL") && algo.equals("ECDH")) {
+                System.out.println("***********BoringSSL/ECDH**************");
+                writer.write("**********BoringSSL/ECDH***************\n");
+                textview.append("**********BoringSSL/ECDH************\n");
+
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    OpenSSL test = new OpenSSL();
+                    int[] testDH = test.ECDH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+
+            }
+
             if (library.equals("OpenSSL") && algo.equals("RSA")) {
                 System.out.println("***********OpenSSL/RSA**************");
                 writer.write("**********OpenSSL/RSA***************\n");
@@ -573,6 +600,30 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
+            if (library.equals("OpenSSL") && algo.equals("ECDH")) {
+                System.out.println("***********OpenSSL/DH**************");
+                writer.write("**********OpenSSL/DH***************\n");
+                textview.append("**********OpenSSL/DH************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    OpenSSL test = new OpenSSL();
+                    int[] testDH = test.ECDH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ms\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
