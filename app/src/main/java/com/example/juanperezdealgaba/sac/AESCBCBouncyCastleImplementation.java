@@ -42,7 +42,7 @@ import org.spongycastle.util.encoders.Hex;
         InvalidCipherTextException, IOException{
 
             SecureRandom random = new SecureRandom();
-            byte[] key = new byte[32];
+            byte[] key = new byte[16];
             random.nextBytes(key);
 
 

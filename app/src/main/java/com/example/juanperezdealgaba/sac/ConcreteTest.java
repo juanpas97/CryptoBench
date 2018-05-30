@@ -912,7 +912,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
 
-            if (library.equals("Bouncy Castle") && algo.equals("AES")) {
+            if (library.equals("Bouncy Castle") && algo.equals("AES-CBC")) {
                 AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
                 try {
                     test.AESCBC(writer, textview, resulttime);
@@ -920,6 +920,67 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     throw new RuntimeException(i);
                 }
             }
+
+            if (library.equals("Bouncy Castle") && algo.equals("AES-CTR")) {
+
+                System.out.println("************Bouncy Castle/AES-CTR**************");
+                textview.append("\n************Bouncy Castle/AES-CTR***************\n");
+                writer.write("\n************Bouncy Castle/AES-CTR***************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    AESCTR test = new AESCTR();
+                    try {
+                        test.testCTR();
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
+            if (library.equals("Bouncy Castle") && algo.equals("AES-GCM")) {
+
+                System.out.println("************Bouncy Castle/AES-GCM**************");
+                textview.append("\n************Bouncy Castle/AES-GCM***************\n");
+                writer.write("\n************Bouncy Castle/AES-GCM***************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    AESGCM test = new AESGCM();
+                    try {
+                        test.testGCM();
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
+            if (library.equals("Bouncy Castle") && algo.equals("AES-OFB")) {
+
+                System.out.println("************Bouncy Castle/AES-OFB**************");
+                textview.append("\n************Bouncy Castle/AES-OFB***************\n");
+                writer.write("\n************Bouncy Castle/AES-OFB***************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    AESOFB test = new AESOFB();
+                    try {
+                        test.testOFB();
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
+                }
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
 
             if (library.equals("Bouncy Castle") && algo.equals("MD5")) {
                 MD5Implementation test = new MD5Implementation();

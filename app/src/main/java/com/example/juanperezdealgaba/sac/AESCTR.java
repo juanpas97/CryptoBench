@@ -1,20 +1,31 @@
 package com.example.juanperezdealgaba.sac;
 
 import org.spongycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.util.encoders.DecoderException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.Security;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+//Using this example http://www.java2s.com/Code/Java/Security/BasicIOexamplewithCTRusingAES.htm
+
 public class AESCTR {
 
-        public static void main(String[] args) throws Exception {
+    public void testCTR() throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
             Security.addProvider(new BouncyCastleProvider());
             byte[] input = "example".getBytes();
             byte[] keyBytes = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
@@ -49,7 +60,10 @@ public class AESCTR {
             cOut.write(cipherText);
             cOut.close();
             System.out.println("plain : " + new String(bOut.toByteArray()));
+
+
         }
 
     }
+
 
