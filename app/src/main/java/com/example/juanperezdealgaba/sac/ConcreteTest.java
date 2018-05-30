@@ -783,6 +783,30 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********************************\n");
             }
 
+            if (library.equals("mbedTLS") && algo.equals("ECDH")) {
+                System.out.println("***********mbedTLS/ECDH**************");
+                writer.write("**********mbedTLS/ECDH***************\n");
+                textview.append("**********mbedTLS/ECDH************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    mbedTLS test = new mbedTLS();
+                    int[] testECDH = test.ECDH();
+                    System.out.println("Time to key agreement:" + testECDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + testECDH[1] + "ms\n");
+                    textview.append("Time to key agreement:" + testECDH[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
+            }
+
             if (library.equals("mbedTLS") && algo.equals("DH")) {
                 mbedTLS test = new mbedTLS();
                 test.DH();

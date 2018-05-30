@@ -14,6 +14,7 @@
 #include "mbedtls/dhm.h"
 #include "mbedtls/cipher.h"
 #include <mbedtls/gcm.h>
+#include "mbedtls/ecdh.h"
 
 
 #include <time.h>
@@ -433,6 +434,191 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
         LOGD("Error decrypting");
         LOGD("%i",ret);
     }
+
+    LOGD("We are good");
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
+
+}
+
+extern "C"
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instance) {
+
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
+
+    int ret;
+    mbedtls_ecdh_context ctx_cli, ctx_srv;
+    mbedtls_entropy_context entropy;
+    mbedtls_ctr_drbg_context ctr_drbg;
+    unsigned char cli_to_srv[32], srv_to_cli[32];
+    const char pers[] = "ecdh";
+
+    mbedtls_ecdh_init( &ctx_cli );
+    mbedtls_ecdh_init( &ctx_srv );
+    mbedtls_ctr_drbg_init( &ctr_drbg );
+
+    LOGD( "  . Seeding the random number generator..." );
+    fflush( stdout );
+
+    mbedtls_entropy_init( &entropy );
+    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
+                                       (const unsigned char *) pers,
+                                       sizeof pers ) ) != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+        return 0;
+    }
+
+    LOGD( " ok\n" );
+
+    /*
+     * Client: inialize context and generate keypair
+     */
+    LOGD( "  . Setting up client context..." );
+    fflush( stdout );
+
+    ret = mbedtls_ecp_group_load( &ctx_cli.grp, MBEDTLS_ECP_DP_CURVE25519 );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_ecp_group_load returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_ecdh_gen_public( &ctx_cli.grp, &ctx_cli.d, &ctx_cli.Q,
+                                   mbedtls_ctr_drbg_random, &ctr_drbg );
+    if( ret != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_ecdh_gen_public returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_mpi_write_binary( &ctx_cli.Q.X, cli_to_srv, 32 );
+    if( ret != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_mpi_write_binary returned %d\n", ret );
+        return 0;
+    }
+
+   LOGD( " ok\n" );
+
+    /*
+     * Server: initialize context and generate keypair
+     */
+   LOGD( "  . Setting up server context..." );
+    fflush( stdout );
+
+    ret = mbedtls_ecp_group_load( &ctx_srv.grp, MBEDTLS_ECP_DP_CURVE25519 );
+    if( ret != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_ecp_group_load returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_ecdh_gen_public( &ctx_srv.grp, &ctx_srv.d, &ctx_srv.Q,
+                                   mbedtls_ctr_drbg_random, &ctr_drbg );
+    if( ret != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_ecdh_gen_public returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_mpi_write_binary( &ctx_srv.Q.X, srv_to_cli, 32 );
+    if( ret != 0 )
+    {
+       LOGD( " failed\n  ! mbedtls_mpi_write_binary returned %d\n", ret );
+        return 0;
+    }
+
+   LOGD( " ok\n" );
+
+    LOGD( "  . Server reading client key and computing secret..." );
+    fflush( stdout );
+
+    ret = mbedtls_mpi_lset( &ctx_srv.Qp.Z, 1 );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_mpi_lset returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_mpi_read_binary( &ctx_srv.Qp.X, cli_to_srv, 32 );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_mpi_read_binary returned %d\n", ret );
+        return 0;
+    }
+
+    gettimeofday(&st,NULL);
+    ret = mbedtls_ecdh_compute_shared( &ctx_srv.grp, &ctx_srv.z,
+                                       &ctx_srv.Qp, &ctx_srv.d,
+                                       mbedtls_ctr_drbg_random, &ctr_drbg );
+    gettimeofday(&et,NULL);
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
+        return 0;
+    }
+
+    LOGD( " ok\n" );
+
+    /*
+     * Client: read peer's key and generate shared secret
+     */
+    LOGD( "  . Client reading server key and computing secret..." );
+    fflush( stdout );
+
+    ret = mbedtls_mpi_lset( &ctx_cli.Qp.Z, 1 );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_mpi_lset returned %d\n", ret );
+        return 0;
+    }
+
+    ret = mbedtls_mpi_read_binary( &ctx_cli.Qp.X, srv_to_cli, 32 );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_mpi_read_binary returned %d\n", ret );
+        return 0;
+    }
+
+    gettimeofday(&st,NULL);
+    ret = mbedtls_ecdh_compute_shared( &ctx_cli.grp, &ctx_cli.z,
+                                       &ctx_cli.Qp, &ctx_cli.d,
+                                       mbedtls_ctr_drbg_random, &ctr_drbg );
+    gettimeofday(&et,NULL);
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1]=encryption_time + decryption_time;
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
+        return 0;
+    }
+
+    LOGD( " ok\n" );
+
+    /*
+     * Verification: are the computed secrets equal?
+     */
+    LOGD( "  . Checking if both computed secrets are equal..." );
+    fflush( stdout );
+
+    ret = mbedtls_mpi_cmp_mpi( &ctx_cli.z, &ctx_srv.z );
+    if( ret != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
+        return 0;
+    }
+
+    LOGD( " ok\n" );
 
     LOGD("We are good");
 
