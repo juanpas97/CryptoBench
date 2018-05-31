@@ -12,7 +12,7 @@ public class mbedTLS {
 
     public native double[] MD5();
 
-    public native double[] DH();
+    public native int[] DH();
 
     public native int[] ECDH();
 

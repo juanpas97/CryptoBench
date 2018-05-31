@@ -18,6 +18,7 @@
 
 
 #include <time.h>
+#include <cstring>
 
 #define HEAP_HINT NULL
 
@@ -285,10 +286,136 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance) {
 
-    LOGD("DH to be done");
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
+
+    int ret;
+    size_t n1, buflen;
+    size_t n2;
+    unsigned char buf1[2048];
+    unsigned char buf2[2048];
+    mbedtls_dhm_context dhm1;
+    mbedtls_ctr_drbg_context ctr_drbg1;
+    mbedtls_entropy_context entropy1;
+
+    mbedtls_dhm_context dhm2;
+    mbedtls_ctr_drbg_context ctr_drbg2;
+    mbedtls_entropy_context entropy2;
+
+    const char *pers = "dh_test";
+
+    mbedtls_dhm_init( &dhm1 );
+    mbedtls_ctr_drbg_init( &ctr_drbg1 );
+
+    mbedtls_dhm_init( &dhm2 );
+    mbedtls_ctr_drbg_init( &ctr_drbg2 );
+
+    mbedtls_entropy_init( &entropy1 );
+    mbedtls_entropy_init( &entropy2 );
+
+    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg1, mbedtls_entropy_func, &entropy1,
+                                       (const unsigned char *) pers,
+                                       strlen( pers ) ) ) != 0 )
+    {
+        LOGD( " failed 1\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+    }
+
+    ret= mbedtls_mpi_read_string(&dhm1.P,16,MBEDTLS_DHM_RFC3526_MODP_2048_P);
+    if(ret != 0){
+        LOGD("Error at reading P 1");
+    }
+
+    ret = mbedtls_mpi_read_string(&dhm1.G,16,MBEDTLS_DHM_RFC3526_MODP_2048_G);
+    if(ret != 0){
+        LOGD("Error at reading G 1");
+    }
+
+    ret = mbedtls_dhm_make_params( &dhm1, (int) mbedtls_mpi_size( &dhm1.P ), buf1, &n1,
+                                         mbedtls_ctr_drbg_random, &ctr_drbg1 );
+
+    if(ret != 0){
+        LOGD("Error at make params 1");
+    }
+
+    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg2, mbedtls_entropy_func, &entropy2,
+                                       (const unsigned char *) pers,
+                                       strlen( pers ) ) ) != 0 )
+    {
+        LOGD( " failed 1\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
+    }
+
+    ret= mbedtls_mpi_read_string(&dhm2.P,16,MBEDTLS_DHM_RFC3526_MODP_2048_P);
+    if(ret != 0){
+        LOGD("Error at reading P 2");
+    }
+
+    ret = mbedtls_mpi_read_string(&dhm2.G,16,MBEDTLS_DHM_RFC3526_MODP_2048_G);
+    if(ret != 0){
+        LOGD("Error at reading G 2");
+    }
+
+    mbedtls_dhm_make_params( &dhm2, (int) mbedtls_mpi_size( &dhm2.P ), buf2, &n2,
+                             mbedtls_ctr_drbg_random, &ctr_drbg2 );
+
+    n2 = dhm2.len;
+    if( ( ret = mbedtls_dhm_make_public( &dhm2, (int) dhm2.len, buf2, n2,
+                                         mbedtls_ctr_drbg_random, &ctr_drbg2 ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_make_public returned %d\n\n", ret );
+    }
+
+    n1 = dhm2.len;
+    if( ( ret = mbedtls_dhm_make_public( &dhm1, (int) dhm1.len, buf1, n1,
+                                         mbedtls_ctr_drbg_random, &ctr_drbg1 ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_make_public returned %d\n\n", ret );
+    }
+
+    if( ( ret = mbedtls_dhm_read_public( &dhm2, buf1, dhm1.len ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_read_public returned %d\n\n", ret );
+    }
+
+    if( ( ret = mbedtls_dhm_read_public( &dhm1, buf2, dhm2.len ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_read_public returned %d\n\n", ret );
+    }
+
+    gettimeofday(&st,NULL);
+    if( ( ret = mbedtls_dhm_calc_secret( &dhm1, buf1, sizeof( buf1 ), &n1,
+                                         mbedtls_ctr_drbg_random, &ctr_drbg1 ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
+    }
+
+    if( ( ret = mbedtls_dhm_calc_secret( &dhm2, buf2, sizeof( buf2 ), &n2,
+                                         mbedtls_ctr_drbg_random, &ctr_drbg2 ) ) != 0 )
+    {
+        LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
+    }
+
+    gettimeofday(&et,NULL);
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1] = generation_time;
+
+    LOGD("BUF1");
+    for( int i = 0; i < 16; i++ )
+        LOGD( "%02x", buf1[i] );
+    LOGD("BUF2");
+    for( int i = 0; i < 16; i++ )
+        LOGD( "%02x", buf2[i] );
+
+    LOGD("DH finished");
+
+    env->SetIntArrayRegion(result, 0, 3, fill);
+
+    return result;
 
 }
 

@@ -806,8 +806,27 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (library.equals("mbedTLS") && algo.equals("DH")) {
-                mbedTLS test = new mbedTLS();
-                test.DH();
+                System.out.println("***********mbedTLS/DH**************");
+                writer.write("**********mbedTLS/DH***************\n");
+                textview.append("**********mbedTLS/DH************\n");
+
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    mbedTLS test = new mbedTLS();
+                    int[] testDH = test.DH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + testDH[1] + "ms\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ms\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("***********************\n");
+                writer.write("********************************\n");
+                textview.append("**********************************\n");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("RSA")) {
