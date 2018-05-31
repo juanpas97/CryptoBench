@@ -1,7 +1,5 @@
 package com.example.juanperezdealgaba.sac;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -1058,20 +1056,35 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
 
             if (library.equals("Bouncy Castle") && algo.equals("MD5")) {
-                MD5Implementation test = new MD5Implementation();
-                try {
-                    test.testmd5(writer, textview, resulttime);
-                } catch (Exception i) {
-                    throw new RuntimeException(i);
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    MD5Implementation test = new MD5Implementation();
+                    try {
+                        test.testmd5(writer, textview, resulttime);
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
                 }
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("DH")) {
-                DiffieHellmanImplementation test = new DiffieHellmanImplementation();
-                try {
-                    test.startDiffieHellman(writer, textview, resulttime);
-                } catch (Exception i) {
-                    throw new RuntimeException(i);
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    DiffieHellman test = new DiffieHellman();
+                    try {
+                        test.testDH();
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
+                }
+            }
+
+            if (library.equals("Bouncy Castle") && algo.equals("ECDH")) {
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    ECDiffieHellmanImplementation test = new ECDiffieHellmanImplementation();
+                    try {
+                        test.startDiffieHellman(writer, textview, resulttime);
+                    } catch (Exception i) {
+                        throw new RuntimeException(i);
+                    }
                 }
             }
 

@@ -4,7 +4,6 @@ import android.widget.TextView;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -15,7 +14,7 @@ import java.security.SignatureException;
 import static com.example.juanperezdealgaba.sac.DSA.GenerateKeys;
 import static com.example.juanperezdealgaba.sac.DSA.GenerateSignature;
 import static com.example.juanperezdealgaba.sac.DSA.ValidateSignature;
-import static com.example.juanperezdealgaba.sac.DiffieHellman.GetTimestamp;
+import static com.example.juanperezdealgaba.sac.ECDiffieHellman.GetTimestamp;
 
 /**
  * Created by juanperezdealgaba on 2/3/18.

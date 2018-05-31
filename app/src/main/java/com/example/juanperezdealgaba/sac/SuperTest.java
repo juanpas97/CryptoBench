@@ -104,7 +104,7 @@ public class SuperTest {
                 results.append("*******DH/ Key Agreement******\n");
 
                 for(int i = 0;i < repetitions; i++) {
-                    DiffieHellmanImplementation testDH = new DiffieHellmanImplementation();
+                    ECDiffieHellmanImplementation testDH = new ECDiffieHellmanImplementation();
                     testDH.startDiffieHellman(writer, results);
                 }
 

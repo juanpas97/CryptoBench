@@ -1,5 +1,10 @@
 package com.example.juanperezdealgaba.sac;
 
+import org.spongycastle.jce.provider.BouncyCastleProvider;
+
+import java.math.BigInteger;
+import java.security.AlgorithmParameterGenerator;
+import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -9,54 +14,67 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
-import java.util.Arrays;
-import java.util.Date;
-import java.sql.Timestamp;
+import java.security.spec.InvalidParameterSpecException;
 
 import javax.crypto.KeyAgreement;
-
-import org.spongycastle.jce.ECNamedCurveTable;
-import org.spongycastle.jce.provider.BouncyCastleProvider;
-import org.spongycastle.jce.spec.ECParameterSpec;
+import javax.crypto.spec.DHParameterSpec;
 
 public class DiffieHellman {
 
 
-    public static void GetTimestamp(String info) {
-        System.out.println(info + new Timestamp((new Date()).getTime()));
-    }
+    public static void testDH() throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
 
-    public static boolean GenerateAgreement() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException {
-        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("B-571");
+        Security.addProvider(new BouncyCastleProvider());
+        AlgorithmParameterGenerator paramGen = AlgorithmParameterGenerator.getInstance("DH");
+        paramGen.init(2048); // number of bits
 
-        KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
+        byte[] g= {0x02};
 
-        g.initialize(ecSpec, new SecureRandom());
+        BigInteger p512 = new BigInteger("FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245" +
+                "E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7ED" +
+                "EE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3D" +
+                "C2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F" +
+                "83655D23DCA3AD961C62F356208552BB9ED529077096966D" +
+                "670C354E4ABC9804F1746C08CA18217C32905E462E36CE3B" +
+                "E39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9" +
+                "DE2BCBF6955817183995497CEA956AE515D2261898FA0510" +
+                "15728E5A8AACAA68FFFFFFFFFFFFFFFF",16);
+        BigInteger g512 = new BigInteger(g);
 
-        KeyPair aKeyPair = g.generateKeyPair();
+//A
+        KeyPairGenerator akpg = KeyPairGenerator.getInstance("DiffieHellman");
 
-        KeyAgreement aKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
+        DHParameterSpec param = new DHParameterSpec(p512, g512);
+        System.out.println("Prime: " + p512);
+        System.out.println("Base: " + g512);
+        akpg.initialize(param);
+        KeyPair kp = akpg.generateKeyPair();
 
-        aKeyAgree.init(aKeyPair.getPrivate());
+//B
+        KeyPairGenerator bkpg = KeyPairGenerator.getInstance("DiffieHellman");
 
-        KeyPair bKeyPair = g.generateKeyPair();
+        DHParameterSpec param2 = new DHParameterSpec(p512, g512);
+        System.out.println("Prime: " + p512);
+        System.out.println("Base: " + g512);
+        bkpg.initialize(param2);
+        KeyPair kp2 = bkpg.generateKeyPair();
 
-        KeyAgreement bKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
 
-        bKeyAgree.init(bKeyPair.getPrivate());
+        KeyAgreement aKeyAgree = KeyAgreement.getInstance("DiffieHellman");
+        KeyAgreement bKeyAgree = KeyAgreement.getInstance("DiffieHellman");
 
-        //
-        // agreement
-        //
-        aKeyAgree.doPhase(bKeyPair.getPublic(), true);
-        bKeyAgree.doPhase(aKeyPair.getPublic(), true);
+        aKeyAgree.init(kp.getPrivate());
+        bKeyAgree.init(kp2.getPrivate());
 
-        byte[] aSecret = aKeyAgree.generateSecret();
-        byte[] bSecret = bKeyAgree.generateSecret();
+        aKeyAgree.doPhase(kp2.getPublic(), true);
+        bKeyAgree.doPhase(kp.getPublic(), true);
 
-//        System.out.println(Arrays.toString(aSecret));
-//        System.out.println(Arrays.toString(bSecret));
 
-        return MessageDigest.isEqual(aSecret, bSecret);
+        byte[] ASharedSecret = aKeyAgree.generateSecret();
+        byte[] BSharedSecret = bKeyAgree.generateSecret();
+
+        System.out.println("Result:");
+        System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
+
     }
 }
