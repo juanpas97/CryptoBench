@@ -203,9 +203,9 @@ target_link_libraries( # Specifies the target library.
 target_link_libraries( # Specifies the target library.
                        BoringSSL
 
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libcrypto.a
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libssl.a
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libdecrepit.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libboringcrypto.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libboringssl.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libboringecrepit.a
                         ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/boringssl-${ANDROID_ABI}/lib/libboringssl_gtest.a
 
                        # Links the target library to the log library
@@ -248,9 +248,9 @@ target_link_libraries( # Specifies the target library.
 target_link_libraries( # Specifies the target library.
                        BoringSSL
 
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libcrypto.a
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libssl.a
-                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libdecrepit.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libboringcrypto.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libboringssl.a
+                       ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libboringdecrepit.a
                        ${CMAKE_CURRENT_SOURCE_DIR}/BoringSSL/x86/lib/libboringssl_gtest.a
                        # Links the target library to the log library
                        # included in the NDK.

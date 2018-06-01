@@ -10,16 +10,17 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <android/log.h>
-#include "openssl/md5.h"
-#include "openssl/evp.h"
-#include "openssl/aes.h"
-#include <openssl/rsa.h>
-#include <openssl/dh.h>
-#include <openssl/pem.h>
-#include <openssl/err.h>
-#include <openssl/rand.h>
-#include <openssl/engine.h>
-#include <openssl/crypto.h>
+#include "opensslboring/md5.h"
+#include "opensslboring/evp.h"
+#include "opensslboring/aes.h"
+#include <opensslboring/rsa.h>
+#include <opensslboring/dh.h>
+#include <opensslboring/pem.h>
+#include <opensslboring/err.h>
+#include <opensslboring/rand.h>
+#include <opensslboring/engine.h>
+#include <opensslboring/crypto.h>
+#include <opensslboring/ossl_typ.h>
 
 #define KEY_LENGTH  2048
 #define PUB_EXP     3
@@ -160,14 +161,28 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
 
     struct timeval st,et;
 
-    unsigned char aes_key[16], iv[16];
 
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
 
-    /* Input data to encrypt */
-    unsigned char aes_input[32];
-    RAND_bytes(aes_input, sizeof(aes_input));
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+
+    unsigned char iv[16] = {
+            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+    };
+
+
+
+    const unsigned char aes_input[64] = {
+            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
 
     /* Init vector */
     //unsigned char iv[AES_BLOCK_SIZE];
@@ -228,16 +243,27 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject ins
     int plaintext_len;
 
     struct timeval st,et;
-    unsigned char aes_key[16], iv[16];
 
     if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error creating CTX");
 
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
 
+
+    unsigned char iv[16] = {
+            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+    };
     /* Input data to encrypt */
-    unsigned char aes_input[32];
-    RAND_bytes(aes_input, sizeof(aes_input));
+    const unsigned char aes_input[64] = {
+            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
 
     /* Init vector */
     //unsigned char iv[AES_BLOCK_SIZE];
@@ -311,12 +337,24 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject ins
 
     EVP_CIPHER_CTX *ctx;
 
-    unsigned char aes_key[16], iv[16];
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
 
-    unsigned char plaintext[32];
-    RAND_bytes(plaintext, sizeof(plaintext));
+
+    unsigned char iv[16] = {
+            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+    };
+
+    const unsigned char plaintext[64] = {
+            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
 
     unsigned char ciphertext[32];
     unsigned char tag[16];
@@ -487,57 +525,93 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
     jdoubleArray result;
     result = env->NewDoubleArray(3);
     jdouble fill[3];
+    jdoubleArray error;
+    struct timeval st,et;
 
     LOGD("Starting");
-    DH *privkey;
+    DH *privkey = DH_new();
+
+    const char* p = "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6D F25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB9ED529077096966D670C354E4ABC9804F1746C08CA18217C32905E462E36CE3BE39E772C180E86039B2783A2EC07A28FB5C55DF06F4C52C9DE2BCBF6955817183995497CEA956AE515D2261898FA051015728E5A8AACAA68FFFFFFFFFFFFFFFF";
+
+    const char* g = "2";
+
     int codes;
-    int secret_size;
 
-/* Generate the parameters to be used */
-    if(NULL == (privkey = DH_new())) LOGD("Error at new");
-    if(1 != DH_generate_parameters_ex(privkey, 2048, DH_GENERATOR_2, NULL)) LOGD("Error at generating params ex");
-
-    if(1 != DH_check(privkey, &codes)) LOGD("Error at checking");
-    if(codes != 0)
-    {
-        /* Problems have been found with the generated parameters */
-        /* Handle these here - we'll just abort for this example */
-        LOGD("DH_check failed\n");
-        abort();
-    }
-
-/* Generate the public and private key pair */
-    if(1 != DH_generate_key(privkey)) LOGD("Error generating key");
-
-/* Send the public key to the peer.
- * How this occurs will be specific to your situation (see main text below) */
-
-
-/* Receive the public key from the peer. In this example we're just hard coding a value */
-    BIGNUM *pubkey = NULL;
-    if(0 == (BN_dec2bn(&pubkey, "01234567890123456789012345678901234567890123456789"))) LOGD("Error at BIGNUM");
-
-/* Compute the shared secret */
     unsigned char *secret;
 
-    clock_t begin = clock();
-    if(NULL == (secret = static_cast<unsigned char *>(malloc(sizeof(unsigned char) * (DH_size(privkey)))))) LOGD("Error at secret");
-
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    fill[1] = time_spent;
-
-    if(0 > (secret_size = DH_compute_key(secret, pubkey, privkey))) LOGD("Error at checking number");
-
-/* Do something with the shared secret */
-/* Note secret_size may be less than DH_size(privkey) */
-    LOGD("Finished");
 
 
-/* Clean up */
-    free(secret);
-    BN_free(pubkey);
-    DH_free(privkey);
+    DH *pubkey=DH_new();
+
+
+
+    BIGNUM* prime = BN_new();
+
+    BIGNUM* generator= BN_new();
+
+
+    BN_dec2bn(&generator, g);
+
+    BN_hex2bn(&prime, p);
+
+
+
+    int ret = DH_set0_pqg(privkey,prime,NULL,generator);
+
+    if(ret != 1){
+
+        LOGD("Error at setting");
+
+        return error;
+
+    }
+
+
+
+    if(1 != DH_generate_key(privkey)) LOGD("Error at generating key");
+
+
+
+
+
+    ret = DH_set0_pqg(pubkey,prime,NULL,generator);
+
+    if(ret != 1){
+
+        LOGD("Error at setting");
+
+        return error;
+
+    }
+
+    int secret_size;
+
+
+
+    if(1 != DH_generate_key(pubkey)) LOGD("Error at generating key");
+
+
+
+    if(NULL == (secret = static_cast<unsigned char *>(OPENSSL_malloc(sizeof(unsigned char) * (DH_size(privkey)))))) LOGD("Error at malloc");
+
+
+
+    BIGNUM *publico = pubkey-> pub_key;
+
+    gettimeofday(&st,NULL);
+    secret_size = DH_compute_key(secret, publico, privkey);
+    gettimeofday(&et,NULL);
+
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = encryption_time;
+
+    if(0 > secret_size){ LOGD("Error computing first secret");}
+
+
+    LOGD("We are fine");
+
+
 
     env->SetDoubleArrayRegion(result, 0, 3, fill);
 
@@ -553,12 +627,25 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject ins
     jint fill[3];
 
     EVP_CIPHER_CTX *ctx;
-    unsigned char aes_key[16], iv[16];
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
 
-    unsigned char plaintext[32];
-    RAND_bytes(plaintext, sizeof(plaintext));
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+
+    unsigned char iv[16] = {
+            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+    };
+
+    const unsigned char plaintext[64] = {
+            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
+            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
+            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
+            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
+    };
 
     unsigned char ciphertext[32];
 

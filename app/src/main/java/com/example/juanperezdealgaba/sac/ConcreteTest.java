@@ -366,7 +366,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
-                OpenSSL test = new OpenSSL();
+                BoringSSL test = new BoringSSL();
                 double[] testDH = test.DH();
                 System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                 writer.write("Time to key agreement:" + testDH[1] + "ns\n");
