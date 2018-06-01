@@ -367,10 +367,10 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                 BoringSSL test = new BoringSSL();
-                double[] testDH = test.DH();
-                System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
-                writer.write("Time to key agreement:" + testDH[1] + "ns\n");
-                textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                int[] testDH = test.DH();
+                System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
+                writer.write("Time to key agreement:" + testDH[1] + "ms\n");
+                textview.append("Time to key agreement:" + testDH[1] + "ms\n");
                 textview.append("\n");
                     algo_repet += 1;
                 }

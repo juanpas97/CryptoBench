@@ -519,13 +519,13 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
-    jdoubleArray error;
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+    jintArray error;
     struct timeval st,et;
 
     LOGD("Starting");
@@ -613,7 +613,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
 
 
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 }

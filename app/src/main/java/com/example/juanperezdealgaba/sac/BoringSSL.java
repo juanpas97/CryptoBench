@@ -10,7 +10,7 @@ public class BoringSSL {
 
     public native int[] AESCBC();
 
-    public native double[] DH();
+    public native int[] DH();
 
     public native double[] MD5();
 
