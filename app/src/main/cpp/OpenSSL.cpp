@@ -291,12 +291,14 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
 
         unsigned char c[MD5_DIGEST_LENGTH];
 
@@ -310,7 +312,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
 
         unsigned char data[1024] = "asdsdasd";
 
-        clock_t begin = clock();
+        gettimeofday(&st,NULL);
 
         ret = MD5_Update(&ctx, data, bytes);
 
@@ -323,9 +325,10 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
             LOGD("Error final");
         }
 
-        clock_t end = clock();
-        double time_spent_encryption = (double) (end - begin) / CLOCKS_PER_SEC;
-        fill[1] = time_spent_encryption;
+        gettimeofday(&et,NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[0] = encryption_time;
 
         /*LOGD("Here starts:");
         for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
@@ -335,7 +338,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
         LOGD("MD5 finished succesfully");
 
 
-        env->SetDoubleArrayRegion(result, 0, 3, fill);
+        env->SetIntArrayRegion(result, 0, 3, fill);
         return result;
 }
 

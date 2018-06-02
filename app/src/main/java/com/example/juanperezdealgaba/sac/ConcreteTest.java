@@ -570,10 +570,10 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    double[] testMD5 = test.MD5();
-                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
-                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
-                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    int[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[0] + "ns\n");
+                    writer.write("Time to generate hash:" + testMD5[0] + "ns\n");
+                    textview.append("Time to generate hash:" + testMD5[0] + "ns\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }

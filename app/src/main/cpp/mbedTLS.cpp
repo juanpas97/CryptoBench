@@ -326,12 +326,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
         LOGD( " failed 1\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
     }
 
-    ret= mbedtls_mpi_read_string(&dhm1.P,16,MBEDTLS_DHM_RFC3526_MODP_2048_P);
+    ret= mbedtls_mpi_read_string(&dhm1.P,16,MBEDTLS_DHM_RFC5114_MODP_2048_P);
     if(ret != 0){
         LOGD("Error at reading P 1");
     }
 
-    ret = mbedtls_mpi_read_string(&dhm1.G,16,MBEDTLS_DHM_RFC3526_MODP_2048_G);
+    ret = mbedtls_mpi_read_string(&dhm1.G,16,MBEDTLS_DHM_RFC5114_MODP_2048_G);
     if(ret != 0){
         LOGD("Error at reading G 1");
     }
@@ -350,12 +350,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
         LOGD( " failed 1\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
     }
 
-    ret= mbedtls_mpi_read_string(&dhm2.P,16,MBEDTLS_DHM_RFC3526_MODP_2048_P);
+    ret= mbedtls_mpi_read_string(&dhm2.P,16,MBEDTLS_DHM_RFC5114_MODP_2048_P);
     if(ret != 0){
         LOGD("Error at reading P 2");
     }
 
-    ret = mbedtls_mpi_read_string(&dhm2.G,16,MBEDTLS_DHM_RFC3526_MODP_2048_G);
+    ret = mbedtls_mpi_read_string(&dhm2.G,16,MBEDTLS_DHM_RFC5114_MODP_2048_G);
     if(ret != 0){
         LOGD("Error at reading G 2");
     }
