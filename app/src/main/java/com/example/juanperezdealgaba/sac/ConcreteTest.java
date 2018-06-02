@@ -995,6 +995,29 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("********************************\n");
             }
 
+            if (library.equals("WolfCrypt") && algo.equals("ECDH")) {
+                System.out.println("************WolfCrypt/ECDH**************");
+                textview.append("\n************WolfCrypt/ECDH***************\n");
+                writer.write("\n************WolfCrypt/ECDH***************\n");
+                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+                    WolfCrypt test = new WolfCrypt();
+                    int[] testDH = test.ECDH();
+                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    textview.append("\n");
+                    algo_repet += 1;
+                }
+
+                System.out.println("Times executed:" + algo_repet + "\n");
+                writer.write("Times executed:" + algo_repet + "\n");
+                textview.append("Times executed:" + algo_repet + "\n");
+
+                System.out.println("********************************");
+                writer.write("********************************\n");
+                textview.append("********************************\n");
+            }
+
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
                 RSAImplementation test = new RSAImplementation();
                 try {

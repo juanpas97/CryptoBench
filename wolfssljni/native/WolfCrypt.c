@@ -13,6 +13,7 @@
 #include <wolfssl/wolfcrypt/md5.h>
 #include <wolfssl/wolfcrypt/dh.h>
 #include <wolfssl/wolfcrypt/aes.h>
+#include <wolfssl/wolfcrypt/ecc.h>
 
 #define HEAP_HINT NULL
 
@@ -776,6 +777,83 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
     wc_AesFree(&dec);
 
     LOGD("Finished AES/GCM");
+
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+
+    return result;
+
+}
+JNIEXPORT jintArray JNICALL
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject instance) {
+
+    LOGD("Starting ECDH");
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
+    jintArray error[3];
+
+    int ret;
+
+    byte secret[1024];
+    word32 secretsize = sizeof(secret);
+    struct timeval st,et;
+    
+
+    ecc_key priv;
+    ecc_key pub;
+    WC_RNG rng_pub,rng_priv;
+
+    ret = wc_InitRng_ex(&rng_priv, HEAP_HINT, devId);
+    if (ret != 0) {
+        LOGD("Error initialising RNG");
+
+    }
+
+    ret=wc_ecc_init(&priv);
+    if(ret != 0){
+        LOGD("Error at init");
+    }
+
+    ret = wc_ecc_make_key_ex(&rng_priv,32,&priv,ECC_SECP256R1);
+
+    if(ret != 0){
+        LOGD("Error making key");
+        LOGD("Error is : %i", ret);
+    }
+
+    ret = wc_InitRng_ex(&rng_pub, HEAP_HINT, devId);
+    if (ret != 0) {
+        LOGD("Error initialising RNG");
+
+    }
+
+    ret=wc_ecc_init(&pub);
+    if(ret != 0){
+        LOGD("Error at init");
+    }
+
+    ret = wc_ecc_make_key_ex(&rng_pub,32,&pub,ECC_SECP256R1);
+
+    if(ret != 0){
+        LOGD("Error making key");
+        LOGD("Error is : %i", ret);
+    }
+
+    gettimeofday(&st,NULL);
+    ret = wc_ecc_shared_secret(&priv, &pub, secret, &secretsize);
+
+    gettimeofday(&et,NULL);
+
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = decryption_time;
+
+    if(ret != 0){
+        LOGD("Error sharing secret");
+        LOGD("Error is : %i", ret);
+    }
+
+    LOGD("We are good");
 
     (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 

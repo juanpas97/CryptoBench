@@ -14,4 +14,5 @@ public class WolfCrypt {
     public native double[] RSA();
     public native int[] AESCTR();
     public native int[] AESGCM();
+    public native int[] ECDH();
 }
