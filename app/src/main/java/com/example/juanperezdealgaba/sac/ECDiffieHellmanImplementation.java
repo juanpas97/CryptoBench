@@ -40,9 +40,9 @@ public class ECDiffieHellmanImplementation {
     public void startDiffieHellman(FileWriter writer, TextView results, long result_time) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
-        System.out.println("***********Bouncy Castle/DH/ Key Agreement**************");
-        writer.write("\n**********Bouncy Castle/DH/ Key Agreement********\n");
-        results.append("*******Bouncy Castle/DH/ Key Agreement******\n");
+        System.out.println("***********Bouncy Castle-ECDH**************");
+        writer.write("\n**********Bouncy Castle-ECDH********\n");
+        results.append("*******Bouncy Castle-ECDH******\n");
         int algo_repet = 0;
         while (System.currentTimeMillis() < result_time) {
             long startKeyAgreement = System.nanoTime();

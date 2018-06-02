@@ -27,7 +27,7 @@ public class ECDiffieHellman {
     }
 
     public static boolean GenerateAgreement() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException {
-        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("B-571");
+        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256r1");
 
         KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
 

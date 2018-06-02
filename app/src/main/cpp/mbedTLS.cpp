@@ -641,7 +641,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
    LOGD( "  . Setting up server context..." );
     fflush( stdout );
 
-    ret = mbedtls_ecp_group_load( &ctx_srv.grp, MBEDTLS_ECP_DP_CURVE25519 );
+    ret = mbedtls_ecp_group_load( &ctx_srv.grp,  MBEDTLS_ECP_DP_SECP256R1  );
     if( ret != 0 )
     {
        LOGD( " failed\n  ! mbedtls_ecp_group_load returned %d\n", ret );
