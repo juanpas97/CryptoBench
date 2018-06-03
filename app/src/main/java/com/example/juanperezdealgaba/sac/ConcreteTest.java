@@ -189,16 +189,16 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     BoringSSL test = new BoringSSL();
-                    double[] timesRSA = test.RSA();
+                    int[] timesRSA = test.RSA();
 
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ms\n");
                     textview.append("\n");
                 }
 
@@ -342,10 +342,10 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     BoringSSL test = new BoringSSL();
-                    double[] testMD5 = test.MD5();
-                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
-                    writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
-                    textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
+                    int[] testMD5 = test.MD5();
+                    System.out.println("Time to generate hash:" + testMD5[1] + "ms\n");
+                    writer.write("Time to generate hash:" + testMD5[1] + "ms\n");
+                    textview.append("Time to generate hash:" + testMD5[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -395,9 +395,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
                     int[] testDH = test.ECDH();
-                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
-                    writer.write("Time to key agreement:" + testDH[1] + "ns\n");
-                    textview.append("Time to key agreement:" + testDH[1] + "ns\n");
+                    System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
+                    writer.write("Time to key agreement:" + testDH[1] + "ms\n");
+                    textview.append("Time to key agreement:" + testDH[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -835,16 +835,16 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/RSA***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    double[] timesRSA = test.RSA();
+                    int[] timesRSA = test.RSA();
 
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -955,7 +955,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    double[] testMD5 = test.MD5();
+                    int[] testMD5 = test.MD5();
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
@@ -978,7 +978,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/DH***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    double[] testDH = test.DH();
+                    int[] testDH = test.DH();
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");

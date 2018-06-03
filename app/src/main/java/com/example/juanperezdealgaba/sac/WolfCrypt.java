@@ -8,10 +8,10 @@ public class WolfCrypt {
     }
 
 
-    public native double[] DH();
+    public native int[] DH();
     public native int[] AESCBC();
-    public native double[] MD5();
-    public native double[] RSA();
+    public native int[] MD5();
+    public native int[] RSA();
     public native int[] AESCTR();
     public native int[] AESGCM();
     public native int[] ECDH();

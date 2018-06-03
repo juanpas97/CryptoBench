@@ -31,12 +31,14 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
 
     size_t pri_len;            // Length of private key
     size_t pub_len;            // Length of public key
@@ -87,15 +89,14 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
     int encrypt_len;
     err = static_cast<char *>(malloc(130));
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
                                          keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
 
-        clock_t end = clock();
+        gettimeofday(&et,NULL);
 
-        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-        fill[0] =time_spent;
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[0]=encryption_time;;
 
         ERR_error_string(ERR_get_error(), err);
         LOGD("Error");
@@ -114,15 +115,14 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
     LOGD("%d",encrypt_len);
 
     // Decrypt it
-    begin = clock();
+    gettimeofday(&st,NULL);
     decrypt = static_cast<char *>(malloc(encrypt_len));
     if(RSA_private_decrypt(encrypt_len, (unsigned char*)encrypt, (unsigned char*)decrypt,
                            keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
-        clock_t end = clock();
+        gettimeofday(&et,NULL);
 
-        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-        fill[1] = time_spent;
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[1]=decryption_time;
 
 
         ERR_error_string(ERR_get_error(), err);
@@ -143,7 +143,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 
 
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 
@@ -169,10 +169,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-
     unsigned char iv[16] = {
-            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
 
 
@@ -202,7 +201,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
     gettimeofday(&et,NULL);
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = encryption_time;
+    fill[0] = encryption_time;
 
     /* AES-128 bit CBC Decryption */
     memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
@@ -252,10 +251,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject ins
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-
     unsigned char iv[16] = {
-            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
     /* Input data to encrypt */
     const unsigned char aes_input[64] = {
@@ -343,10 +341,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject ins
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-
     unsigned char iv[16] = {
-            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
 
     const unsigned char plaintext[64] = {
@@ -469,12 +466,14 @@ void print_data(const char *tittle, const void* data, int len)
 
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+
+    struct timeval st,et;
 
     unsigned char c[MD5_DIGEST_LENGTH];
 
@@ -488,7 +487,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 
     unsigned char data[1024] = "asdsdasd";
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
 
     ret = MD5_Update(&ctx, data, bytes);
 
@@ -501,9 +500,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
         LOGD("Error final");
     }
 
-    clock_t end = clock();
-    double time_spent_encryption = (double) (end - begin) / CLOCKS_PER_SEC;
-    fill[1] = time_spent_encryption;
+    gettimeofday(&et,NULL);
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1]=generation_time;
 
     /*LOGD("Here starts:");
     for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
@@ -513,7 +512,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
     LOGD("MD5 finished succesfully");
 
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
     return result;
 
 }
@@ -614,10 +613,9 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject ins
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-
     unsigned char iv[16] = {
-            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
 
     const unsigned char plaintext[64] = {

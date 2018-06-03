@@ -114,7 +114,7 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
 
 
             for (int i = 0; i < repetitions; i++) {
-                double[] testDH = test.DH();
+                int[] testDH = test.DH();
                 System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                 writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                 text.append("Time to key agreement:" + testDH[1] + "ns\n");
@@ -130,7 +130,7 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
             text.append("**********MD5************\n");
 
             for (int i = 0; i < repetitions; i++) {
-                double[] testMD5 = test.MD5();
+                int[] testMD5 = test.MD5();
                 System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                 writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                 text.append("Time to generate hash:" + testMD5[1] + "ns\n");

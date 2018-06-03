@@ -6,13 +6,13 @@ public class BoringSSL {
         System.loadLibrary("BoringSSL");
     }
 
-    public native double[] RSA();
+    public native int[] RSA();
 
     public native int[] AESCBC();
 
     public native int[] DH();
 
-    public native double[] MD5();
+    public native int[] MD5();
 
     public native int[] AESCTR();
 

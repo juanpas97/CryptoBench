@@ -54,14 +54,16 @@ unsigned char decrypted_buffer[RSA_LENGTH];
 
 
 
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = (*env)->NewDoubleArray(env,3);
-    jdouble fill[3];
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
 
-    jdouble error[1];
+    jint error[1];
+
+    struct timeval st,et;
 
     int ret;
     word32 bytes;
@@ -173,12 +175,12 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
         return error;
     }
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     ret = wc_DhAgree(&key, agree, &agreeSz, priv, privSz, pub2, pubSz2);
-    clock_t end = clock();
-    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+    gettimeofday(&et,NULL);
+    int key_agreement = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = time_spent_encryption;
+    fill[1] = key_agreement;
     if (ret != 0) {
         LOGD("Error agreeing");
         return error;
@@ -199,7 +201,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
 
     LOGD("Diffie Hellman Finished");
 
-    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 
     return result;
 }
@@ -225,11 +227,16 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
 
     RNG  rng;
 
-    int  szkey = 16;
-    byte key[szkey];
+    unsigned char key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
 
-    int  sziv = 16;
-    byte iv[sziv];
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     int szmsg = 16;
     byte msg[szmsg];
@@ -239,15 +246,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
         LOGD("Error at RNG"); //init of rng failed!
     }
 
-    ret = wc_RNG_GenerateBlock(&rng, key, sizeof(key));
-    if (ret != 0) {
-        LOGD("Error generating block at key"); //generating block failed!
-    }
-
-    ret = wc_RNG_GenerateBlock(&rng, iv, sizeof(iv));
-    if (ret != 0) {
-        LOGD("Error generating block at iv"); //generating block failed!
-    }
 
     ret = wc_RNG_GenerateBlock(&rng, msg, sizeof(msg));
     if (ret != 0) {
@@ -364,11 +362,17 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
 
     RNG  rng;
 
-    int  szkey = 16;
-    byte key[szkey];
 
-    int  sziv = 16;
-    byte iv[sziv];
+    unsigned char key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     int szmsg = 16;
     byte msg[szmsg];
@@ -376,16 +380,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
     int retrng = wc_InitRng(&rng);
     if (retrng != 0) {
         LOGD("Error at RNG"); //init of rng failed!
-    }
-
-    ret = wc_RNG_GenerateBlock(&rng, key, sizeof(key));
-    if (ret != 0) {
-        LOGD("Error generating block at key"); //generating block failed!
-    }
-
-    ret = wc_RNG_GenerateBlock(&rng, iv, sizeof(iv));
-    if (ret != 0) {
-        LOGD("Error generating block at iv"); //generating block failed!
     }
 
     ret = wc_RNG_GenerateBlock(&rng, msg, sizeof(msg));
@@ -472,15 +466,16 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
 
 }
 
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = (*env)->NewDoubleArray(env,3);
-    jdouble fill[3];
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
 
-    jdouble error[1];
+    jint error[1];
 
+    struct timeval st,et;
     Md5 md5;
     byte *hash[MD5_DIGEST_SIZE];
 
@@ -518,7 +513,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
         LOGD("wc_Initmd5 failed");
 
     } else {
-        clock_t begin1 = clock();
+        gettimeofday(&st,NULL);
 
         ret = wc_Md5Update(&md5, data, len);
 
@@ -536,26 +531,26 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
             LOGD("Error in Md5Final");
         }
 
-        clock_t end1 = clock();
+        gettimeofday(&et,NULL);
 
-        double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+        int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-        fill[1] = time_spent_decryption;
+        fill[1] = generation_time;
         LOGD("Hash finished");
     }
 
-    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 
     return result;
 
 }
 
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = (*env)->NewDoubleArray(env,3);
-    jdouble fill[3];
+    jintArray result;
+    result = (*env)->NewIntArray(env,3);
+    jint fill[3];
 
     RsaKey key;
     RNG rng1;
@@ -564,7 +559,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     jdoubleArray error[1];
     int encrypted_len;
     int decrypted_len;
-
+    struct timeval st,et;
 
     // encrypt data.
     index = 0;
@@ -574,13 +569,13 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return error[0]; }
     ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
     if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return error[0]; }
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     ret = wc_RsaPublicEncrypt_ex((const byte *)in_buffer, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    clock_t end = clock();
+    gettimeofday(&et,NULL);
 
-    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[0] = time_spent_encryption;
+    fill[0] = encryption_time;
     if (ret < 0) { LOGD("Error at wc_RsaPublicEncrypt_ex: %i.", ret); return error[0]; }
     encrypted_len = ret;
     LOGD("%i",encrypted_len);
@@ -592,14 +587,15 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     ret = wc_InitRsaKey(&key, NULL);
     if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return error[0]; }
     ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index, &key, PRIVATE_KEY_LENGTH);
-    clock_t begin1 = clock();
     if (ret != 0) { LOGD("Error at wc_RsaPrivateKeyDecode: %i.", ret); return error[0]; }
+    gettimeofday(&st,NULL);
     ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    clock_t end1 = clock();
+    gettimeofday(&et,NULL);
 
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = time_spent_decryption;
+    fill[1] = decryption_time;
+
     if (ret < 0) { LOGD("Error at wc_RsaPrivateDecrypt_ex: %i.", ret); return error[0]; }
     decrypted_len = ret;
     wc_FreeRsaKey(&key);
@@ -643,11 +639,17 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
 
     RNG  rng;
 
-    int  szkey = 16;
-    byte key[szkey];
 
-    int  sziv = 16;
-    byte iv[sziv];
+    unsigned char key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     int szmsg = 16;
     byte msg[szmsg];
@@ -684,16 +686,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
     int retrng = wc_InitRng(&rng);
     if (retrng != 0) {
         LOGD("Error at RNG"); //init of rng failed!
-    }
-
-    ret = wc_RNG_GenerateBlock(&rng, key, sizeof(key));
-    if (ret != 0) {
-        LOGD("Error generating block at key"); //generating block failed!
-    }
-
-    ret = wc_RNG_GenerateBlock(&rng, iv, sizeof(iv));
-    if (ret != 0) {
-        LOGD("Error generating block at iv"); //generating block failed!
     }
 
     ret = wc_RNG_GenerateBlock(&rng, msg, sizeof(msg));
