@@ -420,7 +420,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    double[] timesRSA = test.RSA(3);
+                    int[] timesRSA = test.RSA(3);
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
@@ -594,7 +594,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    double[] testDH = test.DH();
+                    int[] testDH = test.DH();
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");

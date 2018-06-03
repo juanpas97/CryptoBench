@@ -139,16 +139,16 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********RSA************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                double[] timesRSA = test.RSA(3);
+                int[] timesRSA = test.RSA(3);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                text.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
+                text.append("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                text.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
+                text.append("Time to decrypt:" + timesRSA[1] + "ms\n");
                 text.append("\n");
             }
             System.out.println("***********************\n");
@@ -176,10 +176,10 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********DH************\n");
 
             for (int i = 0; i < repetitions; i++) {
-                double[] testDH = test.DH();
-                System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
-                writer.write("Time to key agreement:" + testDH[1] + "ns\n");
-                text.append("Time to key agreement:" + testDH[1] + "ns\n");
+                int[] testDH = test.DH();
+                System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
+                writer.write("Time to key agreement:" + testDH[1] + "ms\n");
+                text.append("Time to key agreement:" + testDH[1] + "ms\n");
                 text.append("\n");
             }
 

@@ -33,14 +33,13 @@
 
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance, jint size) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(size);
-    jdouble fill[size];
-    struct timespec start, end;
-    struct timespec start1, end1;
+    jintArray result;
+    result = env->NewIntArray(size);
+    jint fill[size];
+    struct timeval st,et;
 
     size_t pri_len;            // Length of private key
     size_t pub_len;            // Length of public key
@@ -91,14 +90,13 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     int encrypt_len;
     err = static_cast<char *>(malloc(130));
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
                                          keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
-        clock_t end = clock();
+        gettimeofday(&et,NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-        fill[0] =time_spent;
+        fill[0] = encryption_time;
         ERR_error_string(ERR_get_error(), err);
         LOGD("Error");
         fprintf(stderr, "Error encrypting message: %s\n", err);
@@ -118,15 +116,13 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     // Decrypt it
     decrypt = static_cast<char *>(malloc(encrypt_len));
 
-     begin = clock();
+     gettimeofday(&st,NULL);
     if(RSA_private_decrypt(encrypt_len, (unsigned char*)encrypt, (unsigned char*)decrypt,
                            keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
-        clock_t end = clock();
+        gettimeofday(&et,NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-        double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-
-
-        fill[1] = time_spent;
+        fill[1] = encryption_time;
         ERR_error_string(ERR_get_error(), err);
         fprintf(stderr, "Error decrypting message: %s\n", err);
         goto free_stuff;
@@ -143,7 +139,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     free(decrypt);
     free(err);
 
-    env->SetDoubleArrayRegion(result, 0, size, fill);
+    env->SetIntArrayRegion(result, 0, size, fill);
 
     return result;
 }
@@ -159,10 +155,16 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
     jint fill[size];
 
     struct timeval st,et;
-    unsigned char aes_key[16], iv[16];
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
 
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     /* Input data to encrypt */
     unsigned char aes_input[32];
@@ -223,12 +225,12 @@ void print_data(const char *tittle, const void* data, int len)
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
 
     EVP_PKEY *params;
     EVP_PKEY_CTX *kctx,*secretctx;
@@ -238,6 +240,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
     size_t keylen;
     unsigned char *skey;
 
+    struct timeval st,et;
 
     LOGD("GO");
 /* Use built-in parameters */
@@ -263,11 +266,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
     if (EVP_PKEY_derive_set_peer(secretctx, dhkey2) <= 0)
     {LOGD("Error at derive set peer");}
 
-    clock_t begin1 = clock();
+    gettimeofday(&st,NULL);
     if (EVP_PKEY_derive(secretctx, NULL, &keylen) <= 0){LOGD("Error at derive");}
-    clock_t end1 = clock();
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
-    fill[1] = time_spent_decryption;
+    gettimeofday(&et,NULL);
+    int key_agreement_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = key_agreement_time;
 
     //skey stores the shared secret
     skey = static_cast<unsigned char *>(OPENSSL_malloc(keylen));
@@ -284,7 +288,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 
     LOGD("Diffie Hellman finished");
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 
@@ -359,12 +363,19 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
     int plaintext_len;
 
     struct timeval st,et;
-    unsigned char aes_key[16], iv[16];
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     if(!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error creating CTX");
 
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
 
     /* Input data to encrypt */
     unsigned char aes_input[32];
@@ -442,9 +453,16 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
 
     EVP_CIPHER_CTX *ctx;
 
-    unsigned char aes_key[16], iv[16];
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     unsigned char plaintext[32];
     RAND_bytes(plaintext, sizeof(plaintext));
@@ -558,9 +576,18 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
     jint fill[3];
 
     EVP_CIPHER_CTX *ctx;
-    unsigned char aes_key[16], iv[16];
-    RAND_bytes(aes_key, sizeof(aes_key));
-    RAND_bytes(iv, sizeof(iv));
+
+
+    unsigned char aes_key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
+
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     unsigned char plaintext[32];
     RAND_bytes(plaintext, sizeof(plaintext));

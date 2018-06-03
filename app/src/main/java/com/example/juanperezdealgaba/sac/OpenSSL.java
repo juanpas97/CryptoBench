@@ -7,11 +7,11 @@ public class OpenSSL {
     }
 
 
-    public native double[] RSA(int size);
+    public native int[] RSA(int size);
 
     public native int[] AESCBC(int size);
 
-    public native double[] DH();
+    public native int[] DH();
 
     public native int[] ECDH();
 
