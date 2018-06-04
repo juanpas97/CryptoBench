@@ -2,7 +2,7 @@ package com.example.juanperezdealgaba.sac;
 
 public class mbedTLS {
 
-    static{
+    static {
         System.loadLibrary("mbedTLS");
     }
 

@@ -644,14 +644,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     mbedTLS test = new mbedTLS();
                     int[] timesRSA = test.RSA();
 
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    textview.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
+                    textview.append("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    textview.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
+                    textview.append("Time to decrypt:" + timesRSA[1] + "ms\n");
                     textview.append("\n");
                     algo_repet += 1;
                 }
@@ -665,6 +665,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 textview.append("**********************************\n");
 
             }
+
 
             if (library.equals("mbedTLS") && algo.equals("AES-CBC")) {
                 System.out.println("***********mbedTLS/AES**************");

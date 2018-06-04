@@ -42,7 +42,7 @@ enum {
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
 #define IN_BUFFER_LENGTH                (RSA_OAEP_DECRYPTED_DATA_LENGTH)
-#define PRIVATE_KEY_LENGTH              (1190)
+#define PRIVATE_KEY_LENGTH              (2048)
 #define PUBLIC_KEY_LENGTH               (294)
 
 extern unsigned char private_key[PRIVATE_KEY_LENGTH];
@@ -610,7 +610,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     // got here means no error.
     LOGD("All went O.K.");
 
-    (*env)->SetDoubleArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 
     return result;
 }
