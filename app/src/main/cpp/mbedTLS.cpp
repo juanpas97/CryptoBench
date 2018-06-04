@@ -45,12 +45,13 @@
 
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance) {
 
-    jdoubleArray resultArray;
-    resultArray = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray resultArray;
+    resultArray = env->NewIntArray(3);
+    jint fill[3];
+    struct timeval st,et;
 
     int ret;
     int return_val;
@@ -98,17 +99,17 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     LOGD( "\n  . Generating the RSA encrypted value" );
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
 
     return_val = mbedtls_rsa_pkcs1_encrypt( &rsa, mbedtls_ctr_drbg_random,
                                             &ctr_drbg, MBEDTLS_RSA_PUBLIC,
                                             strlen( argv[1] ), input, buf );
 
-    clock_t end = clock();
+    gettimeofday(&et,NULL);
 
-    double time_spent_encryption = (double)(end - begin) / CLOCKS_PER_SEC;
+    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[0] = time_spent_encryption;
+    fill[0] = encryption_time;
 
     if( return_val != 0 )
     {
@@ -124,16 +125,16 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     LOGD( "\n  . Decrypting the encrypted data" );
 
-    clock_t begin1 = clock();
+    gettimeofday(&st,NULL);
 
     return_val = mbedtls_rsa_pkcs1_decrypt( &rsa, mbedtls_ctr_drbg_random,
                                             &ctr_drbg, MBEDTLS_RSA_PRIVATE, &i,
                                             buf, result, 1024 );
-    clock_t end1 = clock();
+    gettimeofday(&et,NULL);
 
-    double time_spent_decryption = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = time_spent_decryption;
+    fill[1] = decryption_time;
 
     if( return_val != 0 )
     {
@@ -151,7 +152,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
     mbedtls_entropy_free( &entropy );
 
 
-    env->SetDoubleArrayRegion(resultArray, 0, 3, fill);
+    env->SetIntArrayRegion(resultArray, 0, 3, fill);
     return resultArray;
 
 }
@@ -177,17 +178,16 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
             };
 
 
-    uint8_t key[16] =
-            {
-                    0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52,
-                    0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
-            };
+    uint8_t key[16] = {
+            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+            0x15, 0x88,
+            0x09, 0xcf, 0x4f, 0x3c
+    };
 
-    uint8_t iv[16] =
-            {
-                    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-            };
+    uint8_t iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
 
     struct timeval st,et;
@@ -215,11 +215,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
     }
 
 
-    uint8_t iv2[16] =
-            {
-                    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-                    0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-            };
+    uint8_t iv2[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
 
     mbedtls_aes_init( &ctx );
     status = mbedtls_aes_setkey_dec(&ctx, key, 128);
@@ -251,14 +250,15 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance) {
 
-    jdoubleArray result;
-    result = env->NewDoubleArray(3);
-    jdouble fill[3];
+    jintArray result;
+    result = env->NewIntArray(3);
+    jint fill[3];
+    struct timeval st,et;
 
-    jdoubleArray error[1];
+    jintArray error[1];
 
     int i, ret;
     unsigned char digest[16];
@@ -266,20 +266,23 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
     LOGD( "\n  MD5('%s') = ", str );
 
-    clock_t begin = clock();
+    gettimeofday(&st,NULL);
     if(  (ret = mbedtls_md5_ret( (unsigned char *) str, 13, digest ))  != 0 ) {
         return 0;
     }
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    fill[1] = time_spent;
+    gettimeofday(&et,NULL);
+
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+    fill[1] = generation_time;
+
 
     for( i = 0; i < 16; i++ )
         LOGD( "%02x", digest[i] );
 
     LOGD( "Finished!" );
 
-    env->SetDoubleArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 
@@ -435,10 +438,9 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-    unsigned char ctr[16] = {
-            0xf0, 0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9,
-            0xfa, 0xfb,
-            0xfc, 0xfd, 0xfe, 0xff
+    unsigned char iv[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
 
     const unsigned char plaintext[64] = {
@@ -464,7 +466,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
     int ret;
 
     gettimeofday(&st,NULL);
-    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, ctr, stream_block, plaintext, enc_out);
+    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, iv, stream_block, plaintext, enc_out);
     gettimeofday(&et,NULL);
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
@@ -475,7 +477,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
     fill[0] = encryption_time;
 
     gettimeofday(&st,NULL);
-    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, ctr, stream_block, enc_out, plain_out);
+    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, iv, stream_block, enc_out, plain_out);
     gettimeofday(&et,NULL);
     int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
@@ -510,8 +512,8 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
     };
 
     unsigned char iv[16] = {
-            0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
     };
 
     const unsigned char plaintext[64] = {
