@@ -110,6 +110,7 @@ public  class  MainActivity extends AppCompatActivity {
         final File report_public = new File(newDir, "public_key.txt");
         report_public.mkdirs();
         final File report_private = new File(newDir, "private_key.txt");
+        final File report_public_pem = new File(newDir, "public_key.pem");
         if (report_public.exists())
             report_public.delete();
         if (report_private.exists())
@@ -127,6 +128,23 @@ public  class  MainActivity extends AppCompatActivity {
                     "wQIDAQAB\n" +
                     "-----END PUBLIC KEY-----");
             writer.close();
+
+        }catch(IOException i) {
+            throw new RuntimeException(i);
+        }
+
+        try {
+            FileWriter writer_pem = new FileWriter(report_public_pem);
+            writer_pem.append("-----BEGIN PUBLIC KEY-----\n" +
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy8Dbv8prpJ/0kKhlGeJY\n" +
+                    "ozo2t60EG8L0561g13R29LvMR5hyvGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+\n" +
+                    "vw1HocOAZtWK0z3r26uA8kQYOKX9Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQAp\n" +
+                    "fc9jB9nTzphOgM4JiEYvlV8FLhg9yZovMYd6Wwf3aoXK891VQxTr/kQYoq1Yp+68\n" +
+                    "i6T4nNq7NWC+UNVjQHxNQMQMzU6lWCX8zyg3yH88OAQkUXIXKfQ+NkvYQ1cxaMoV\n" +
+                    "PpY72+eVthKzpMeyHkBn7ciumk5qgLTEJAfWZpe4f4eFZj/Rc8Y8Jj2IS5kVPjUy\n" +
+                    "wQIDAQAB\n" +
+                    "-----END PUBLIC KEY-----");
+            writer_pem.close();
 
         }catch(IOException i) {
             throw new RuntimeException(i);

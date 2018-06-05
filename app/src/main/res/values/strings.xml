@@ -21,6 +21,7 @@
     <string-array name="algo_array">
         <item>Algorithms</item>
         <item>RSA</item>
+        <item>RSA2</item>
         <item>MD5</item>
         <item>AES-CBC</item>
         <item>AES-GCM</item>
