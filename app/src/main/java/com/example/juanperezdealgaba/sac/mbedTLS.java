@@ -6,11 +6,11 @@ public class mbedTLS {
         System.loadLibrary("mbedTLS");
     }
 
-    public native int[] RSA();
+    public native int[] RSA(int blocksize);
 
     public native int[] AESCBC(int blocksize);
 
-    public native int[] MD5();
+    public native int[] MD5(int blocksize);
 
     public native int[] DH();
 

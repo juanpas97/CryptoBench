@@ -317,6 +317,42 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(separate);
                     results.append(separate);
 
+                    String mbedRSA= "***********RSA**************" + "\n";
+                    System.out.println(mbedRSA);
+                    results.append(mbedRSA);
+                    writer.write(mbedRSA);
+
+                    mbedTLS testRSA = new mbedTLS();
+                    int[] timesRSA = testRSA.RSA(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedmd5= "***********MD5**************" + "\n";
+                    System.out.println(mbedmd5);
+                    results.append(mbedmd5);
+                    writer.write(mbedmd5);
+
+                    mbedTLS testmd5 = new mbedTLS();
+                    int[] timesmd5 = testmd5.ECDH();
+
+                    System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
 
 
                     blocksize = blocksize*2;

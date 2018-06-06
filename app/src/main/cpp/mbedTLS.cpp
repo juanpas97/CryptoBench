@@ -239,10 +239,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
     }
 
     LOGD("AES finished");
-    LOGD("Plain decrypted:");
-    for (int i = 0; i < 64; ++i) {
-        LOGD("%x", compare[i]);
-    }
+    //LOGD("Plain decrypted:");
+    //for (int i = 0; i < 64; ++i) {
+     //   LOGD("%x", compare[i]);
+    //}
     mbedtls_aes_free( &ctx );
 
     env->SetIntArrayRegion(result, 0, 3, fill);
@@ -251,7 +251,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -262,12 +262,16 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
     int i, ret;
     unsigned char digest[16];
-    char str[] = "Hello, world!";
+    uint8_t Plaintext[blocksize];
 
-    LOGD( "\n  MD5('%s') = ", str );
+    for (int i = 0; i <= sizeof(Plaintext); ++i) {
+        Plaintext[i] = rand();
+
+    }
+
 
     gettimeofday(&st,NULL);
-    if(  (ret = mbedtls_md5_ret( (unsigned char *) str, 13, digest ))  != 0 ) {
+    if(  (ret = mbedtls_md5_ret(Plaintext, 13, digest ))  != 0 ) {
         return 0;
     }
     gettimeofday(&et,NULL);
@@ -277,8 +281,8 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
     fill[1] = generation_time;
 
 
-    for( i = 0; i < 16; i++ )
-        LOGD( "%02x", digest[i] );
+    //for( i = 0; i < 16; i++ )
+    //    LOGD( "%02x", digest[i] );
 
     LOGD( "Finished!" );
 
@@ -397,22 +401,23 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
         LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
     }
 
+    gettimeofday(&et,NULL);
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1] = generation_time;
+
     if( ( ret = mbedtls_dhm_calc_secret( &dhm2, buf2, sizeof( buf2 ), &n2,
                                          mbedtls_ctr_drbg_random, &ctr_drbg2 ) ) != 0 )
     {
         LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
     }
 
-    gettimeofday(&et,NULL);
-    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1] = generation_time;
 
-    LOGD("BUF1");
-    for( int i = 0; i < 16; i++ )
-        LOGD( "%02x", buf1[i] );
-    LOGD("BUF2");
-    for( int i = 0; i < 16; i++ )
-        LOGD( "%02x", buf2[i] );
+    //LOGD("BUF1");
+    //for( int i = 0; i < 16; i++ )
+    //    LOGD( "%02x", buf1[i] );
+    //LOGD("BUF2");
+    //for( int i = 0; i < 16; i++ )
+     //   LOGD( "%02x", buf2[i] );
 
     LOGD("DH finished");
 
@@ -652,7 +657,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -661,17 +666,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     struct timeval st,et;
 
-    unsigned char plaintext[]= {0x8d, 0x4c, 0xa8, 0xf4, 0x47, 0x02, 0x9a, 0x92,
-                                0x65, 0x27, 0xbd, 0x49, 0x12, 0xd2, 0xc6, 0xcc,
-                                0xc7, 0x2b, 0x18, 0x02, 0x90, 0x4a, 0xd6, 0x65,
-                                0x6f, 0x2a, 0x3c, 0x40, 0x68, 0xf5, 0x36, 0x70,
-                                0xd4, 0x52, 0x82, 0xae, 0xa8, 0xa2, 0x38, 0xc0,
-                                0x00, 0x13, 0x5f, 0x15, 0x45, 0x1a, 0x95, 0x17,
-                                0xc1, 0x62, 0x9e, 0xc8, 0xe3, 0xe2, 0xc4, 0xf7,
-                                0xbf, 0xaa, 0xef, 0xfb, 0x15, 0xde, 0xa8, 0xa9,
-                                0x64, 0x3e, 0x0e, 0x5a, 0xa0, 0x12, 0x7d, 0x0d,
-                                0x5b, 0xb1, 0xef, 0xf3, 0xaf, 0xed, 0x8f, 0x5b,
-                                0xd8, 0xb3, 0xbc, 0xa1, 0x35, 0xd1};
+    unsigned char plaintext[blocksize];
+
+    for (int i = 0;  i <= sizeof(plaintext); i++) {
+       plaintext[i] = rand();
+    }
 
 
     int ret = 0;

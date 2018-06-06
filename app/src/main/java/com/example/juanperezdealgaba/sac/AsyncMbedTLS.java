@@ -71,7 +71,7 @@ public class AsyncMbedTLS extends AsyncTask<MbedTLSParamsTest,Void,String> {
             text.append("**********MD5************\n");
 
             for (int i = 0; i < repetitions; i++) {
-                int[] testMD5 = test.MD5();
+                int[] testMD5 = test.MD5(64);
                 System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                 writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                 text.append("Time to generate hash:" + testMD5[1] + "ns\n");
@@ -87,7 +87,7 @@ public class AsyncMbedTLS extends AsyncTask<MbedTLSParamsTest,Void,String> {
             text.append("**********RSA************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesRSA = test.RSA();
+                int[] timesRSA = test.RSA(64);
 
                 System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");

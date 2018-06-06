@@ -642,7 +642,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    int[] timesRSA = test.RSA();
+                    int[] timesRSA = test.RSA(64);
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
@@ -765,7 +765,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    int[] testMD5 = test.MD5();
+                    int[] testMD5 = test.MD5(64);
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
