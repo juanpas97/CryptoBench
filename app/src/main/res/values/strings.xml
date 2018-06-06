@@ -30,4 +30,5 @@
         <item>DH</item>
         <item>ECDH</item>
     </string-array>
+    <string name="title_activity_complete_test">CompleteTestActivity</string>
 </resources>

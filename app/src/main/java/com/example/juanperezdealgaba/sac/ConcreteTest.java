@@ -1030,6 +1030,15 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
 
+            if (library.equals("Bouncy Castle") && algo.equals("RSA2")) {
+                RSAPrueba test = new RSAPrueba();
+                try {
+                    test.testRSA();
+                } catch (Exception i) {
+                    throw new RuntimeException(i);
+                }
+            }
+
             if (library.equals("Bouncy Castle") && algo.equals("AES-CBC")) {
                 AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
                 try {

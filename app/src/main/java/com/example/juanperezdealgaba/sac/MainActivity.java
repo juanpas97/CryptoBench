@@ -196,6 +196,19 @@ public  class  MainActivity extends AppCompatActivity {
             }
         });
 
+        final Button completeTest = findViewById(R.id.complete_test);
+        completeTest.setOnClickListener(new View.OnClickListener() {
+
+            @SuppressLint("StaticFieldLeak")
+            public void onClick(View v) {
+
+                Intent complete = new Intent(v.getContext(), CompleteTestActivity.class);
+
+                startActivity(complete);
+
+            }
+        });
+
     }
 
     /**

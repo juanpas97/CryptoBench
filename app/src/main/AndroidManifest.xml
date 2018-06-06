@@ -25,7 +25,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ConcreteTest" />
-        <activity android:name=".SuperTestActivity"></activity>
+        <activity android:name=".SuperTestActivity" />
+        <activity
+            android:name=".CompleteTestActivity"
+            android:label="@string/title_activity_complete_test"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
