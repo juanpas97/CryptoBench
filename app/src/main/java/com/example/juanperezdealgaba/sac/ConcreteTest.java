@@ -674,7 +674,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    int[] timesAES = test.AESCBC();
+                    int[] timesAES = test.AESCBC(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -704,7 +704,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
 
-                    int[] timesAES = test.AESCTR();
+                    int[] timesAES = test.AESCTR(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -735,7 +735,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
 
-                    int[] timesAES = test.AESGCM();
+                    int[] timesAES = test.AESGCM(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");

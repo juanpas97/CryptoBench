@@ -8,7 +8,7 @@ public class mbedTLS {
 
     public native int[] RSA();
 
-    public native int[] AESCBC();
+    public native int[] AESCBC(int blocksize);
 
     public native int[] MD5();
 
@@ -16,8 +16,8 @@ public class mbedTLS {
 
     public native int[] ECDH();
 
-    public native int[] AESCTR();
+    public native int[] AESCTR(int blocksize);
 
-    public native int[] AESGCM();
+    public native int[] AESGCM(int blocksize);
 
 }

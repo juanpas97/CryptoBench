@@ -163,24 +163,20 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
     jint fill[3];
 
-    const uint8_t Plaintext[64] =
-            {
-                    0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96,
-                    0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-                    0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c,
-                    0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-                    0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11,
-                    0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-                    0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17,
-                    0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-            };
 
+
+    uint8_t Plaintext[blocksize];
+
+    for (int i = 0; i <= sizeof(Plaintext); ++i) {
+        Plaintext[i] = rand();
+
+    }
 
     uint8_t key[16] = {
             0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
@@ -428,7 +424,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance, jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -447,12 +443,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
 
     };
 
-    const unsigned char plaintext[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char plaintext[64];
+
+    for (int i = 0; i <= sizeof(plaintext) ; ++i) {
+        plaintext[i] = rand();
+    }
 
 
     size_t nc_off = 0;
@@ -501,7 +496,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -520,12 +515,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
 
     };
 
-    const unsigned char plaintext[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char plaintext[64];
+
+    for (int i = 0; i <= sizeof(plaintext); ++i) {
+        plaintext[i] = rand();
+    }
 
     unsigned char encrypted[64];
     unsigned char decrypted[64];
@@ -586,173 +580,68 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
 
     struct timeval st,et;
 
-    int ret;
-    mbedtls_ecdh_context ctx_cli, ctx_srv;
-    mbedtls_entropy_context entropy;
     mbedtls_ctr_drbg_context ctr_drbg;
-    unsigned char cli_to_srv[32], srv_to_cli[32];
-    const char pers[] = "ecdh";
-
-    mbedtls_ecdh_init( &ctx_cli );
-    mbedtls_ecdh_init( &ctx_srv );
     mbedtls_ctr_drbg_init( &ctr_drbg );
-
-    LOGD( "  . Seeding the random number generator..." );
-    fflush( stdout );
+    mbedtls_entropy_context entropy;
 
     mbedtls_entropy_init( &entropy );
+    const char *pers = "ecdh_genkey";
+
+
+    mbedtls_ecp_group grp;
+    mbedtls_ecp_point qA, qB;
+    mbedtls_mpi dA, dB, zA, zB;
+
+    mbedtls_ecp_group_init( &grp );
+    mbedtls_ecp_point_init( &qA ); mbedtls_ecp_point_init( &qB );
+    mbedtls_mpi_init( &dA ); mbedtls_mpi_init( &dB );
+    mbedtls_mpi_init( &zA ); mbedtls_mpi_init( &zB );
+
+    int ret;
     if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
                                        (const unsigned char *) pers,
-                                       sizeof pers ) ) != 0 )
+                                       strlen( pers ) ) ) != 0 )
     {
-       LOGD( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
-        return 0;
+        LOGD( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
     }
 
-    LOGD( " ok\n" );
-
-    /*
-     * Client: inialize context and generate keypair
-     */
-    LOGD( "  . Setting up client context..." );
-    fflush( stdout );
-
-    ret = mbedtls_ecp_group_load( &ctx_cli.grp, MBEDTLS_ECP_DP_CURVE25519 );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_ecp_group_load returned %d\n", ret );
-        return 0;
+    ret = mbedtls_ecp_group_load( &grp, MBEDTLS_ECP_DP_SECP256R1);
+    if(ret != 0){
+        LOGD("Error group load");
     }
 
-    ret = mbedtls_ecdh_gen_public( &ctx_cli.grp, &ctx_cli.d, &ctx_cli.Q,
-                                   mbedtls_ctr_drbg_random, &ctr_drbg );
-    if( ret != 0 )
-    {
-       LOGD( " failed\n  ! mbedtls_ecdh_gen_public returned %d\n", ret );
-        return 0;
+    mbedtls_ecdh_gen_public( &grp, &dA, &qA, mbedtls_ctr_drbg_random, &ctr_drbg);
+    if(ret != 0){
+        LOGD("Error generating public 1");
     }
 
-    ret = mbedtls_mpi_write_binary( &ctx_cli.Q.X, cli_to_srv, 32 );
-    if( ret != 0 )
-    {
-       LOGD( " failed\n  ! mbedtls_mpi_write_binary returned %d\n", ret );
-        return 0;
+    mbedtls_ecdh_gen_public( &grp, &dB, &qB, mbedtls_ctr_drbg_random, &ctr_drbg );
+    if(ret != 0){
+        LOGD("Error generating public 2");
     }
 
-   LOGD( " ok\n" );
-
-    /*
-     * Server: initialize context and generate keypair
-     */
-   LOGD( "  . Setting up server context..." );
-    fflush( stdout );
-
-    ret = mbedtls_ecp_group_load( &ctx_srv.grp,  MBEDTLS_ECP_DP_SECP256R1  );
-    if( ret != 0 )
-    {
-       LOGD( " failed\n  ! mbedtls_ecp_group_load returned %d\n", ret );
-        return 0;
-    }
-
-    ret = mbedtls_ecdh_gen_public( &ctx_srv.grp, &ctx_srv.d, &ctx_srv.Q,
-                                   mbedtls_ctr_drbg_random, &ctr_drbg );
-    if( ret != 0 )
-    {
-       LOGD( " failed\n  ! mbedtls_ecdh_gen_public returned %d\n", ret );
-        return 0;
-    }
-
-    ret = mbedtls_mpi_write_binary( &ctx_srv.Q.X, srv_to_cli, 32 );
-    if( ret != 0 )
-    {
-       LOGD( " failed\n  ! mbedtls_mpi_write_binary returned %d\n", ret );
-        return 0;
-    }
-
-   LOGD( " ok\n" );
-
-    LOGD( "  . Server reading client key and computing secret..." );
-    fflush( stdout );
-
-    ret = mbedtls_mpi_lset( &ctx_srv.Qp.Z, 1 );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_mpi_lset returned %d\n", ret );
-        return 0;
-    }
-
-    ret = mbedtls_mpi_read_binary( &ctx_srv.Qp.X, cli_to_srv, 32 );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_mpi_read_binary returned %d\n", ret );
-        return 0;
+    ret = mbedtls_ecdh_compute_shared( &grp, &zA, &qB, &dA,
+                                       mbedtls_ctr_drbg_random, &ctr_drbg);
+    if(ret != 0){
+        LOGD("Error generating secret 1");
     }
 
     gettimeofday(&st,NULL);
-    ret = mbedtls_ecdh_compute_shared( &ctx_srv.grp, &ctx_srv.z,
-                                       &ctx_srv.Qp, &ctx_srv.d,
-                                       mbedtls_ctr_drbg_random, &ctr_drbg );
+    ret = mbedtls_ecdh_compute_shared( &grp, &zB, &qA, &dB,
+                                       NULL, NULL );
     gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    fill[1]=generation_time;
 
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
-        return 0;
+    if(ret != 0){
+        LOGD("Error generating secret 2");
     }
 
-    LOGD( " ok\n" );
+    ret = mbedtls_mpi_cmp_mpi( &zA, &zB );
 
-    /*
-     * Client: read peer's key and generate shared secret
-     */
-    LOGD( "  . Client reading server key and computing secret..." );
-    fflush( stdout );
-
-    ret = mbedtls_mpi_lset( &ctx_cli.Qp.Z, 1 );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_mpi_lset returned %d\n", ret );
-        return 0;
+    if(ret != 0){
+        LOGD("Error comparing secrets");
     }
-
-    ret = mbedtls_mpi_read_binary( &ctx_cli.Qp.X, srv_to_cli, 32 );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_mpi_read_binary returned %d\n", ret );
-        return 0;
-    }
-
-    gettimeofday(&st,NULL);
-    ret = mbedtls_ecdh_compute_shared( &ctx_cli.grp, &ctx_cli.z,
-                                       &ctx_cli.Qp, &ctx_cli.d,
-                                       mbedtls_ctr_drbg_random, &ctr_drbg );
-    gettimeofday(&et,NULL);
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1]=encryption_time + decryption_time;
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
-        return 0;
-    }
-
-    LOGD( " ok\n" );
-
-    /*
-     * Verification: are the computed secrets equal?
-     */
-    LOGD( "  . Checking if both computed secrets are equal..." );
-    fflush( stdout );
-
-    ret = mbedtls_mpi_cmp_mpi( &ctx_cli.z, &ctx_srv.z );
-    if( ret != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_ecdh_compute_shared returned %d\n", ret );
-        return 0;
-    }
-
-    LOGD( " ok\n" );
-
     LOGD("We are good");
 
     env->SetIntArrayRegion(result, 0, 3, fill);

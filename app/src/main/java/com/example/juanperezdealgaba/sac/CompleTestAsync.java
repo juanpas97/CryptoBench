@@ -47,13 +47,13 @@ class CompleteTestParams {
 class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
-    CompleteTestAsync(CompleteTestActivity a){
+    /*CompleteTestAsync(CompleteTestActivity a){
         this.activity = a;
         dialog = new ProgressDialog(activity);
     }
 
-    public  CompleteTestActivity activity;
-    public ProgressDialog dialog;
+    *//*public  CompleteTestActivity activity;
+    public ProgressDialog dialog;*//*
 
     @Override
     protected void onPreExecute() {
@@ -61,7 +61,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
         dialog = new ProgressDialog(activity);
         dialog.setMessage("Performing benchmarks");
         dialog.show();
-    }
+    }*/
 
 
 
@@ -100,7 +100,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             writer.write("\n");
             writer.write("\n");
             writer.write("\n");
-
+            String separate = "*********************************************" + "\n";
 
             for (int i= 0; i< repetitions; i++){
 
@@ -110,10 +110,10 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 results.append(BC);
                 writer.write(BC);
 
-                int blocksize = 2;
-                while (blocksize < 129){
 
-                    String separate = "*********************************************" + "\n";
+                for (int blocksize = 2; blocksize <= 128;){
+
+
                     System.out.println("Blocksize is:");
                     System.out.println(blocksize);
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
@@ -212,7 +212,117 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
                 }
-            }
+
+                String mbed = "***********mbedTLS**************" + "\n";
+                System.out.println(mbed);
+                results.append(mbed);
+                writer.write(mbed);
+
+                for (int blocksize = 2; blocksize <= 128;) {
+                    String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
+                    writer.write(block);
+                    results.append(block);
+                    String mbedCBC= "***********AES/CBC**************" + "\n";
+                    System.out.println(mbedCBC);
+                    results.append(mbedCBC);
+                    writer.write(mbedCBC);
+
+                    mbedTLS test = new mbedTLS();
+                    int[] timesAES = test.AESCBC(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedCTR= "***********AES/CTR**************" + "\n";
+                    System.out.println(mbedCTR);
+                    results.append(mbedCTR);
+                    writer.write(mbedCTR);
+
+                    mbedTLS testCTR = new mbedTLS();
+                    int[] timesAESCTR = testCTR.AESCTR(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedGCM= "***********AES/GCM**************" + "\n";
+                    System.out.println(mbedGCM);
+                    results.append(mbedGCM);
+                    writer.write(mbedGCM);
+
+                    mbedTLS testGCM = new mbedTLS();
+                    int[] timesAESGCM = testGCM.AESGCM(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbeddh= "***********DH**************" + "\n";
+                    System.out.println(mbeddh);
+                    results.append(mbeddh);
+                    writer.write(mbeddh);
+
+                    mbedTLS testDH = new mbedTLS();
+                    int[] timesDH = testDH.DH();
+
+                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedecdh= "***********ECDH**************" + "\n";
+                    System.out.println(mbedecdh);
+                    results.append(mbedecdh);
+                    writer.write(mbedecdh);
+
+                    mbedTLS testECDH = new mbedTLS();
+                    int[] timesECDH = testECDH.ECDH();
+
+                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+
+
+                    blocksize = blocksize*2;
+                }
+
+                }
 
             writer.close();
 
@@ -241,11 +351,11 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
     @Override
     protected void onPostExecute(TextView report) {
-            if(dialog.isShowing()){
+            /*if(dialog.isShowing()){
                 dialog.dismiss();
             }
             dialog = null;
-            activity = null;
+            activity = null;*/
         super.onPostExecute(report);
     }
 
