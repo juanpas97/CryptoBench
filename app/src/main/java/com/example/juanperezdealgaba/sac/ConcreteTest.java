@@ -420,7 +420,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] timesRSA = test.RSA(3);
+                    int[] timesRSA = test.RSA(64);
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
@@ -450,7 +450,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] timesAES = test.AESCBC(3);
+                    int[] timesAES = test.AESCBC(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -480,7 +480,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] timesAES = test.AESCTR();
+                    int[] timesAES = test.AESCTR(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -510,7 +510,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] timesAES = test.AESGCM();
+                    int[] timesAES = test.AESGCM(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -540,7 +540,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] timesAES = test.AESGCM();
+                    int[] timesAES = test.AESGCM(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -570,7 +570,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     OpenSSL test = new OpenSSL();
-                    int[] testMD5 = test.MD5();
+                    int[] testMD5 = test.MD5(64);
                     System.out.println("Time to generate hash:" + testMD5[0] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[0] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[0] + "ns\n");

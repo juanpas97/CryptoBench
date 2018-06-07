@@ -500,7 +500,136 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     blocksize = blocksize*2;
                 }
 
+                String openssl = "***********OpenSSL**************" + "\n";
+                System.out.println(openssl);
+                results.append(openssl);
+                writer.write(openssl);
 
+                for (int blocksize = 2; blocksize <= 128;){
+
+                    String wcmd5= "***********MD5**************" + "\n";
+                    System.out.println(wcmd5);
+                    results.append(wcmd5);
+                    writer.write(wcmd5);
+
+                    OpenSSL testmd5 = new OpenSSL();
+                    int[] timesmd5 = testmd5.MD5(blocksize);
+
+                    System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String wcRSA= "***********RSA**************" + "\n";
+                    System.out.println(wcRSA);
+                    results.append(wcRSA);
+                    writer.write(wcRSA);
+
+                    OpenSSL testRSA = new OpenSSL();
+                    int[] timesRSA = testRSA.RSA(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String openCBC= "***********AES/CBC**************" + "\n";
+                    System.out.println(openCBC);
+                    results.append(openCBC);
+                    writer.write(openCBC);
+
+                    OpenSSL test = new OpenSSL();
+                    int[] timesAES = test.AESCBC(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedCTR= "***********AES/CTR**************" + "\n";
+                    System.out.println(mbedCTR);
+                    results.append(mbedCTR);
+                    writer.write(mbedCTR);
+
+                    OpenSSL testCTR = new OpenSSL();
+                    int[] timesAESCTR = testCTR.AESCTR(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedGCM= "***********AES/GCM**************" + "\n";
+                    System.out.println(mbedGCM);
+                    results.append(mbedGCM);
+                    writer.write(mbedGCM);
+
+                    OpenSSL testGCM = new OpenSSL();
+                    int[] timesAESGCM = testGCM.AESGCM(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String openOFB= "***********AES/OFB**************" + "\n";
+                    System.out.println(openOFB);
+                    results.append(openOFB);
+                    writer.write(openOFB);
+
+                    OpenSSL testofb = new OpenSSL();
+                    int[] timesAESOFB = testofb.AESOFB(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESOFB[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESOFB[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESOFB[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESOFB[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESOFB[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESOFB[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    blocksize = blocksize*2;
+                }
 
                 }
 

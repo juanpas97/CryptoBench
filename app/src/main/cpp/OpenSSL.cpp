@@ -59,7 +59,7 @@ RSA * createRSA(unsigned char * key,int value){
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance, jint size) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -105,7 +105,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 "uJSUVL5+CVjKLjZEJ6Qc2WZLl94xSwL71E41H4YciVnSCQxVc4Jw\n"\
 "-----END RSA PRIVATE KEY-----\n";
 
-    char plainText[2048/8] = "Hello this is Juan";
+    char plainText[blocksize];
+
+    for (int i = 0; i < sizeof(plainText) ; ++i) {
+        plainText[i] = rand();
+    }
 
     unsigned char  encrypted[4098]={};
     unsigned char decrypted[4098]={};
@@ -173,11 +177,11 @@ void print_data(const char *tittle, const void* data, int len);
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject instance, jint size) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
-    result = env->NewIntArray(size);
-    jint fill[size];
+    result = env->NewIntArray(3);
+    jint fill[3];
 
     struct timeval st,et;
     unsigned char aes_key[16] = {
@@ -192,7 +196,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
     };
 
     /* Input data to encrypt */
-    unsigned char aes_input[32];
+    unsigned char aes_input[blocksize];
     RAND_bytes(aes_input, sizeof(aes_input));
 
     /* Init vector */
@@ -231,7 +235,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
 
     print_data("\n Decrypted",dec_out, sizeof(dec_out));
 
-    env->SetIntArrayRegion(result, 0, size, fill);
+    env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
 
@@ -321,7 +325,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DH(JNIEnv *env, jobject instance)
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -339,7 +343,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
 
         size_t bytes = 16;
 
-        unsigned char data[1024] = "asdsdasd";
+        unsigned char data[blocksize];
+
+    for (int i = 0; i < sizeof(data) ; ++i) {
+        data[i] = rand();
+    }
 
         gettimeofday(&st,NULL);
 
@@ -375,7 +383,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -403,7 +411,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
 
 
     /* Input data to encrypt */
-    unsigned char aes_input[32];
+    unsigned char aes_input[blocksize];
     RAND_bytes(aes_input, sizeof(aes_input));
 
     /* Init vector */
@@ -455,12 +463,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
 
     EVP_CIPHER_CTX_free(ctx);
 
-    /* Printing and Verifying */
+   /* *//* Printing and Verifying *//*
     print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
 
     print_data("\n Encrypted",enc_out, sizeof(enc_out));
 
-    print_data("\n Decrypted",dec_out, sizeof(dec_out));
+    print_data("\n Decrypted",dec_out, sizeof(dec_out));*/
 
     env->SetIntArrayRegion(result, 0, 3, fill);
 
@@ -470,7 +478,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -489,13 +497,13 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
 
     };
 
-    unsigned char plaintext[32];
+    unsigned char plaintext[blocksize];
     RAND_bytes(plaintext, sizeof(plaintext));
 
-    unsigned char ciphertext[32];
+    unsigned char ciphertext[blocksize];
     unsigned char tag[16];
 
-    unsigned char decrypted[32];
+    unsigned char decrypted[blocksize];
 
     int len;
 
@@ -594,7 +602,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -614,12 +622,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
 
     };
 
-    unsigned char plaintext[32];
+    unsigned char plaintext[blocksize];
     RAND_bytes(plaintext, sizeof(plaintext));
 
-    unsigned char ciphertext[32];
+    unsigned char ciphertext[blocksize];
 
-    unsigned char decrypted[32];
+    unsigned char decrypted[blocksize];
 
     int len;
 
