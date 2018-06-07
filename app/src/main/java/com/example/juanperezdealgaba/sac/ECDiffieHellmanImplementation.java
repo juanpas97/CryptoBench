@@ -32,7 +32,7 @@ public class ECDiffieHellmanImplementation {
         long endKeyAgreement = System.nanoTime();
         long timeKeyAgreement = (endKeyAgreement - startKeyAgreement);
         writer.write("Time to generate key agreement :" + timeKeyAgreement+ "\n");
-        results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
+        //results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
 
 
     }

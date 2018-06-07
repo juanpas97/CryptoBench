@@ -38,7 +38,7 @@ public class MD5Implementation {
 
         System.out.println("Time to generate Hash:" + timeHash + "ms\n");
         writer.write("Time to generate Hash:" + timeHash + "ms\n");
-        results.append("Time to generate Hash:" + timeHash + "ms\n");
+        //results.append("Time to generate Hash:" + timeHash + "ms\n");
 
 
     }

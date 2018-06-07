@@ -51,22 +51,22 @@ class CompleteTestParams {
 class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
-    CompleteTestAsync(CompleteTestActivity a){
+    /*CompleteTestAsync(CompleteTestActivity a){
         this.activity = a;
         dialog = new ProgressDialog(activity);
-    }
+    }*/
 
-   public  CompleteTestActivity activity;
-    public ProgressDialog dialog;
+   //public  CompleteTestActivity activity;
+   // public ProgressDialog dialog;
 
-    @Override
+  /*  @Override
     protected void onPreExecute() {
         super.onPreExecute();
         dialog = new ProgressDialog(activity);
         dialog.setMessage("Performing benchmarks");
         dialog.show();
     }
-
+*/
 
 
     @Override
@@ -108,13 +108,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             writer.write("Device: " + device + "\n");
             writer.write("Model: " + model + "\n");
 
-            String device_data = "Super Test Results\n" + "*********************************\n"
-                    + "Model CPU: " + model_cpu + "\n" + "Android Version:" + myVersion + "\n" +
-                    "SDK Version: " + sdkVersion + "\n" + "Manufacturer: " + manufacturer + "\n" +
-                    "Device: " + device + "\n" + "Model: " + model + "\n"
-                    + "********************************\n\n";
 
-            results.setText(device_data);
             writer.write("\n");
             writer.write("\n");
             writer.write("\n");
@@ -125,7 +119,6 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                 String BC = "***********Bouncy Castle**************" + "\n";
                 System.out.println(BC);
-                results.append(BC);
                 writer.write(BC);
 
 
@@ -136,95 +129,82 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     System.out.println(blocksize);
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
-                    results.append(block);
 
                     String BCCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(BCCBC);
-                    results.append(BCCBC);
                     writer.write(BCCBC);
 
                     AESCBC testCBC = new AESCBC();
                     testCBC.testCBC(writer,results,blocksize);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCCTR= "***********AES/CTR**************" + "\n";
                     System.out.println(BCCTR);
-                    results.append(BCCTR);
                     writer.write(BCCTR);
 
                     AESCTR testCTR = new AESCTR();
                     testCTR.testCTR(writer, results, blocksize);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCGCM= "***********AES/GCM**************" + "\n";
                     System.out.println(BCGCM);
-                    results.append(BCGCM);
                     writer.write(BCGCM);
 
                     AESGCM testGCM = new AESGCM();
                     testGCM.testGCM(writer, results, blocksize);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCOFB= "***********AES/OFB**************" + "\n";
                     System.out.println(BCOFB);
-                    results.append(BCOFB);
                     writer.write(BCOFB);
 
                     AESOFB testOFB = new AESOFB();
                     testOFB.testOFB(writer, results, blocksize);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCDH= "***********DH**************" + "\n";
                     System.out.println(BCDH);
-                    results.append(BCDH);
                     writer.write(BCDH);
 
                     DiffieHellman testDH = new DiffieHellman();
                     testDH.testDH(writer, results);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCECDH= "***********ECDH**************" + "\n";
                     System.out.println(BCECDH);
-                    results.append(BCECDH);
                     writer.write(BCECDH);
 
                     ECDiffieHellmanImplementation testECDH = new ECDiffieHellmanImplementation();
                     testECDH.startDiffieHellman(writer, results);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String BCMD5= "***********MD-5**************" + "\n";
                     System.out.println(BCMD5);
-                    results.append(BCMD5);
                     writer.write(BCMD5);
+
+                    MD5Implementation testmd5 = new MD5Implementation();
+                    testmd5.testmd5(writer, results,blocksize);
+
+                    writer.write(separate);
+
+                    String BCRSA= "***********RSA**************" + "\n";
+                    System.out.println(BCRSA);
+                    writer.write(BCRSA);
+
 
                     RSAPrueba testRSA = new RSAPrueba();
                     testRSA.testRSA(writer, results,blocksize);
 
-                    writer.write(separate);
-                    results.append(separate);
 
-                    String BCRSA= "***********RSA**************" + "\n";
-                    System.out.println(BCRSA);
-                    results.append(BCRSA);
-                    writer.write(BCRSA);
 
-                   MD5Implementation testmd5 = new MD5Implementation();
-                    testmd5.testmd5(writer, results,blocksize);
 
                     writer.write(separate);
-                    results.append(separate);
 
                     blocksize = blocksize*2;
 
@@ -233,16 +213,13 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                 String mbed = "***********mbedTLS**************" + "\n";
                 System.out.println(mbed);
-                results.append(mbed);
                 writer.write(mbed);
 
                 for (int blocksize = 2; blocksize <= 128;) {
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
-                    results.append(block);
                     String mbedCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(mbedCBC);
-                    results.append(mbedCBC);
                     writer.write(mbedCBC);
 
                     mbedTLS test = new mbedTLS();
@@ -250,20 +227,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedCTR= "***********AES/CTR**************" + "\n";
                     System.out.println(mbedCTR);
-                    results.append(mbedCTR);
                     writer.write(mbedCTR);
 
                     mbedTLS testCTR = new mbedTLS();
@@ -271,20 +243,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedGCM= "***********AES/GCM**************" + "\n";
                     System.out.println(mbedGCM);
-                    results.append(mbedGCM);
                     writer.write(mbedGCM);
 
                     mbedTLS testGCM = new mbedTLS();
@@ -292,20 +259,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbeddh= "***********DH**************" + "\n";
                     System.out.println(mbeddh);
-                    results.append(mbeddh);
                     writer.write(mbeddh);
 
                     mbedTLS testDH = new mbedTLS();
@@ -313,15 +275,11 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedecdh= "***********ECDH**************" + "\n";
                     System.out.println(mbedecdh);
-                    results.append(mbedecdh);
                     writer.write(mbedecdh);
 
                     mbedTLS testECDH = new mbedTLS();
@@ -329,15 +287,11 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedRSA= "***********RSA**************" + "\n";
                     System.out.println(mbedRSA);
-                    results.append(mbedRSA);
                     writer.write(mbedRSA);
 
                     mbedTLS testRSA = new mbedTLS();
@@ -345,20 +299,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedmd5= "***********MD5**************" + "\n";
                     System.out.println(mbedmd5);
-                    results.append(mbedmd5);
                     writer.write(mbedmd5);
 
                     mbedTLS testmd5 = new mbedTLS();
@@ -366,11 +315,8 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     blocksize = blocksize*2;
 
@@ -378,18 +324,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                 String wc = "***********WolfCrypt**************" + "\n";
                 System.out.println(wc);
-                results.append(wc);
                 writer.write(wc);
 
                 for (int blocksize = 2; blocksize <= 128;){
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
-                    results.append(block);
 
 
                     String wcCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(wcCBC);
-                    results.append(wcCBC);
                     writer.write(wcCBC);
 
                     WolfCrypt test = new WolfCrypt();
@@ -397,20 +340,17 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
+
 
                     String mbedCTR= "***********AES/CTR**************" + "\n";
                     System.out.println(mbedCTR);
-                    results.append(mbedCTR);
                     writer.write(mbedCTR);
 
                     WolfCrypt testCTR = new WolfCrypt();
@@ -418,20 +358,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedGCM= "***********AES/GCM**************" + "\n";
                     System.out.println(mbedGCM);
-                    results.append(mbedGCM);
                     writer.write(mbedGCM);
 
                     WolfCrypt testGCM = new WolfCrypt();
@@ -439,20 +374,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcdh= "***********DH**************" + "\n";
                     System.out.println(wcdh);
-                    results.append(wcdh);
                     writer.write(wcdh);
 
                     WolfCrypt testDH = new WolfCrypt();
@@ -460,15 +390,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcecdh= "***********ECDH**************" + "\n";
                     System.out.println(wcecdh);
-                    results.append(wcecdh);
                     writer.write(wcecdh);
 
                     WolfCrypt testECDH = new WolfCrypt();
@@ -476,15 +403,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
-                    results.append(wcmd5);
                     writer.write(wcmd5);
 
                     WolfCrypt testmd5 = new WolfCrypt();
@@ -492,15 +416,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcRSA= "***********RSA**************" + "\n";
                     System.out.println(wcRSA);
-                    results.append(wcRSA);
                     writer.write(wcRSA);
 
                     WolfCrypt testRSA = new WolfCrypt();
@@ -508,35 +429,30 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("\n");
+             ;
 
                     writer.write(separate);
-                    results.append(separate);
+
 
                     blocksize = blocksize*2;
                 }
 
                 String openssl = "***********OpenSSL**************" + "\n";
                 System.out.println(openssl);
-                results.append(openssl);
                 writer.write(openssl);
 
                 for (int blocksize = 2; blocksize <= 128;){
 
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
-                    results.append(block);
 
 
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
-                    results.append(wcmd5);
                     writer.write(wcmd5);
 
                     OpenSSL testmd5 = new OpenSSL();
@@ -544,15 +460,11 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to generate hash:" + timesmd5[0] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[0] + "ms\n");
-                    results.append("Time to generate hash" + timesmd5[0] + "ms\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcRSA= "***********RSA**************" + "\n";
                     System.out.println(wcRSA);
-                    results.append(wcRSA);
                     writer.write(wcRSA);
 
                     OpenSSL testRSA = new OpenSSL();
@@ -560,20 +472,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String opendh= "***********DH**************" + "\n";
                     System.out.println(opendh);
-                    results.append(opendh);
                     writer.write(opendh);
 
                     OpenSSL testDH = new OpenSSL();
@@ -581,15 +489,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openecdh= "***********ECDH**************" + "\n";
                     System.out.println(openecdh);
-                    results.append(openecdh);
                     writer.write(openecdh);
 
                     OpenSSL testECDH = new OpenSSL();
@@ -597,15 +502,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(openCBC);
-                    results.append(openCBC);
                     writer.write(openCBC);
 
                     OpenSSL test = new OpenSSL();
@@ -613,20 +515,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedCTR= "***********AES/CTR**************" + "\n";
                     System.out.println(mbedCTR);
-                    results.append(mbedCTR);
                     writer.write(mbedCTR);
 
                     OpenSSL testCTR = new OpenSSL();
@@ -634,20 +532,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedGCM= "***********AES/GCM**************" + "\n";
                     System.out.println(mbedGCM);
-                    results.append(mbedGCM);
                     writer.write(mbedGCM);
 
                     OpenSSL testGCM = new OpenSSL();
@@ -655,20 +549,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openOFB= "***********AES/OFB**************" + "\n";
                     System.out.println(openOFB);
-                    results.append(openOFB);
                     writer.write(openOFB);
 
                     OpenSSL testofb = new OpenSSL();
@@ -676,23 +565,18 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESOFB[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESOFB[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESOFB[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESOFB[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     blocksize = blocksize*2;
                 }
 
                 String boringssl = "***********BoringSSL**************" + "\n";
                 System.out.println(boringssl);
-                results.append(boringssl);
                 writer.write(boringssl);
 
 
@@ -701,11 +585,9 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
-                    results.append(block);
 
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
-                    results.append(wcmd5);
                     writer.write(wcmd5);
 
                     BoringSSL testmd5 = new BoringSSL();
@@ -713,15 +595,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String wcRSA= "***********RSA**************" + "\n";
                     System.out.println(wcRSA);
-                    results.append(wcRSA);
                     writer.write(wcRSA);
 
                     BoringSSL testRSA = new BoringSSL();
@@ -729,20 +608,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String opendh= "***********DH**************" + "\n";
                     System.out.println(opendh);
-                    results.append(opendh);
                     writer.write(opendh);
 
                     BoringSSL testDH = new BoringSSL();
@@ -750,15 +625,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openecdh= "***********ECDH**************" + "\n";
                     System.out.println(openecdh);
-                    results.append(openecdh);
                     writer.write(openecdh);
 
                     BoringSSL testECDH = new BoringSSL();
@@ -766,15 +638,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
                     writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(openCBC);
-                    results.append(openCBC);
                     writer.write(openCBC);
 
                     BoringSSL test = new BoringSSL();
@@ -782,20 +651,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedCTR= "***********AES/CTR**************" + "\n";
                     System.out.println(mbedCTR);
-                    results.append(mbedCTR);
                     writer.write(mbedCTR);
 
                     BoringSSL testCTR = new BoringSSL();
@@ -803,20 +668,16 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    results.append("\n");
+
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String mbedGCM= "***********AES/GCM**************" + "\n";
                     System.out.println(mbedGCM);
-                    results.append(mbedGCM);
                     writer.write(mbedGCM);
 
                     BoringSSL testGCM = new BoringSSL();
@@ -824,20 +685,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     String openOFB= "***********AES/OFB**************" + "\n";
                     System.out.println(openOFB);
-                    results.append(openOFB);
                     writer.write(openOFB);
 
                     BoringSSL testofb = new BoringSSL();
@@ -845,16 +701,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to encrypt:" + timesAESOFB[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAESOFB[0] + "ns\n");
-                    results.append("Time to encrypt:" + timesAESOFB[0] + "ns\n");
 
 
                     System.out.println("Time to decrypt:" + timesAESOFB[1] + "ns\n");
                     writer.write("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    results.append("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    results.append("\n");
 
                     writer.write(separate);
-                    results.append(separate);
 
                     blocksize = blocksize*2;
                 }
@@ -913,7 +765,9 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
     @Override
     protected void onPostExecute(final TextView report) {
-            dialog.dismiss();
+            //dialog.dismiss();
+            report.setText("\n"+"\n"+"\n"+"\n"+"   Test finished successfully"+"\n"+"\n"+"  Find your results at " +
+                    "CryptoBench/Report.txt");
         super.onPostExecute(report);
     }
 
