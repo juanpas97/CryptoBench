@@ -836,7 +836,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/RSA***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesRSA = test.RSA();
+                    int[] timesRSA = test.RSA(64);
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
@@ -868,7 +868,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESCBC();
+                    int[] timesAES = test.AESCBC(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -898,7 +898,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESGCM();
+                    int[] timesAES = test.AESGCM(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -928,7 +928,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESCTR();
+                    int[] timesAES = test.AESCTR(64);
 
                     System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -958,7 +958,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] testMD5 = test.MD5();
+                    int[] testMD5 = test.MD5(64);
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");

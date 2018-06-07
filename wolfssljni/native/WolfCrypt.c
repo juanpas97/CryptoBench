@@ -209,7 +209,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject instance, jint blocksize) {
 
     jintArray result;
     result = (*env)->NewIntArray(env,3);
@@ -240,7 +240,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
 
     };
 
-    int szmsg = 16;
+    int szmsg = blocksize;
     byte msg[szmsg];
 
     int retrng = wc_InitRng(&rng);
@@ -255,7 +255,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
     }
 
 
-    LOGD("Begin of key");
+/*    LOGD("Begin of key");
 
     for (int i = 0; i < 16 ; ++i) {
         LOGD("%x",key[i]);
@@ -271,7 +271,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
 
     for (int i = 0; i < 16 ; ++i) {
         LOGD("%x",msg[i]);
-    }
+    }*/
 
     if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init enc");
@@ -328,9 +328,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
         LOGD("Decryption finished");
     }
 
-    if (XMEMCMP(plain, msg, (int) sizeof(plain))) {
-        LOGD("Error comparing XMEMCMP");
-    }
+
 
     wc_AesFree(&enc);
     wc_AesFree(&dec);
@@ -344,7 +342,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = (*env)->NewIntArray(env,3);
@@ -353,10 +351,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
     jdouble error[1];
 
     Aes enc;
-    byte cipher[AES_BLOCK_SIZE];
+    byte cipher[blocksize];
 
     Aes dec;
-    byte plain[AES_BLOCK_SIZE];
+    byte plain[blocksize];
 
     int ret = 0;
 
@@ -376,7 +374,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
 
     };
 
-    int szmsg = 16;
+    int szmsg = blocksize;
     byte msg[szmsg];
 
     int retrng = wc_InitRng(&rng);
@@ -453,10 +451,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
     fill[1] = decryption_time;
 
 
-    if (XMEMCMP(plain, msg, (int) sizeof(plain))) {
-        LOGD("Error comparing XMEMCMP");
-    }
-
     wc_AesFree(&enc);
     wc_AesFree(&dec);
 
@@ -469,7 +463,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = (*env)->NewIntArray(env,3);
@@ -484,7 +478,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
     int ret;
     int final;
 
-    int szdata= 32;
+    int szdata= blocksize;
     byte data[szdata];
     word32 len = sizeof(data);
     ret = wc_InitMd5(&md5);
@@ -548,7 +542,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = (*env)->NewIntArray(env,3);
@@ -563,6 +557,21 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     int encrypted_len;
     int decrypted_len;
 
+    RNG  rng;
+
+    int szdata = blocksize;
+    byte data[szdata];
+
+    int rngint = wc_InitRng(&rng);
+    if (rngint != 0) {
+        LOGD("Failure Init"); //init of rng failed!
+    }
+
+    ret = wc_RNG_GenerateBlock(&rng, data,szdata);
+
+    if (ret != 0) {
+        LOGD("Failure GenerateByte"); //generating block failed!
+    }
 
     // encrypt data.
     index = 0;
@@ -573,7 +582,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
     if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return result; }
     gettimeofday(&st,NULL);
-    ret = wc_RsaPublicEncrypt_ex((const byte *)in_buffer, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_PKCSV15_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+    ret = wc_RsaPublicEncrypt_ex(data, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_PKCSV15_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
     gettimeofday(&et,NULL);
 
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
@@ -604,12 +613,12 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     decrypted_len = ret;
     wc_FreeRsaKey(&key);
 
-    // compare data.
+   /* // compare data.
     if (decrypted_len != IN_BUFFER_LENGTH) { LOGD("Decrypted length should be %i but it is %i.", IN_BUFFER_LENGTH, decrypted_len); return result; }
     for (int i = 0; i < IN_BUFFER_LENGTH; i++)
     {
-        if (decrypted_buffer[i] != in_buffer[i]) { LOGD("Byte at index %i should be %i but it is %i.", i, 0xFF & in_buffer[i], 0xFF & decrypted_buffer[i]); return result; }
-    }
+        if (decrypted_buffer[i] != data[i]) { LOGD("Byte at index %i should be %i but it is %i.", i, 0xFF & data[i], 0xFF & decrypted_buffer[i]); return result; }
+    }*/
 
     LOGD("Finished decryption");
     // got here means no error.
@@ -621,7 +630,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
 
     LOGD("Starting AESGCM");
     jintArray result;
@@ -635,10 +644,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
     struct timeval st,et;
 
     Aes enc;
-    byte cipher[AES_BLOCK_SIZE];
+    byte cipher[blocksize];
 
     Aes dec;
-    byte plain[AES_BLOCK_SIZE];
+    byte plain[blocksize];
 
     int ret = 0;
 
@@ -656,7 +665,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
 
     };
 
-    int szmsg = 16;
+    int szmsg = blocksize;
     byte msg[szmsg];
 
     const byte p[] =
@@ -715,15 +724,13 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
 
     if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init enc");
-        return 0;
     }else{
         LOGD("No problem at init enc");
     }
 
     if (wc_AesInit(&dec, HEAP_HINT, devId) != 0){
         LOGD("Error in aes init dec");
-        return 0;
-    }else{
+     }else{
         LOGD("No problem at init dec");
     }
 

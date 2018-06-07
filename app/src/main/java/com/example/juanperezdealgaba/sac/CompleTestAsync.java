@@ -344,7 +344,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(mbedmd5);
 
                     mbedTLS testmd5 = new mbedTLS();
-                    int[] timesmd5 = testmd5.ECDH();
+                    int[] timesmd5 = testmd5.MD5(blocksize);
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
@@ -354,9 +354,153 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(separate);
                     results.append(separate);
 
+                    blocksize = blocksize*2;
+
+                }
+
+                String wc = "***********WolfCrypt**************" + "\n";
+                System.out.println(wc);
+                results.append(wc);
+                writer.write(wc);
+
+                for (int blocksize = 2; blocksize <= 128;){
+
+                    String wcCBC= "***********AES/CBC**************" + "\n";
+                    System.out.println(wcCBC);
+                    results.append(wcCBC);
+                    writer.write(wcCBC);
+
+                    WolfCrypt test = new WolfCrypt();
+                    int[] timesAES = test.AESCBC(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAES[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAES[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedCTR= "***********AES/CTR**************" + "\n";
+                    System.out.println(mbedCTR);
+                    results.append(mbedCTR);
+                    writer.write(mbedCTR);
+
+                    WolfCrypt testCTR = new WolfCrypt();
+                    int[] timesAESCTR = testCTR.AESCTR(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String mbedGCM= "***********AES/GCM**************" + "\n";
+                    System.out.println(mbedGCM);
+                    results.append(mbedGCM);
+                    writer.write(mbedGCM);
+
+                    WolfCrypt testGCM = new WolfCrypt();
+                    int[] timesAESGCM = testGCM.AESGCM(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String wcdh= "***********DH**************" + "\n";
+                    System.out.println(wcdh);
+                    results.append(wcdh);
+                    writer.write(wcdh);
+
+                    WolfCrypt testDH = new WolfCrypt();
+                    int[] timesDH = testDH.DH();
+
+                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String wcecdh= "***********ECDH**************" + "\n";
+                    System.out.println(wcecdh);
+                    results.append(wcecdh);
+                    writer.write(wcecdh);
+
+                    WolfCrypt testECDH = new WolfCrypt();
+                    int[] timesECDH = testECDH.ECDH();
+
+                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String wcmd5= "***********MD5**************" + "\n";
+                    System.out.println(wcmd5);
+                    results.append(wcmd5);
+                    writer.write(wcmd5);
+
+                    WolfCrypt testmd5 = new WolfCrypt();
+                    int[] timesmd5 = testmd5.MD5(64);
+
+                    System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String wcRSA= "***********RSA**************" + "\n";
+                    System.out.println(wcRSA);
+                    results.append(wcRSA);
+                    writer.write(wcRSA);
+
+                    WolfCrypt testRSA = new WolfCrypt();
+                    int[] timesRSA = testRSA.RSA(blocksize);
+
+                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                    results.append("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("Time to decrypt:" + timesRSA[1] + "ns\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
 
                     blocksize = blocksize*2;
                 }
+
+
 
                 }
 

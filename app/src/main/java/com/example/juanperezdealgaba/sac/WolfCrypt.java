@@ -9,11 +9,11 @@ public class WolfCrypt {
 
 
     public native int[] DH();
-    public native int[] AESCBC();
-    public native int[] MD5();
-    public native int[] RSA();
-    public native int[] AESCTR();
-    public native int[] AESGCM();
+    public native int[] AESCBC(int blocksize);
+    public native int[] MD5(int blocksize);
+    public native int[] RSA(int blocksize);
+    public native int[] AESCTR(int blocksize);
+    public native int[] AESGCM(int blocksize);
     public native int[] ECDH();
     ;
 }
