@@ -28,7 +28,7 @@
         <activity android:name=".SuperTestActivity" />
         <activity
             android:name=".CompleteTestActivity"
-            android:label="@string/title_activity_complete_test"
+            android:label="Complete Test"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
