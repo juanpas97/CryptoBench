@@ -182,19 +182,6 @@ public  class  MainActivity extends AppCompatActivity {
         * execution times will be messed here.
         */
 
-        final Button Benchmark = findViewById(R.id.SuperTest);
-        Benchmark.setOnClickListener(new View.OnClickListener() {
-
-            @SuppressLint("StaticFieldLeak")
-            public void onClick(View v) {
-
-                Intent supertest = new Intent(v.getContext(), SuperTestActivity.class);
-                String message = "SuperTest";
-                supertest.putExtra(EXTRA_MESSAGE, message);
-                startActivity(supertest);
-
-            }
-        });
 
         final Button completeTest = findViewById(R.id.complete_test);
         completeTest.setOnClickListener(new View.OnClickListener() {
