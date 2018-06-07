@@ -50,7 +50,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********RSA************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesRSA = test.RSA();
+                int[] timesRSA = test.RSA(64);
 
                 System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
@@ -72,7 +72,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********AES-CBC************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCBC();
+                int[] timesAES = test.AESCBC(63);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -94,7 +94,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********AES-CTR************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCTR();
+                int[] timesAES = test.AESCTR(63);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -116,7 +116,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********AES-OFB************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESOFB();
+                int[] timesAES = test.AESOFB(63);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -138,7 +138,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********AES-GCM************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESGCM();
+                int[] timesAES = test.AESGCM(63);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -178,7 +178,7 @@ public class AsyncBoringSSL extends AsyncTask<BoringSSLParamsTest,Void,String> {
             text.append("**********MD5************\n");
 
             for (int i = 0; i < repetitions; i++) {
-                int[] testMD5 = test.MD5();
+                int[] testMD5 = test.MD5(63);
                 System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                 writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                 text.append("Time to generate hash:" + testMD5[1] + "ns\n");

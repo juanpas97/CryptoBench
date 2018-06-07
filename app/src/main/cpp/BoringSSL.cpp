@@ -58,7 +58,7 @@ RSA * createRSA(unsigned char * key,int value){
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -104,7 +104,11 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 "uJSUVL5+CVjKLjZEJ6Qc2WZLl94xSwL71E41H4YciVnSCQxVc4Jw\n"\
 "-----END RSA PRIVATE KEY-----\n";
 
-    char plainText[2048/8] = "Hello this is Juan";
+    char plainText[blocksize];
+
+    for (int i = 0; i < blocksize ; ++i) {
+        plainText[i] = rand();
+    }
 
     unsigned char  encrypted[4098]={};
     unsigned char decrypted[4098]={};
@@ -171,9 +175,10 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 
 void print_data(const char *tittle, const void* data, int len);
 
+
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject instance, jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -194,14 +199,8 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
 
     };
 
-
-
-    const unsigned char aes_input[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char aes_input[blocksize];
+    RAND_bytes(aes_input, sizeof(aes_input));
 
     /* Init vector */
     //unsigned char iv[AES_BLOCK_SIZE];
@@ -249,7 +248,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -276,12 +275,8 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject ins
 
     };
     /* Input data to encrypt */
-    const unsigned char aes_input[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char aes_input[blocksize];
+    RAND_bytes(aes_input, sizeof(aes_input));
 
     /* Init vector */
     //unsigned char iv[AES_BLOCK_SIZE];
@@ -347,7 +342,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -366,17 +361,13 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject ins
 
     };
 
-    const unsigned char plaintext[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char plaintext[blocksize];
+    RAND_bytes(plaintext, sizeof(plaintext));
 
-    unsigned char ciphertext[32];
+    unsigned char ciphertext[blocksize];
     unsigned char tag[16];
 
-    unsigned char decrypted[32];
+    unsigned char decrypted[blocksize];
 
     int len;
 
@@ -487,7 +478,7 @@ void print_data(const char *tittle, const void* data, int len)
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
@@ -505,7 +496,8 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 
     size_t bytes = 16;
 
-    unsigned char data[1024] = "asdsdasd";
+    unsigned char data[blocksize];
+    RAND_bytes(data, sizeof(data));
 
     gettimeofday(&st,NULL);
 
@@ -619,13 +611,14 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instanc
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject instance,jint blocksize) {
 
     jintArray result;
     result = env->NewIntArray(3);
     jint fill[3];
 
     EVP_CIPHER_CTX *ctx;
+
 
     unsigned char aes_key[16] = {
             0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
@@ -638,16 +631,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject ins
 
     };
 
-    const unsigned char plaintext[64] = {
-            0x6b, 0xc1, 0xbe, 0xe2, 0x2e, 0x40, 0x9f, 0x96, 0xe9, 0x3d, 0x7e, 0x11, 0x73, 0x93, 0x17, 0x2a,
-            0xae, 0x2d, 0x8a, 0x57, 0x1e, 0x03, 0xac, 0x9c, 0x9e, 0xb7, 0x6f, 0xac, 0x45, 0xaf, 0x8e, 0x51,
-            0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
-            0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10
-    };
+    unsigned char plaintext[blocksize];
+    RAND_bytes(plaintext, sizeof(plaintext));
 
-    unsigned char ciphertext[32];
+    unsigned char ciphertext[blocksize];
 
-    unsigned char decrypted[32];
+    unsigned char decrypted[blocksize];
 
     int len;
 
@@ -720,6 +709,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject ins
     env->SetIntArrayRegion(result, 0, 3, fill);
 
     return result;
+
 
 }
 
