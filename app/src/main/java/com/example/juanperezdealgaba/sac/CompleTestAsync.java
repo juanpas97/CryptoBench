@@ -364,6 +364,10 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(wc);
 
                 for (int blocksize = 2; blocksize <= 128;){
+                    String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
+                    writer.write(block);
+                    results.append(block);
+
 
                     String wcCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(wcCBC);
@@ -507,6 +511,11 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                 for (int blocksize = 2; blocksize <= 128;){
 
+                    String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
+                    writer.write(block);
+                    results.append(block);
+
+
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
                     results.append(wcmd5);
@@ -515,9 +524,9 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testmd5 = new OpenSSL();
                     int[] timesmd5 = testmd5.MD5(blocksize);
 
-                    System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
-                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
-                    results.append("Time to generate hash" + timesmd5[1] + "ms\n");
+                    System.out.println("Time to generate hash:" + timesmd5[0] + "ms\n");
+                    writer.write("Time to generate hash" + timesmd5[0] + "ms\n");
+                    results.append("Time to generate hash" + timesmd5[0] + "ms\n");
                     results.append("\n");
 
                     writer.write(separate);
@@ -668,7 +677,13 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 results.append(boringssl);
                 writer.write(boringssl);
 
+
+
                 for (int blocksize = 2; blocksize <= 128;){
+
+                    String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
+                    writer.write(block);
+                    results.append(block);
 
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
@@ -829,6 +844,9 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 }
 
             writer.close();
+
+
+
 
         } catch (IOException e){
             throw new RuntimeException(e);

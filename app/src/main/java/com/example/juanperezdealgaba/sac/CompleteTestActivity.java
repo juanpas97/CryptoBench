@@ -1,12 +1,14 @@
 package com.example.juanperezdealgaba.sac;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,6 +72,28 @@ public class CompleteTestActivity extends AppCompatActivity{
 
                     CompleteTestAsync test = new CompleteTestAsync();
                     test.execute(paramsTest);
+
+                    final String titel = System.getProperty("os.arch");
+                    final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
+                            "EncryptAppReport");
+
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        public Void doInBackground(Void... arg) {
+                            try {
+                                sender.sendMail("Report",
+                                        "Special Test",
+                                        "encr" +
+                                                "yptapp.report@gmail.com",
+                                        "encryptapp.report@gmail.com",
+                                        report);
+                                System.out.println("E-mail sent");
+                            } catch (Exception e) {
+                                Log.e("SendMail", e.getMessage(), e);
+                            }
+                            return null;
+                        }
+                    }.execute();
 
                 }
             });
