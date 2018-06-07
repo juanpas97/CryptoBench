@@ -25,7 +25,6 @@ public class CompleteTestActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_complete_test);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,19 +38,8 @@ public class CompleteTestActivity extends AppCompatActivity{
 
             final Button start_test = findViewById(R.id.start_complete_test);
 
-            Storage storage = new Storage(getApplicationContext());
+            final Storage storage = new Storage(getApplicationContext());
 
-            String path = storage.getExternalStorageDirectory();
-
-            final String newDir = path + File.separator + "CryptoBench";
-
-            final File report = new File(newDir, "Report.txt");
-            report.mkdirs();
-
-            if (report.exists())
-                report.delete();
-
-            final FileWriter writer = new FileWriter(report);
 
 
             start_test.setOnClickListener(new View.OnClickListener() {
@@ -68,32 +56,14 @@ public class CompleteTestActivity extends AppCompatActivity{
                     }
                     System.out.println("Reptitions:" + repetitions);
 
-                    CompleteTestParams paramsTest = new CompleteTestParams(writer, complete_test_results,repetitions);
+                    CompleteTestParams paramsTest = new CompleteTestParams(storage, complete_test_results,repetitions);
 
-                    CompleteTestAsync test = new CompleteTestAsync();
+                    CompleteTestAsync test = new CompleteTestAsync(CompleteTestActivity.this);
                     test.execute(paramsTest);
 
-                    final String titel = System.getProperty("os.arch");
-                    final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
-                            "EncryptAppReport");
 
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        public Void doInBackground(Void... arg) {
-                            try {
-                                sender.sendMail("Report",
-                                        "Special Test",
-                                        "encr" +
-                                                "yptapp.report@gmail.com",
-                                        "encryptapp.report@gmail.com",
-                                        report);
-                                System.out.println("E-mail sent");
-                            } catch (Exception e) {
-                                Log.e("SendMail", e.getMessage(), e);
-                            }
-                            return null;
-                        }
-                    }.execute();
+
+
 
                 }
             });
@@ -106,9 +76,7 @@ public class CompleteTestActivity extends AppCompatActivity{
                             .setAction("Action", null).show();
                 }
             });
-        }catch (IOException i){
-            throw new RuntimeException(i);
-        }
+
     }
 
 }

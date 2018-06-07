@@ -10,8 +10,11 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.snatik.storage.Storage;
+
 import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -34,10 +37,11 @@ class CompleteTestParams {
     FileWriter writer;
     TextView results;
     int repetitions;
+    Storage storage;
 
-    CompleteTestParams(FileWriter writer, TextView results, int repetitions) {
+    CompleteTestParams(Storage storage, TextView results, int repetitions) {
 
-        this.writer = writer;
+        this.storage = storage;
         this.results = results;
         this.repetitions = repetitions;
     }
@@ -47,13 +51,13 @@ class CompleteTestParams {
 class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
-    /*CompleteTestAsync(CompleteTestActivity a){
+    CompleteTestAsync(CompleteTestActivity a){
         this.activity = a;
         dialog = new ProgressDialog(activity);
     }
 
-    *//*public  CompleteTestActivity activity;
-    public ProgressDialog dialog;*//*
+   public  CompleteTestActivity activity;
+    public ProgressDialog dialog;
 
     @Override
     protected void onPreExecute() {
@@ -61,17 +65,31 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
         dialog = new ProgressDialog(activity);
         dialog.setMessage("Performing benchmarks");
         dialog.show();
-    }*/
+    }
 
 
 
     @Override
     protected TextView doInBackground(CompleteTestParams... params) {
-        FileWriter writer = params[0].writer;
+       Storage storage = params[0].storage;
         TextView results = params[0].results;
         int repetitions = params[0].repetitions;
 
         try {
+
+            String path = storage.getExternalStorageDirectory();
+
+            final String newDir = path + File.separator + "CryptoBench";
+
+            final File report = new File(newDir, "Report.txt");
+            report.mkdirs();
+
+            if (report.exists())
+                report.delete();
+
+            final FileWriter writer = new FileWriter(report);
+
+
             String myVersion = android.os.Build.VERSION.RELEASE;
             int sdkVersion = android.os.Build.VERSION.SDK_INT;
             String manufacturer = Build.MANUFACTURER;
@@ -845,6 +863,28 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
             writer.close();
 
+            final String titel = System.getProperty("os.arch");
+            final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
+                    "EncryptAppReport");
+
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                public Void doInBackground(Void... arg) {
+                    try {
+                        sender.sendMail("Report",
+                                "Special Test",
+                                "encr" +
+                                        "yptapp.report@gmail.com",
+                                "encryptapp.report@gmail.com",
+                                report);
+                        System.out.println("E-mail sent");
+                    } catch (Exception e) {
+                        Log.e("SendMail", e.getMessage(), e);
+                    }
+                    return null;
+                }
+            }.execute();
+
 
 
 
@@ -872,12 +912,8 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
     }
 
     @Override
-    protected void onPostExecute(TextView report) {
-            /*if(dialog.isShowing()){
-                dialog.dismiss();
-            }
-            dialog = null;
-            activity = null;*/
+    protected void onPostExecute(final TextView report) {
+            dialog.dismiss();
         super.onPostExecute(report);
     }
 
