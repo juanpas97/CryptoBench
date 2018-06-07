@@ -544,6 +544,38 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(separate);
                     results.append(separate);
 
+                    String opendh= "***********DH**************" + "\n";
+                    System.out.println(opendh);
+                    results.append(opendh);
+                    writer.write(opendh);
+
+                    OpenSSL testDH = new OpenSSL();
+                    int[] timesDH = testDH.DH();
+
+                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
+                    String openecdh= "***********ECDH**************" + "\n";
+                    System.out.println(openecdh);
+                    results.append(openecdh);
+                    writer.write(openecdh);
+
+                    OpenSSL testECDH = new OpenSSL();
+                    int[] timesECDH = testECDH.ECDH();
+
+                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+                    results.append("Time to key agreement:" + timesECDH[1] + "ms\n");
+                    results.append("\n");
+
+                    writer.write(separate);
+                    results.append(separate);
+
                     String openCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(openCBC);
                     results.append(openCBC);

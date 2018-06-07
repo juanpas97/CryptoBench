@@ -229,11 +229,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
 
     fill[1] = decryption_time;
     /* Printing and Verifying */
-    print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
+   /* print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
 
     print_data("\n Encrypted",enc_out, sizeof(enc_out));
 
-    print_data("\n Decrypted",dec_out, sizeof(dec_out));
+    print_data("\n Decrypted",dec_out, sizeof(dec_out));*/
 
     env->SetIntArrayRegion(result, 0, 3, fill);
 
