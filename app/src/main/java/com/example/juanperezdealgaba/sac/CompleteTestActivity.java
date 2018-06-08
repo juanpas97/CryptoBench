@@ -47,7 +47,7 @@ public class CompleteTestActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
                     int repetitions;
-
+                    complete_test_results.setText("");
                     String check = repetitions_test.getText().toString();
                     if (check.matches("")) {
                         repetitions = 1;

@@ -215,15 +215,13 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
     result = (*env)->NewIntArray(env,3);
     jint fill[3];
 
-    jint error[1];
-
     struct timeval st,et;
 
     Aes enc;
-    byte cipher[AES_BLOCK_SIZE];
+    byte cipher[blocksize];
 
     Aes dec;
-    byte plain[AES_BLOCK_SIZE];
+    byte plain[blocksize];
 
     int ret = 0;
 
@@ -241,6 +239,9 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
     };
 
     int szmsg = blocksize;
+
+    LOGD("Size of blocksize: %i",szmsg);
+
     byte msg[szmsg];
 
     int retrng = wc_InitRng(&rng);
@@ -327,13 +328,12 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
     }else{
         LOGD("Decryption finished");
     }
-
-
+    
 
     wc_AesFree(&enc);
     wc_AesFree(&dec);
 
-    LOGD("Finished AES/CBC 256");
+    LOGD("Finished AES/CBC 128");
 
     (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
 

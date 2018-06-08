@@ -122,7 +122,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(BC);
 
 
-                for (int blocksize = 2; blocksize <= 128;){
+                for (int blocksize = 128; blocksize <= 1024;){
 
 
                     System.out.println("Blocksize is:");
@@ -193,29 +193,26 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String BCRSA= "***********RSA**************" + "\n";
-                    System.out.println(BCRSA);
-                    writer.write(BCRSA);
-
-
-                    RSAPrueba testRSA = new RSAPrueba();
-                    testRSA.testRSA(writer, results,blocksize);
-
-
-
-
-                    writer.write(separate);
-
                     blocksize = blocksize*2;
 
 
                 }
 
+                String BCRSA= "***********RSA**************" + "\n";
+                System.out.println(BCRSA);
+                writer.write(BCRSA);
+
+
+                RSAPrueba testRSABC = new RSAPrueba();
+                testRSABC.testRSA(writer, results,128);
+
+                writer.write(separate);
+
                 String mbed = "***********mbedTLS**************" + "\n";
                 System.out.println(mbed);
                 writer.write(mbed);
 
-                for (int blocksize = 2; blocksize <= 128;) {
+                for (int blocksize = 128; blocksize <= 1024;) {
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
                     String mbedCBC= "***********AES/CBC**************" + "\n";
@@ -290,21 +287,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String mbedRSA= "***********RSA**************" + "\n";
-                    System.out.println(mbedRSA);
-                    writer.write(mbedRSA);
 
-                    mbedTLS testRSA = new mbedTLS();
-                    int[] timesRSA = testRSA.RSA(blocksize);
-
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-
-                    writer.write(separate);
 
                     String mbedmd5= "***********MD5**************" + "\n";
                     System.out.println(mbedmd5);
@@ -322,11 +305,28 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                 }
 
+                String mbedRSA= "***********RSA**************" + "\n";
+                System.out.println(mbedRSA);
+                writer.write(mbedRSA);
+
+                mbedTLS testRSAmbed = new mbedTLS();
+                int[] timesRSA = testRSAmbed.RSA(128);
+
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+
+                writer.write(separate);
+
                 String wc = "***********WolfCrypt**************" + "\n";
                 System.out.println(wc);
                 writer.write(wc);
 
-                for (int blocksize = 2; blocksize <= 128;){
+                for (int blocksize = 128; blocksize <= 1024;){
+
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
 
@@ -420,32 +420,34 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String wcRSA= "***********RSA**************" + "\n";
-                    System.out.println(wcRSA);
-                    writer.write(wcRSA);
-
-                    WolfCrypt testRSA = new WolfCrypt();
-                    int[] timesRSA = testRSA.RSA(blocksize);
-
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-             ;
-
-                    writer.write(separate);
 
 
                     blocksize = blocksize*2;
                 }
 
+                String wcRSA= "***********RSA**************" + "\n";
+                System.out.println(wcRSA);
+                writer.write(wcRSA);
+
+                WolfCrypt testRSAwc = new WolfCrypt();
+                timesRSA = testRSAwc.RSA(128);
+
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                ;
+
+                writer.write(separate);
+
+
                 String openssl = "***********OpenSSL**************" + "\n";
                 System.out.println(openssl);
                 writer.write(openssl);
 
-                for (int blocksize = 2; blocksize <= 128;){
+                for (int blocksize = 128; blocksize <= 1024;){
 
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
@@ -463,22 +465,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String wcRSA= "***********RSA**************" + "\n";
-                    System.out.println(wcRSA);
-                    writer.write(wcRSA);
 
-                    OpenSSL testRSA = new OpenSSL();
-                    int[] timesRSA = testRSA.RSA(blocksize);
-
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-
-
-                    writer.write(separate);
 
                     String opendh= "***********DH**************" + "\n";
                     System.out.println(opendh);
@@ -575,13 +562,30 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     blocksize = blocksize*2;
                 }
 
+                String openRSA= "***********RSA**************" + "\n";
+                System.out.println(openRSA);
+                writer.write(openRSA);
+
+                OpenSSL testRSA = new OpenSSL();
+                timesRSA = testRSA.RSA(128);
+
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+
+
+                writer.write(separate);
+
                 String boringssl = "***********BoringSSL**************" + "\n";
                 System.out.println(boringssl);
                 writer.write(boringssl);
 
 
 
-                for (int blocksize = 2; blocksize <= 128;){
+                for (int blocksize = 128; blocksize <= 1024;){
 
                     String block = "*************BLOCKSIZE: " + blocksize +"******************" + "\n";
                     writer.write(block);
@@ -599,22 +603,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String wcRSA= "***********RSA**************" + "\n";
-                    System.out.println(wcRSA);
-                    writer.write(wcRSA);
 
-                    BoringSSL testRSA = new BoringSSL();
-                    int[] timesRSA = testRSA.RSA(blocksize);
-
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
-
-
-                    writer.write(separate);
 
                     String opendh= "***********DH**************" + "\n";
                     System.out.println(opendh);
@@ -710,6 +699,23 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     blocksize = blocksize*2;
                 }
+
+                String wcRSAboring= "***********RSA**************" + "\n";
+                System.out.println(wcRSAboring);
+                writer.write(wcRSAboring);
+
+                BoringSSL testRSAboring = new BoringSSL();
+                timesRSA = testRSAboring.RSA(128);
+
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+
+
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+
+
+                writer.write(separate);
 
                 }
 
