@@ -225,12 +225,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     mbedTLS test = new mbedTLS();
                     int[] timesAES = test.AESCBC(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -241,12 +241,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     mbedTLS testCTR = new mbedTLS();
                     int[] timesAESCTR = testCTR.AESCTR(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -257,12 +257,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     mbedTLS testGCM = new mbedTLS();
                     int[] timesAESGCM = testGCM.AESGCM(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -289,12 +289,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 mbedTLS testRSAmbed = new mbedTLS();
                 int[] timesRSA = testRSAmbed.RSA(128);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
 
                 writer.write(separate);
 
@@ -339,12 +339,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     WolfCrypt test = new WolfCrypt();
                     int[] timesAES = test.AESCBC(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -357,12 +357,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     WolfCrypt testCTR = new WolfCrypt();
                     int[] timesAESCTR = testCTR.AESCTR(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -373,12 +373,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     WolfCrypt testGCM = new WolfCrypt();
                     int[] timesAESGCM = testGCM.AESGCM(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -435,12 +435,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 WolfCrypt testRSAwc = new WolfCrypt();
                 timesRSA = testRSAwc.RSA(128);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
                 ;
 
                 writer.write(separate_lib);
@@ -475,12 +475,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL test = new OpenSSL();
                     int[] timesAES = test.AESCBC(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -492,12 +492,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testCTR = new OpenSSL();
                     int[] timesAESCTR = testCTR.AESCTR(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -509,12 +509,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testGCM = new OpenSSL();
                     int[] timesAESGCM = testGCM.AESGCM(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -525,12 +525,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testofb = new OpenSSL();
                     int[] timesAESOFB = testofb.AESOFB(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESOFB[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESOFB[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESOFB[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESOFB[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESOFB[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESOFB[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESOFB[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -570,12 +570,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 OpenSSL testRSA = new OpenSSL();
                 timesRSA = testRSA.RSA(128);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
 
 
                 writer.write(separate_lib);
@@ -612,12 +612,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL test = new BoringSSL();
                     int[] timesAES = test.AESCBC(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -629,12 +629,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL testCTR = new BoringSSL();
                     int[] timesAESCTR = testCTR.AESCTR(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -646,12 +646,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL testGCM = new BoringSSL();
                     int[] timesAESGCM = testGCM.AESGCM(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -662,12 +662,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL testofb = new BoringSSL();
                     int[] timesAESOFB = testofb.AESOFB(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESOFB[0] + "ns\n");
-                    writer.write("Time to encrypt:" + timesAESOFB[0] + "ns\n");
+                    System.out.println("Time to encrypt:" + timesAESOFB[0] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESOFB[0] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESOFB[1] + "ns\n");
-                    writer.write("Time to decrypt:" + timesAESOFB[1] + "ns\n");
+                    System.out.println("Time to decrypt:" + timesAESOFB[1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESOFB[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -707,12 +707,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 BoringSSL testRSAboring = new BoringSSL();
                 timesRSA = testRSAboring.RSA(128);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ns\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ns\n");
+                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
+                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ns\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
+                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
+                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
 
 
                 writer.write(separate_lib);

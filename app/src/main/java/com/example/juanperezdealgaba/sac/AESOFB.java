@@ -83,6 +83,7 @@ public class AESOFB {
 
         // encryption pass
         cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+        long start = System.nanoTime();
         ByteArrayInputStream bIn = new ByteArrayInputStream(input);
         CipherInputStream cIn = new CipherInputStream(bIn, cipher);
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
@@ -92,16 +93,26 @@ public class AESOFB {
             bOut.write(ch);
         }
 
+        long end = System.nanoTime();
+        long microseconds = (end - start) / 1000;
+        writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+
         byte[] cipherText = bOut.toByteArray();
 
         System.out.println("cipher: " + new String(cipherText));
 
         // decryption pass
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+        start = System.nanoTime();
         bOut = new ByteArrayOutputStream();
         CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
         cOut.write(cipherText);
         cOut.close();
+
+        end = System.nanoTime();
+        microseconds = (end - start) / 1000;
+        writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+
         System.out.println("plain : " + new String(bOut.toByteArray()));
     }
 
