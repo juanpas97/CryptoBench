@@ -51,22 +51,22 @@ class CompleteTestParams {
 class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
-    /*CompleteTestAsync(CompleteTestActivity a){
+    CompleteTestAsync(CompleteTestActivity a){
         this.activity = a;
         dialog = new ProgressDialog(activity);
-    }*/
+    }
 
-   //public  CompleteTestActivity activity;
-   // public ProgressDialog dialog;
+   public  CompleteTestActivity activity;
+    public ProgressDialog dialog;
 
-  /*  @Override
+   @Override
     protected void onPreExecute() {
         super.onPreExecute();
         dialog = new ProgressDialog(activity);
         dialog.setMessage("Performing benchmarks");
         dialog.show();
     }
-*/
+
 
 
     @Override
@@ -113,6 +113,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             writer.write("\n");
             writer.write("\n");
             String separate = "*********************************************" + "\n";
+            String separate_lib = "*********************************************" + "\n"+ "\n"+ "\n"+ "\n";
 
             for (int i= 0; i< repetitions; i++){
 
@@ -166,23 +167,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String BCDH= "***********DH**************" + "\n";
-                    System.out.println(BCDH);
-                    writer.write(BCDH);
 
-                    DiffieHellman testDH = new DiffieHellman();
-                    testDH.testDH(writer, results);
-
-                    writer.write(separate);
-
-                    String BCECDH= "***********ECDH**************" + "\n";
-                    System.out.println(BCECDH);
-                    writer.write(BCECDH);
-
-                    ECDiffieHellmanImplementation testECDH = new ECDiffieHellmanImplementation();
-                    testECDH.startDiffieHellman(writer, results);
-
-                    writer.write(separate);
 
                     String BCMD5= "***********MD-5**************" + "\n";
                     System.out.println(BCMD5);
@@ -207,6 +192,24 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 testRSABC.testRSA(writer, results,128);
 
                 writer.write(separate);
+
+                String BCDH= "***********DH**************" + "\n";
+                System.out.println(BCDH);
+                writer.write(BCDH);
+
+                DiffieHellman testDH = new DiffieHellman();
+                testDH.testDH(writer, results);
+
+                writer.write(separate);
+
+                String BCECDH= "***********ECDH**************" + "\n";
+                System.out.println(BCECDH);
+                writer.write(BCECDH);
+
+                ECDiffieHellmanImplementation testECDH = new ECDiffieHellmanImplementation();
+                testECDH.startDiffieHellman(writer, results);
+
+                writer.write(separate_lib);
 
                 String mbed = "***********mbedTLS**************" + "\n";
                 System.out.println(mbed);
@@ -263,32 +266,6 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String mbeddh= "***********DH**************" + "\n";
-                    System.out.println(mbeddh);
-                    writer.write(mbeddh);
-
-                    mbedTLS testDH = new mbedTLS();
-                    int[] timesDH = testDH.DH();
-
-                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-
-                    writer.write(separate);
-
-                    String mbedecdh= "***********ECDH**************" + "\n";
-                    System.out.println(mbedecdh);
-                    writer.write(mbedecdh);
-
-                    mbedTLS testECDH = new mbedTLS();
-                    int[] timesECDH = testECDH.ECDH();
-
-                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-
-                    writer.write(separate);
-
-
-
                     String mbedmd5= "***********MD5**************" + "\n";
                     System.out.println(mbedmd5);
                     writer.write(mbedmd5);
@@ -320,6 +297,30 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
 
                 writer.write(separate);
+
+                String mbeddh= "***********DH**************" + "\n";
+                System.out.println(mbeddh);
+                writer.write(mbeddh);
+
+                mbedTLS testDHmbed = new mbedTLS();
+                int[] timesDH = testDHmbed.DH();
+
+                System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+
+                writer.write(separate);
+
+                String mbedecdh= "***********ECDH**************" + "\n";
+                System.out.println(mbedecdh);
+                writer.write(mbedecdh);
+
+                mbedTLS testECDHmbed = new mbedTLS();
+                int[] timesECDH = testECDHmbed.ECDH();
+
+                System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+
+                writer.write(separate_lib);
 
                 String wc = "***********WolfCrypt**************" + "\n";
                 System.out.println(wc);
@@ -381,31 +382,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-                    String wcdh= "***********DH**************" + "\n";
-                    System.out.println(wcdh);
-                    writer.write(wcdh);
 
-                    WolfCrypt testDH = new WolfCrypt();
-                    int[] timesDH = testDH.DH();
-
-                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-
-
-                    writer.write(separate);
-
-                    String wcecdh= "***********ECDH**************" + "\n";
-                    System.out.println(wcecdh);
-                    writer.write(wcecdh);
-
-                    WolfCrypt testECDH = new WolfCrypt();
-                    int[] timesECDH = testECDH.ECDH();
-
-                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-
-
-                    writer.write(separate);
 
                     String wcmd5= "***********MD5**************" + "\n";
                     System.out.println(wcmd5);
@@ -425,6 +402,32 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     blocksize = blocksize*2;
                 }
 
+                String wcdh= "***********DH**************" + "\n";
+                System.out.println(wcdh);
+                writer.write(wcdh);
+
+                WolfCrypt testDHwc = new WolfCrypt();
+                timesDH = testDHwc.DH();
+
+                System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
+                String wcecdh= "***********ECDH**************" + "\n";
+                System.out.println(wcecdh);
+                writer.write(wcecdh);
+
+                WolfCrypt testECDHwc = new WolfCrypt();
+                timesECDH = testECDHwc.ECDH();
+
+                System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
                 String wcRSA= "***********RSA**************" + "\n";
                 System.out.println(wcRSA);
                 writer.write(wcRSA);
@@ -440,7 +443,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
                 ;
 
-                writer.write(separate);
+                writer.write(separate_lib);
 
 
                 String openssl = "***********OpenSSL**************" + "\n";
@@ -462,34 +465,6 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     System.out.println("Time to generate hash:" + timesmd5[0] + "ms\n");
                     writer.write("Time to generate hash" + timesmd5[0] + "ms\n");
-
-                    writer.write(separate);
-
-
-
-                    String opendh= "***********DH**************" + "\n";
-                    System.out.println(opendh);
-                    writer.write(opendh);
-
-                    OpenSSL testDH = new OpenSSL();
-                    int[] timesDH = testDH.DH();
-
-                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-
-
-                    writer.write(separate);
-
-                    String openecdh= "***********ECDH**************" + "\n";
-                    System.out.println(openecdh);
-                    writer.write(openecdh);
-
-                    OpenSSL testECDH = new OpenSSL();
-                    int[] timesECDH = testECDH.ECDH();
-
-                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-
 
                     writer.write(separate);
 
@@ -562,6 +537,32 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     blocksize = blocksize*2;
                 }
 
+                String opendh= "***********DH**************" + "\n";
+                System.out.println(opendh);
+                writer.write(opendh);
+
+                OpenSSL testDHopen = new OpenSSL();
+                timesDH = testDHopen.DH();
+
+                System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
+                String openecdh= "***********ECDH**************" + "\n";
+                System.out.println(openecdh);
+                writer.write(openecdh);
+
+                OpenSSL testECDHopen = new OpenSSL();
+                timesECDH = testECDHopen.ECDH();
+
+                System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
                 String openRSA= "***********RSA**************" + "\n";
                 System.out.println(openRSA);
                 writer.write(openRSA);
@@ -577,7 +578,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
 
 
-                writer.write(separate);
+                writer.write(separate_lib);
 
                 String boringssl = "***********BoringSSL**************" + "\n";
                 System.out.println(boringssl);
@@ -603,33 +604,6 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate);
 
-
-
-                    String opendh= "***********DH**************" + "\n";
-                    System.out.println(opendh);
-                    writer.write(opendh);
-
-                    BoringSSL testDH = new BoringSSL();
-                    int[] timesDH = testDH.DH();
-
-                    System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesDH[1] + "ms\n");
-
-
-                    writer.write(separate);
-
-                    String openecdh= "***********ECDH**************" + "\n";
-                    System.out.println(openecdh);
-                    writer.write(openecdh);
-
-                    BoringSSL testECDH = new BoringSSL();
-                    int[] timesECDH = testECDH.ECDH();
-
-                    System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
-                    writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
-
-
-                    writer.write(separate);
 
                     String openCBC= "***********AES/CBC**************" + "\n";
                     System.out.println(openCBC);
@@ -700,6 +674,32 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     blocksize = blocksize*2;
                 }
 
+                opendh= "***********DH**************" + "\n";
+                System.out.println(opendh);
+                writer.write(opendh);
+
+                BoringSSL testDHboring = new BoringSSL();
+                timesDH = testDHboring.DH();
+
+                System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
+                openecdh= "***********ECDH**************" + "\n";
+                System.out.println(openecdh);
+                writer.write(openecdh);
+
+                BoringSSL testECDHboring = new BoringSSL();
+                timesECDH = testECDHboring.ECDH();
+
+                System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
+                writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+
+
+                writer.write(separate);
+
                 String wcRSAboring= "***********RSA**************" + "\n";
                 System.out.println(wcRSAboring);
                 writer.write(wcRSAboring);
@@ -715,7 +715,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write("Time to decrypt:" + timesRSA[1] + "ns\n");
 
 
-                writer.write(separate);
+                writer.write(separate_lib);
 
                 }
 
@@ -771,7 +771,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
     @Override
     protected void onPostExecute(final TextView report) {
-            //dialog.dismiss();
+            dialog.dismiss();
             report.setText("\n"+"\n"+"\n"+"\n"+"   Test finished successfully"+"\n"+"\n"+"  Find your results at " +
                     "CryptoBench/Report.txt");
         super.onPostExecute(report);

@@ -58,7 +58,7 @@ public class CompleteTestActivity extends AppCompatActivity{
 
                     CompleteTestParams paramsTest = new CompleteTestParams(storage, complete_test_results,repetitions);
 
-                    CompleteTestAsync test = new CompleteTestAsync();
+                    CompleteTestAsync test = new CompleteTestAsync(CompleteTestActivity.this);
                     test.execute(paramsTest);
 
                 }
