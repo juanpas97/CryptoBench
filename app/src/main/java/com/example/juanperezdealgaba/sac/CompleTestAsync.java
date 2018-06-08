@@ -721,7 +721,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
             writer.close();
 
-            final String titel = System.getProperty("os.arch");
+            final String title = System.getProperty("os.arch");
             final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
                     "EncryptAppReport");
 
@@ -730,7 +730,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 public Void doInBackground(Void... arg) {
                     try {
                         sender.sendMail("Report",
-                                "Special Test",
+                                "Complete Test" + title,
                                 "encr" +
                                         "yptapp.report@gmail.com",
                                 "encryptapp.report@gmail.com",

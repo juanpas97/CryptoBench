@@ -89,7 +89,6 @@ public  class  MainActivity extends AppCompatActivity {
         }
 
 
-
         /**
         * When the App is initialized for first time, we will create the Encryptapp
         * in "external" storage
@@ -103,10 +102,12 @@ public  class  MainActivity extends AppCompatActivity {
         storage.createDirectory(newDir);
 
         final File report_public = new File(newDir, "public_key.txt");
-        report_public.mkdirs();
-        final File report_private = new File(newDir, "private_key.txt");
+
         if (report_public.exists())
             report_public.delete();
+
+        final File report_private = new File(newDir, "private_key.txt");
+
         if (report_private.exists())
             report_private.delete();
 
