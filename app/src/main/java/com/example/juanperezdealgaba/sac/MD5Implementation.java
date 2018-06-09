@@ -31,7 +31,7 @@ public class MD5Implementation {
         long StartHash =System.nanoTime();
         examplemd5.doFinal(hash, 0);
         long endHash =System.nanoTime();
-        long timeHash = (endHash - StartHash);
+        long timeHash = (endHash - StartHash)/1000;
 
         System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
         System.out.println("Output (hex): " + new String(Hex.encode(hash)));

@@ -2,15 +2,23 @@ package com.example.juanperezdealgaba.sac;
 
 import android.widget.TextView;
 
+import org.spongycastle.jce.ECNamedCurveTable;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.jce.spec.ECParameterSpec;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.security.Security;
+
+import javax.crypto.KeyAgreement;
 
 import static com.example.juanperezdealgaba.sac.ECDiffieHellman.GenerateAgreement;
 import static com.example.juanperezdealgaba.sac.ECDiffieHellman.GetTimestamp;
@@ -27,11 +35,43 @@ public class ECDiffieHellmanImplementation {
         Security.addProvider(new BouncyCastleProvider());
 
 
-        long startKeyAgreement = System.nanoTime();
-        System.out.println(GenerateAgreement());
-        long endKeyAgreement = System.nanoTime();
-        long timeKeyAgreement = (endKeyAgreement - startKeyAgreement);
-        writer.write("Time to generate key agreement :" + timeKeyAgreement+ "\n");
+        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256r1");
+
+        KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
+
+        g.initialize(ecSpec, new SecureRandom());
+
+        KeyPair aKeyPair = g.generateKeyPair();
+
+        KeyAgreement aKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
+
+        aKeyAgree.init(aKeyPair.getPrivate());
+
+        KeyPair bKeyPair = g.generateKeyPair();
+
+        KeyAgreement bKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
+
+        bKeyAgree.init(bKeyPair.getPrivate());
+
+        //
+        // agreement
+        //
+        aKeyAgree.doPhase(bKeyPair.getPublic(), true);
+        bKeyAgree.doPhase(aKeyPair.getPublic(), true);
+
+        long start = System.nanoTime();
+
+        byte[] aSecret = aKeyAgree.generateSecret();
+
+        long end = System.nanoTime();
+        long result = (end-start)/1000;
+
+
+        byte[] bSecret = bKeyAgree.generateSecret();
+
+        System.out.println(MessageDigest.isEqual(aSecret, bSecret));
+
+        writer.write("Time to generate key agreement :" + result+ " ms\n");
         //results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
 
 
