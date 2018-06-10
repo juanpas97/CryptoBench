@@ -48,8 +48,21 @@ public class RSAPrueba {
 
             byte[] input = string.generateRandomString(blocksize).getBytes();
 
-            byte[] encrypted = encrypt(input,public_key_ready);
-            byte[] decrypted = decrypt(encrypted,private_key_ready);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
+            // encrypt the plaintext using the public key
+            cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
+
+            long start = System.nanoTime();
+            byte[] encrypted = cipher.doFinal(input);
+            long end = System.nanoTime();
+            long result = (end - start)/1000;
+            writer.write("Time to encrypt: " + result + " ms\n" );
+
+
+            byte[] decrypted = decrypt(encrypted,private_key_ready,writer);
+
+
             String decrypted_fin = new String(decrypted,"UTF-8");
             System.out.println("We start here:");
             System.out.println(decrypted_fin);
@@ -150,33 +163,22 @@ public class RSAPrueba {
      * @return The unencrypted text
      * @throws java.lang.Exception
      */
-    public static byte[] decrypt(byte[] text, PrivateKey key) throws Exception
+    public static byte[] decrypt(byte[] text, PrivateKey key,FileWriter writer) throws Exception
     {
         byte[] dectyptedText = null;
         // decrypt the text using the private key
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, key);
+        long start = System.nanoTime();
         dectyptedText = cipher.doFinal(text);
+        long end = System.nanoTime();
+        long result = (end - start) / 1000;
+        writer.write("Time to decrypt: " + result + "ms\n");
+        System.out.println("File has been decrypted");
         return dectyptedText;
 
     }
 
-    /**
-     * Decrypt BASE64 encoded text using private key
-     * @param text The encrypted text, encoded as BASE64
-     * @param key The private key
-     * @return The unencrypted text encoded as UTF8
-     * @throws java.lang.Exception
-     */
-    public static String decrypt(String text, PrivateKey key) throws Exception
-    {
-        String result;
-        // decrypt the text using the private key
-        byte[] dectyptedText = decrypt(decodeBASE64(text),key);
-        result = new String(dectyptedText, "UTF8");
-        return result;
-
-    }
 
     /**
      * Convert a Key to string encoded as BASE64
@@ -190,15 +192,6 @@ public class RSAPrueba {
         return encodeBASE64(keyBytes);
     }
 
-
-
-   /* public static PrivateKey getPrivateKeyFromString(String key) throws Exception
-    {
-        PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(key);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA", "BC");
-        PrivateKey privateKey = keyFactory.generatePrivate(privSpec);
-        return privateKey;
-    }*/
 
     public static PrivateKey getPrivateKeyFromByte() throws Exception
     {
