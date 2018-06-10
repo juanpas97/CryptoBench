@@ -274,7 +274,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesmd5 = testmd5.MD5(blocksize);
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
-                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash: " + timesmd5[1] + "ms\n");
 
                     writer.write(separate);
 
@@ -392,7 +392,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesmd5 = testmd5.MD5(64);
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
-                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash: " + timesmd5[1] + "ms\n");
 
 
                     writer.write(separate);
@@ -464,7 +464,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesmd5 = testmd5.MD5(blocksize);
 
                     System.out.println("Time to generate hash:" + timesmd5[0] + "ms\n");
-                    writer.write("Time to generate hash" + timesmd5[0] + "ms\n");
+                    writer.write("Time to generate hash: " + timesmd5[0] + "ms\n");
 
                     writer.write(separate);
 
@@ -599,7 +599,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesmd5 = testmd5.MD5(blocksize);
 
                     System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
-                    writer.write("Time to generate hash" + timesmd5[1] + "ms\n");
+                    writer.write("Time to generate hash: " + timesmd5[1] + "ms\n");
 
 
                     writer.write(separate);

@@ -1040,9 +1040,10 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("AES-CBC")) {
-                AESCBCBouncyCastleImplementation test = new AESCBCBouncyCastleImplementation();
+                AESCBC test = new AESCBC();
                 try {
-                    test.AESCBC(writer, textview, resulttime);
+                    int blocksize = 128;
+                    test.testCBC(writer, textview, 128 );
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
