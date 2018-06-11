@@ -74,7 +74,7 @@ public class AESGCM {
 
     }
 
-    public  void testGCM(FileWriter writer, TextView results, int blocksize) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IllegalBlockSizeException,
+    public  void testGCM(FileWriter writer, TextView results, int blocksize,int rep_aes) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IllegalBlockSizeException,
             BadPaddingException,DecoderException{
         try {
 
@@ -99,36 +99,37 @@ public class AESGCM {
             in = Cipher.getInstance("AES/GCM/NoPadding", "SC");
             out = Cipher.getInstance("AES/GCM/NoPadding", "SC");
 
-            in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+
 
             System.out.println("Plaintext");
             for (int i = 0; i < plaintext.length; i++) {
                 System.out.println(Integer.toHexString(plaintext[i]));
             }
 
-            long start = System.nanoTime();
-            byte[] enc = in.doFinal(plaintext);
+            for(int i = 0; i < rep_aes; i++) {
+                in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+                out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
+                long start = System.nanoTime();
+                byte[] enc = in.doFinal(plaintext);
 
-            long end = System.nanoTime();
-            long microseconds = (end - start) / 1000;
-            writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
+                long end = System.nanoTime();
+                long microseconds = (end - start) / 1000;
+                writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
 
-            System.out.println("Encrypted");
-            for (int i = 0; i < enc.length; i++) {
-                System.out.println(Integer.toHexString(enc[i]));
-            }
+               // System.out.println("Encrypted");
+                //for (int i = 0; i < enc.length; i++) {
+                //    System.out.println(Integer.toHexString(enc[i]));
+                //}
 
-
-            out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
-
-            start = System.nanoTime();
-            byte[] dec = out.doFinal(enc);
-            end = System.nanoTime();
-            microseconds = (end - start) / 1000;
-            writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
-            System.out.println("Decrypted");
-            for (int i = 0; i < dec.length; i++) {
-                System.out.println(Integer.toHexString(dec[i]));
+                start = System.nanoTime();
+                byte[] dec = out.doFinal(enc);
+                end = System.nanoTime();
+                microseconds = (end - start) / 1000;
+                writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+                System.out.println("Decrypted");
+                //for (int i = 0; i < dec.length; i++) {
+                 //   System.out.println(Integer.toHexString(dec[i]));
+                //}
             }
         }catch (IOException i){
             throw new RuntimeException(i);

@@ -48,118 +48,6 @@
 #define GENERATOR "4"
 
 
-/*extern "C"
-JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance) {
-
-    jintArray resultArray;
-    resultArray = env->NewIntArray(3);
-    jint fill[3];
-    struct timeval st,et;
-
-    int ret;
-    int return_val;
-    mbedtls_rsa_context rsa;
-    mbedtls_entropy_context entropy;
-    mbedtls_ctr_drbg_context ctr_drbg;
-    const char *pers = "rsa_genkey";
-    size_t i;
-
-    char *argv[2];
-
-    argv[1] = const_cast<char *>("Inputtt");
-
-    unsigned char input[1024];
-    unsigned char buf[512];
-    unsigned char result[1024];
-
-    mbedtls_ctr_drbg_init( &ctr_drbg );
-
-    LOGD("Seeding the random number generator");
-    fflush( stdout );
-
-    mbedtls_entropy_init( &entropy );
-    if( ( ret = mbedtls_ctr_drbg_seed( &ctr_drbg, mbedtls_entropy_func, &entropy,
-                                       (const unsigned char *) pers,
-                                       strlen( pers ) ) ) != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
-        return 0;
-    }
-
-    LOGD( " ok\n  . Generating the RSA key [ %d-bit ]...", KEY_SIZE );
-    fflush( stdout );
-
-    mbedtls_rsa_init( &rsa, MBEDTLS_RSA_PKCS_V15, 0 );
-
-    if( ( ret = mbedtls_rsa_gen_key( &rsa, mbedtls_ctr_drbg_random, &ctr_drbg, KEY_SIZE,
-                                     EXPONENT ) ) != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_rsa_gen_key returned %d\n\n", ret );
-        return 0;
-    }
-
-    memcpy( input, argv[1], strlen( argv[1] ) );
-
-    LOGD( "\n  . Generating the RSA encrypted value" );
-
-    gettimeofday(&st,NULL);
-
-    return_val = mbedtls_rsa_pkcs1_encrypt( &rsa, mbedtls_ctr_drbg_random,
-                                            &ctr_drbg, MBEDTLS_RSA_PUBLIC,
-                                            strlen( argv[1] ), input, buf );
-
-    gettimeofday(&et,NULL);
-
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[0] = encryption_time;
-
-    if( return_val != 0 )
-    {
-
-        LOGD( " failed\n  ! mbedtls_rsa_pkcs1_encrypt returned %d\n\n",
-              return_val );
-        return 0;
-    }
-
-
-
-    LOGD("Finished encryption");
-
-    LOGD( "\n  . Decrypting the encrypted data" );
-
-    gettimeofday(&st,NULL);
-
-    return_val = mbedtls_rsa_pkcs1_decrypt( &rsa, mbedtls_ctr_drbg_random,
-                                            &ctr_drbg, MBEDTLS_RSA_PRIVATE, &i,
-                                            buf, result, 1024 );
-    gettimeofday(&et,NULL);
-
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[1] = decryption_time;
-
-    if( return_val != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_rsa_pkcs1_decrypt returned %d\n\n",
-              return_val );
-        return 0;
-    }
-
-    LOGD( "\n  . OK\n\n" );
-
-    LOGD( "The decrypted result is: '%s'\n\n", result );
-
-    mbedtls_rsa_free( &rsa );
-    mbedtls_ctr_drbg_free( &ctr_drbg );
-    mbedtls_entropy_free( &entropy );
-
-
-    env->SetIntArrayRegion(resultArray, 0, 3, fill);
-    return resultArray;
-
-}*/
 
 extern "C"
 JNIEXPORT jintArray JNICALL
@@ -722,15 +610,17 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
         LOGD( " failed\n  ! mbedtls_ctr_drbg_seed returned %d\n", ret );
         return result;
     }
+    mbedtls_rsa_set_padding( mbedtls_pk_rsa( pk ),  MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA1 );
+    unsigned char label[1024] = "label";
 
     gettimeofday(&st,NULL);
-    ret = mbedtls_pk_encrypt( &pk, plaintext, sizeof(plaintext),
-                              buf, &olen, sizeof(buf),
-                              mbedtls_ctr_drbg_random, &ctr_drbg );
+
+    ret = mbedtls_rsa_rsaes_oaep_encrypt(mbedtls_pk_rsa(pk),mbedtls_ctr_drbg_random,&ctr_drbg,MBEDTLS_RSA_PUBLIC,label,
+                                         sizeof(label),
+                                         sizeof(plaintext),plaintext,buf);
     gettimeofday(&et,NULL);
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
     fill[0]=encryption_time;
-
 
 
     if( ret != 0 )
@@ -738,6 +628,8 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
         printf( " failed\n  ! mbedtls_pk_encrypt returned -0x%04x\n", -ret );
         return result;
     }
+
+    LOGD("Encrypt was good");
 
     mbedtls_pk_free(&pk);
 
@@ -750,9 +642,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
         return result;
     }
 
+    mbedtls_rsa_set_padding( mbedtls_pk_rsa( privk ),  MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA1 );
     gettimeofday(&st,NULL);
-    ret =mbedtls_pk_decrypt( &privk, buf, olen, output_decrypted, &olen_dec, sizeof(output_decrypted),
-                             mbedtls_ctr_drbg_random, &ctr_drbg2 );
+
+    ret = mbedtls_rsa_rsaes_oaep_decrypt(mbedtls_pk_rsa(privk),mbedtls_ctr_drbg_random,&ctr_drbg2,MBEDTLS_RSA_PRIVATE,label,
+                                         sizeof(label),&olen_dec ,buf,output_decrypted,1024);
     gettimeofday(&et,NULL);
     int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
     fill[1]=decryption_time;
@@ -763,7 +657,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
     LOGD( " ok\n" );
 
-    LOGD("We are good");
+    LOGD("RSA good");
 
 
     env->SetIntArrayRegion(result, 0, 3, fill);

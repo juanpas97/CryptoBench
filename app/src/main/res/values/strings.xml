@@ -8,6 +8,10 @@
     <string name="Executing_tests">Executing test</string>
     <string name="Special_test">Special Test</string>
     <string name="test_algo">Start special Test</string>
+    <string name="rep_sym">AES:</string>
+    <string name="rep_agree">Key agreement:</string>
+    <string name="rep_rsa">RSA:</string>
+    <string name="rep_hash">Hash:</string>
 
     <string-array name="libraries_array">
         <item>Library</item>

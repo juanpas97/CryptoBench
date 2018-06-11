@@ -93,7 +93,7 @@ public class DiffieHellman {
 
     }
 
-    public  void testDH(FileWriter writer, TextView results) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
+    public  void testDH(FileWriter writer, TextView results,int rep_agree) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
 
         try {
             Security.addProvider(new BouncyCastleProvider());
@@ -152,16 +152,18 @@ public class DiffieHellman {
             aKeyAgree.doPhase(kp2.getPublic(), true);
             bKeyAgree.doPhase(kp.getPublic(), true);
 
-            long start = System.nanoTime();
-            byte[] ASharedSecret = aKeyAgree.generateSecret();
-            long end = System.nanoTime();
-            long result = (end - start) / 1000;
-            byte[] BSharedSecret = bKeyAgree.generateSecret();
+            for(int i = 0; i < rep_agree; i++) {
+                long start = System.nanoTime();
+                byte[] ASharedSecret = aKeyAgree.generateSecret();
+                long end = System.nanoTime();
+                long result = (end - start) / 1000;
+                byte[] BSharedSecret = bKeyAgree.generateSecret();
+                writer.write("Time to generate key agreement : " + result + " ms\n");
+                //System.out.println("Result:");
+                //System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
+            }
 
-            writer.write("Time to generate key agreement : " + result + " ms\n");
 
-            System.out.println("Result:");
-            System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
         }catch(IOException i){
             throw new RuntimeException(i);
         }

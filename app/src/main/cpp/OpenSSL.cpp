@@ -138,7 +138,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 
     gettimeofday(&st,NULL);
     int encrypted_length = RSA_public_encrypt(strlen(plainText),
-                                        reinterpret_cast<const unsigned char *>(plainText), encrypted, rsa, RSA_PKCS1_PADDING);
+                                        reinterpret_cast<const unsigned char *>(plainText), encrypted, rsa, RSA_PKCS1_OAEP_PADDING);
     gettimeofday(&et,NULL);
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
@@ -154,7 +154,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 
     RSA * rsa_priv = createRSA(reinterpret_cast<unsigned char *>(privateKey), 0);
     gettimeofday(&st,NULL);
-    int  decrypted_length = RSA_private_decrypt(encrypted_length,encrypted,decrypted,rsa_priv,RSA_PKCS1_PADDING);
+    int  decrypted_length = RSA_private_decrypt(encrypted_length,encrypted,decrypted,rsa_priv,RSA_PKCS1_OAEP_PADDING);
     gettimeofday(&et,NULL);
     int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 

@@ -30,7 +30,7 @@ import static com.example.juanperezdealgaba.sac.ECDiffieHellman.GetTimestamp;
 public class ECDiffieHellmanImplementation {
 
 
-    public void startDiffieHellman(FileWriter writer, TextView results) throws NoSuchAlgorithmException, NoSuchProviderException,
+    public void startDiffieHellman(FileWriter writer, TextView results, int rep_agree) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
 
@@ -59,19 +59,19 @@ public class ECDiffieHellmanImplementation {
         aKeyAgree.doPhase(bKeyPair.getPublic(), true);
         bKeyAgree.doPhase(aKeyPair.getPublic(), true);
 
+    for(int i = 0; i < rep_agree; i++) {
         long start = System.nanoTime();
 
         byte[] aSecret = aKeyAgree.generateSecret();
 
         long end = System.nanoTime();
-        long result = (end-start)/1000;
-
-
+        long result = (end - start) / 1000;
+        writer.write("Time to generate key agreement :" + result + " ms\n");
         byte[] bSecret = bKeyAgree.generateSecret();
 
         System.out.println(MessageDigest.isEqual(aSecret, bSecret));
+    }
 
-        writer.write("Time to generate key agreement :" + result+ " ms\n");
         //results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
 
 

@@ -23,6 +23,66 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/repetitions_aes"
+        android:layout_width="142dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_test"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repetitions" />
+
+    <EditText
+        android:id="@+id/repetitions_agree"
+        android:layout_width="142dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_test"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repetitions_hash" />
+
+    <EditText
+        android:id="@+id/repetitions_hash"
+        android:layout_width="142dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_test"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/title_hash"
+        app:layout_constraintTop_toBottomOf="@+id/repetitions_rsa" />
+
+    <EditText
+        android:id="@+id/repetitions_rsa"
+        android:layout_width="142dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_test"
+        android:ems="10"
+        android:inputType="number"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repetitions_aes" />
+
+    <EditText
         android:id="@+id/titlet_text"
         android:layout_width="148dp"
         android:layout_height="44dp"
@@ -40,6 +100,78 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/title_aes"
+        android:layout_width="118dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/rep_sym"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toStartOf="@+id/repetitions"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlet_text" />
+
+    <EditText
+        android:id="@+id/title_rsa"
+        android:layout_width="118dp"
+        android:layout_height="49dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/rep_rsa"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toStartOf="@+id/repetitions"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_aes" />
+
+    <EditText
+        android:id="@+id/title_hash"
+        android:layout_width="118dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/rep_hash"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toStartOf="@+id/repetitions"
+        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_rsa" />
+
+    <EditText
+        android:id="@+id/title_agree"
+        android:layout_width="139dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="@string/rep_agree"
+        android:textColor="#20C20E"
+        app:layout_constraintEnd_toStartOf="@+id/repetitions"
+        app:layout_constraintHorizontal_bias="0.112"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_hash" />
+
     <Button
         android:id="@+id/start_complete_test"
         android:layout_width="wrap_content"
@@ -48,24 +180,28 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/button_test"
         android:text="Start Test"
         android:textColor="#20C20E"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/title_agree" />
 
     <TextView
         android:id="@+id/complete_test_results"
-        android:layout_width="360dp"
-        android:layout_height="350dp"
+        android:layout_width="362dp"
+        android:layout_height="110dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="#20C20E"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_complete_test" />
+        app:layout_constraintTop_toBottomOf="@+id/start_complete_test"
+        app:layout_constraintVertical_bias="0.761" />
 </android.support.constraint.ConstraintLayout>

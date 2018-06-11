@@ -36,12 +36,20 @@ class CompleteTestParams {
     TextView results;
     int repetitions;
     Storage storage;
+    int rep_hash;
+    int rep_agree;
+    int rep_rsa;
+    int rep_aes;
 
-    CompleteTestParams(Storage storage, TextView results, int repetitions) {
+    CompleteTestParams(Storage storage, TextView results, int repetitions,int rep_aes,int rep_hash, int rep_agree, int rep_rsa) {
 
         this.storage = storage;
         this.results = results;
         this.repetitions = repetitions;
+        this.rep_aes = rep_aes;
+        this.rep_rsa = rep_rsa;
+        this.rep_agree = rep_agree;
+        this.rep_hash = rep_hash;
     }
 }
 
@@ -72,6 +80,10 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
        Storage storage = params[0].storage;
         TextView results = params[0].results;
         int repetitions = params[0].repetitions;
+        int repetitions_aes = params[0].rep_aes;
+        int repetitions_agree = params[0].rep_agree;
+        int repetitions_rsa = params[0].rep_rsa;
+        int repetitions_hash = params[0].rep_hash;
 
         try {
 
@@ -134,7 +146,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCCBC);
 
                     AESCBC testCBC = new AESCBC();
-                    testCBC.testCBC(writer,results,blocksize);
+                    testCBC.testCBC(writer,results,blocksize,repetitions_aes);
 
                     writer.write(separate);
 
@@ -143,7 +155,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCCTR);
 
                     AESCTR testCTR = new AESCTR();
-                    testCTR.testCTR(writer, results, blocksize);
+                    testCTR.testCTR(writer, results, blocksize, repetitions_aes);
 
                     writer.write(separate);
 
@@ -152,7 +164,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCGCM);
 
                     AESGCM testGCM = new AESGCM();
-                    testGCM.testGCM(writer, results, blocksize);
+                    testGCM.testGCM(writer, results, blocksize,repetitions_aes);
 
                     writer.write(separate);
 
@@ -161,7 +173,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCOFB);
 
                     AESOFB testOFB = new AESOFB();
-                    testOFB.testOFB(writer, results, blocksize);
+                    testOFB.testOFB(writer, results, blocksize,repetitions_aes);
 
                     writer.write(separate);
 
@@ -172,7 +184,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCMD5);
 
                     MD5Implementation testmd5 = new MD5Implementation();
-                    testmd5.testmd5(writer, results,blocksize);
+                    testmd5.testmd5(writer, results,blocksize, repetitions_hash);
 
                     writer.write(separate);
 
@@ -187,7 +199,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
                 RSAPrueba testRSABC = new RSAPrueba();
-                testRSABC.testRSA(writer, results,128);
+                testRSABC.testRSA(writer, results,128,repetitions_rsa);
 
                 writer.write(separate);
 
@@ -196,7 +208,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(BCDH);
 
                 DiffieHellman testDH = new DiffieHellman();
-                testDH.testDH(writer, results);
+                testDH.testDH(writer, results,repetitions_agree);
 
                 writer.write(separate);
 
@@ -205,7 +217,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(BCECDH);
 
                 ECDiffieHellmanImplementation testECDH = new ECDiffieHellmanImplementation();
-                testECDH.startDiffieHellman(writer, results);
+                testECDH.startDiffieHellman(writer, results,repetitions_agree);
 
                 writer.write(separate_lib);
 
@@ -770,7 +782,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
     @Override
     protected void onPostExecute(final TextView report) {
             dialog.dismiss();
-            report.setText("\n"+"\n"+"\n"+"\n"+"   Test finished successfully"+"\n"+"\n"+"  Find your results at " +
+            report.setText("\n"+ "Test finished successfully"+"\n"+"\n"+"  Find your results at " +
                     "CryptoBench/Report.txt");
         super.onPostExecute(report);
     }

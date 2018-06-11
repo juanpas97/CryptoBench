@@ -36,6 +36,22 @@ public class CompleteTestActivity extends AppCompatActivity{
 
             final EditText repetitions_test = findViewById(R.id.repetitions);
 
+            final EditText repetitions_aes = findViewById(R.id.repetitions_aes);
+
+            final EditText repetitions_rsa = findViewById(R.id.repetitions_rsa);
+
+            final EditText repetitions_hash = findViewById(R.id.repetitions_hash);
+
+            final EditText repetitions_agree = findViewById(R.id.repetitions_agree);
+
+            final EditText rep_aes = findViewById(R.id.title_aes);
+
+            final EditText rep_rsa = findViewById(R.id.title_rsa);
+
+            final EditText rep_agree = findViewById(R.id.title_agree);
+
+            final EditText rep_hash = findViewById(R.id.title_hash);
+
             final Button start_test = findViewById(R.id.start_complete_test);
 
             final Storage storage = new Storage(getApplicationContext());
@@ -46,17 +62,50 @@ public class CompleteTestActivity extends AppCompatActivity{
 
                 @Override
                 public void onClick(View view) {
-                    int repetitions;
+
+                    int repetitions,rep_aes, rep_rsa,rep_agree,rep_hash;
+
                     complete_test_results.setText("");
+
                     String check = repetitions_test.getText().toString();
                     if (check.matches("")) {
                         repetitions = 1;
                     } else {
                         repetitions = Integer.parseInt(repetitions_test.getText().toString());
                     }
-                    System.out.println("Reptitions:" + repetitions);
 
-                    CompleteTestParams paramsTest = new CompleteTestParams(storage, complete_test_results,repetitions);
+                    String check_aes = repetitions_aes.getText().toString();
+                    if (check_aes.matches("")) {
+                        rep_aes = 10;
+                    } else {
+                        rep_aes = Integer.parseInt(repetitions_aes.getText().toString());
+                    }
+
+                    String check_rsa = repetitions_rsa.getText().toString();
+                    if (check_rsa.matches("")) {
+                        rep_rsa = 10;
+                    } else {
+                        rep_rsa = Integer.parseInt(repetitions_rsa.getText().toString());
+                    }
+
+                    String check_hash = repetitions_hash.getText().toString();
+                    if (check_hash.matches("")) {
+                        rep_hash = 10;
+                    } else {
+                        rep_hash = Integer.parseInt(repetitions_hash.getText().toString());
+                    }
+
+                    String check_agree = repetitions_agree.getText().toString();
+                    if (check_agree.matches("")) {
+                        rep_agree = 10;
+                    } else {
+                        rep_agree = Integer.parseInt(repetitions_agree.getText().toString());
+                    }
+
+                    System.out.println("Repetitions:" + repetitions);
+                    System.out.println("Rep_aes: " + rep_aes);
+
+                    CompleteTestParams paramsTest = new CompleteTestParams(storage, complete_test_results,repetitions,rep_aes,rep_hash,rep_agree,rep_rsa);
 
                     CompleteTestAsync test = new CompleteTestAsync(CompleteTestActivity.this);
                     test.execute(paramsTest);

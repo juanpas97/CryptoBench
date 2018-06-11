@@ -388,24 +388,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
     }
 
 
-    LOGD("Begin of key");
-
-    for (int i = 0; i < 16 ; ++i) {
-        LOGD("%x",key[i]);
-    }
-
-    LOGD("Begin of IV");
-
-    for (int i = 0; i < 16 ; ++i) {
-        LOGD("%x",iv[i]);
-    }
-
-    LOGD("Begin of msg");
-
-    for (int i = 0; i < 16 ; ++i) {
-        LOGD("%x",msg[i]);
-    }
-
     if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init enc");
         return error;
@@ -582,7 +564,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
     if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return result; }
     gettimeofday(&st,NULL);
-    ret = wc_RsaPublicEncrypt_ex(data, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_PKCSV15_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+    ret = wc_RsaPublicEncrypt_ex(data, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
     gettimeofday(&et,NULL);
 
     int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
@@ -593,7 +575,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     encrypted_len = ret;
     LOGD("%i",encrypted_len);
 
-    LOGD("Finished encryption");
+    LOGD("Finished encryption / RSA");
 
     // decrypt data.
     index = 0;
@@ -602,7 +584,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index, &key, PRIVATE_KEY_LENGTH);
     if (ret != 0) { LOGD("Error at wc_RsaPrivateKeyDecode: %i.", ret); return result; }
     gettimeofday(&st,NULL);
-    ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_PKCSV15_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+    ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
     gettimeofday(&et,NULL);
 
     int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
@@ -620,7 +602,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
         if (decrypted_buffer[i] != data[i]) { LOGD("Byte at index %i should be %i but it is %i.", i, 0xFF & data[i], 0xFF & decrypted_buffer[i]); return result; }
     }*/
 
-    LOGD("Finished decryption");
+    LOGD("Finished decryption / RSA");
     // got here means no error.
     LOGD("All went O.K.");
 

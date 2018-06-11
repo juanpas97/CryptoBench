@@ -1024,7 +1024,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
                 RSAPrueba test = new RSAPrueba();
                 try {
-                    test.testRSA(writer, textview, 128);
+                    test.testRSA(writer, textview, 128,1);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -1043,7 +1043,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 AESCBC test = new AESCBC();
                 try {
                     int blocksize = 128;
-                    test.testCBC(writer, textview, 128 );
+                    test.testCBC(writer, textview, 128,1 );
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
