@@ -51,11 +51,12 @@
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    int array_len = rep_aes * 2;
+    result = env->NewIntArray(array_len);
+    jint fill[array_len];
 
 
 
@@ -77,13 +78,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
 
     };
 
+    uint8_t iv2[16] = {
+            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
+
+    };
+
 
     struct timeval st,et;
-    uint8_t OutputMessage[64];
-    uint8_t compare[64];
+    uint8_t OutputMessage[blocksize];
+    uint8_t compare[blocksize];
     uint32_t i=0,status = 0;
 
-    mbedtls_aes_context ctx;
+    mbedtls_aes_context ctx,ctx_dec;
+
     mbedtls_aes_init( &ctx );
     status = mbedtls_aes_setkey_enc( &ctx, key, 128 );
     if(status != 0)
@@ -91,39 +98,39 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
         LOGD("\n mbedtls Encrypt set key failed");
     }
 
-    gettimeofday(&st,NULL);
-    status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_ENCRYPT, 64, iv, Plaintext, OutputMessage );
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[0] = encryption_time;
-    if(status != 0)
-    {
-        LOGD("\n mbedtls encryption failed");
-    }
-
-
-    uint8_t iv2[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
-
-    mbedtls_aes_init( &ctx );
-    status = mbedtls_aes_setkey_dec(&ctx, key, 128);
+    mbedtls_aes_init( &ctx_dec );
+    status = mbedtls_aes_setkey_dec(&ctx_dec, key, 128);
     if(status != 0)
     {
         LOGD("\n mbedtls decryption set key failed");
     }
 
-    gettimeofday(&st,NULL);
-    status = mbedtls_aes_crypt_cbc( &ctx, MBEDTLS_AES_DECRYPT, 64, iv2, OutputMessage,compare);
-    gettimeofday(&et,NULL);
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int index = 0;
 
-    fill[1] = decryption_time;
-    if(status != 0)
-    {
-        LOGD("\n mbedtls encryption failed");
+    for (int i = 0; i < rep_aes ; i++) {
+        gettimeofday(&st, NULL);
+        status = mbedtls_aes_crypt_cbc(&ctx, MBEDTLS_AES_ENCRYPT, blocksize, iv, Plaintext, OutputMessage);
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index] = encryption_time;
+        if (status != 0) {
+            LOGD("\n mbedtls encryption failed");
+        }
+
+
+        gettimeofday(&st, NULL);
+        status = mbedtls_aes_crypt_cbc(&ctx_dec, MBEDTLS_AES_DECRYPT, blocksize, iv2, OutputMessage,
+                                       compare);
+        gettimeofday(&et, NULL);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index + 1] = decryption_time;
+        if (status != 0) {
+            LOGD("\n mbedtls encryption failed");
+        }
+
+        index += 2;
     }
 
     LOGD("AES finished");
@@ -133,23 +140,25 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
     //}
     mbedtls_aes_free( &ctx );
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, array_len, fill);
     return result;
 }
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash) {
+
+    LOGD("rep_hash is: %i", rep_hash);
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    result = env->NewIntArray(rep_hash);
+    jint fill[rep_hash];
     struct timeval st,et;
 
     jintArray error[1];
 
     int i, ret;
-    unsigned char digest[16];
+    unsigned char digest[1024];
     uint8_t Plaintext[blocksize];
 
     for (int i = 0; i <= sizeof(Plaintext); ++i) {
@@ -157,24 +166,26 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
     }
 
+    for (int i = 0; i < rep_hash; ++i) {
 
-    gettimeofday(&st,NULL);
-    if(  (ret = mbedtls_md5_ret(Plaintext, 13, digest ))  != 0 ) {
-        return 0;
+
+        gettimeofday(&st, NULL);
+        if ((ret = mbedtls_md5_ret(Plaintext, sizeof(Plaintext), digest)) != 0) {
+            return 0;
+        }
+        gettimeofday(&et, NULL);
+
+        int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[i] = generation_time;
+
+
+        //for( i = 0; i < 16; i++ )
+        //    LOGD( "%02x", digest[i] );
     }
-    gettimeofday(&et,NULL);
-
-    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[1] = generation_time;
-
-
-    //for( i = 0; i < 16; i++ )
-    //    LOGD( "%02x", digest[i] );
-
     LOGD( "Finished!" );
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, rep_hash, fill);
 
     return result;
 
@@ -182,11 +193,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance,jint rep_agree) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    result = env->NewIntArray(rep_agree);
+    jint fill[rep_agree];
 
     struct timeval st,et;
 
@@ -289,17 +300,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
         LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
     }
 
-    gettimeofday(&et,NULL);
-    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1] = generation_time;
+    for (int i = 0; i < rep_agree; ++i) {
 
-    if( ( ret = mbedtls_dhm_calc_secret( &dhm2, buf2, sizeof( buf2 ), &n2,
-                                         mbedtls_ctr_drbg_random, &ctr_drbg2 ) ) != 0 )
-    {
-        LOGD( " failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret );
+
+        gettimeofday(&et, NULL);
+        int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[i] = generation_time;
+
+        if ((ret = mbedtls_dhm_calc_secret(&dhm2, buf2, sizeof(buf2), &n2,
+                                           mbedtls_ctr_drbg_random, &ctr_drbg2)) != 0) {
+            LOGD(" failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret);
+        }
+
     }
-
-
     //LOGD("BUF1");
     //for( int i = 0; i < 16; i++ )
     //    LOGD( "%02x", buf1[i] );
@@ -309,7 +322,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
 
     LOGD("DH finished");
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, rep_agree, fill);
 
     return result;
 
@@ -317,11 +330,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance)
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance, jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance, jint blocksize, jint rep_aes) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    int array_len = rep_aes * 2;
+    result = env->NewIntArray(array_len);
+    jint fill[array_len];
 
     struct timeval st, et;
 
@@ -357,43 +371,52 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
 
     int ret;
 
-    gettimeofday(&st,NULL);
-    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, iv, stream_block, plaintext, enc_out);
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int index = 0;
 
-    if (ret == 0){
-        LOGD("Success encrypting");
+    for (int i = 0; i < rep_aes ; i++) {
+        gettimeofday(&st, NULL);
+        ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, iv, stream_block, plaintext,
+                                    enc_out);
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        if (ret == 0) {
+            LOGD("Success encrypting");
+        }
+
+        fill[index] = encryption_time;
+
+        gettimeofday(&st, NULL);
+        ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, iv, stream_block, enc_out,
+                                    plain_out);
+        gettimeofday(&et, NULL);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        if (ret == 0) {
+            LOGD("Success decrypting");
+        }
+
+        fill[index + 1] = decryption_time;
+
+        index += 2;
+
     }
-
-    fill[0] = encryption_time;
-
-    gettimeofday(&st,NULL);
-    ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, iv, stream_block, enc_out, plain_out);
-    gettimeofday(&et,NULL);
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    if (ret == 0){
-        LOGD("Success decrypting");
-    }
-
-    fill[1] = decryption_time;
-
-
     mbedtls_aes_free(&aes);
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, array_len, fill);
 
     return result;
 }
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    int array_len = rep_aes * 2;
+    result = env->NewIntArray(array_len);
+    jint fill[array_len];
+
 
     struct timeval st,et;
 
@@ -428,36 +451,42 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
         LOGD("%i",ret);
     }
 
-    gettimeofday(&st,NULL);
+    int index = 0;
 
-    //I use the "high-level" interface as explained in this post : https://tls.mbed.org/discussions/generic/aes-gcm-authenticated-encryption-example
+    for (int i = 0; i < rep_aes ; i++) {
+        gettimeofday(&st, NULL);
 
-   ret = mbedtls_gcm_crypt_and_tag(&ctx,MBEDTLS_GCM_ENCRYPT, sizeof(plaintext),iv, sizeof(iv),NULL,0,plaintext,encrypted,
-                              sizeof(tag),tag);
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[0]=encryption_time;
-    if(ret != 0){
-        LOGD("Error encrypting");
-        LOGD("%i",ret);
+        //I use the "high-level" interface as explained in this post : https://tls.mbed.org/discussions/generic/aes-gcm-authenticated-encryption-example
+
+        ret = mbedtls_gcm_crypt_and_tag(&ctx, MBEDTLS_GCM_ENCRYPT, sizeof(plaintext), iv,
+                                        sizeof(iv), NULL, 0, plaintext, encrypted,
+                                        sizeof(tag), tag);
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[index] = encryption_time;
+        if (ret != 0) {
+            LOGD("Error encrypting");
+            LOGD("%i", ret);
+        }
+
+        gettimeofday(&st, NULL);
+
+        ret = mbedtls_gcm_auth_decrypt(&ctx, sizeof(encrypted), iv, sizeof(iv), NULL, 0, tag,
+                                       sizeof(tag), encrypted, decrypted);
+
+        gettimeofday(&et, NULL);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[index + 1] = decryption_time;
+
+        if (ret != 0) {
+            LOGD("Error decrypting");
+            LOGD("%i", ret);
+        }
+        index += 2;
     }
-
-    gettimeofday(&st,NULL);
-
-    ret=mbedtls_gcm_auth_decrypt(&ctx,sizeof(encrypted),iv, sizeof(iv),NULL,0,tag, sizeof(tag),encrypted,decrypted);
-
-    gettimeofday(&et,NULL);
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1]=decryption_time;
-
-    if(ret != 0){
-        LOGD("Error decrypting");
-        LOGD("%i",ret);
-    }
-
     LOGD("We are good");
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, array_len, fill);
 
     return result;
 
@@ -465,11 +494,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instance, jint rep_agree) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    result = env->NewIntArray(rep_agree);
+    jint fill[rep_agree];
 
     struct timeval st,et;
 
@@ -519,17 +548,18 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
         LOGD("Error generating secret 1");
     }
 
-    gettimeofday(&st,NULL);
-    ret = mbedtls_ecdh_compute_shared( &grp, &zB, &qA, &dB,
-                                       NULL, NULL );
-    gettimeofday(&et,NULL);
-    int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1]=generation_time;
+    for(int i = 0; i < rep_agree; i++) {
+        gettimeofday(&st, NULL);
+        ret = mbedtls_ecdh_compute_shared(&grp, &zB, &qA, &dB,
+                                          NULL, NULL);
+        gettimeofday(&et, NULL);
+        int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[i] = generation_time;
 
-    if(ret != 0){
-        LOGD("Error generating secret 2");
+        if (ret != 0) {
+            LOGD("Error generating secret 2");
+        }
     }
-
     ret = mbedtls_mpi_cmp_mpi( &zA, &zB );
 
     if(ret != 0){
@@ -537,7 +567,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
     }
     LOGD("We are good");
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, rep_agree, fill);
 
     return result;
 
@@ -545,11 +575,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
 
 extern "C"
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes) {
 
     jintArray result;
-    result = env->NewIntArray(3);
-    jint fill[3];
+    int array_len = rep_aes * 2;
+    result = env->NewIntArray(array_len);
+    jint fill[array_len];
 
 
     struct timeval st,et;
@@ -613,27 +644,6 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
     mbedtls_rsa_set_padding( mbedtls_pk_rsa( pk ),  MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA1 );
     unsigned char label[1024] = "label";
 
-    gettimeofday(&st,NULL);
-
-    ret = mbedtls_rsa_rsaes_oaep_encrypt(mbedtls_pk_rsa(pk),mbedtls_ctr_drbg_random,&ctr_drbg,MBEDTLS_RSA_PUBLIC,label,
-                                         sizeof(label),
-                                         sizeof(plaintext),plaintext,buf);
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[0]=encryption_time;
-
-
-    if( ret != 0 )
-    {
-        printf( " failed\n  ! mbedtls_pk_encrypt returned -0x%04x\n", -ret );
-        return result;
-    }
-
-    LOGD("Encrypt was good");
-
-    mbedtls_pk_free(&pk);
-
-
     ret = mbedtls_pk_parse_keyfile( &privk, "/sdcard/CryptoBench/private_key.txt",NULL);
 
     if( ret != 0 )
@@ -643,24 +653,53 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
     }
 
     mbedtls_rsa_set_padding( mbedtls_pk_rsa( privk ),  MBEDTLS_RSA_PKCS_V21, MBEDTLS_MD_SHA1 );
-    gettimeofday(&st,NULL);
 
-    ret = mbedtls_rsa_rsaes_oaep_decrypt(mbedtls_pk_rsa(privk),mbedtls_ctr_drbg_random,&ctr_drbg2,MBEDTLS_RSA_PRIVATE,label,
-                                         sizeof(label),&olen_dec ,buf,output_decrypted,1024);
-    gettimeofday(&et,NULL);
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-    fill[1]=decryption_time;
-    if(ret !=0){
-        LOGD(" failed\n  ! mbedtls_pk_decrypt returned -0x%04x\n", -ret);
+    int index = 0;
+
+    for (int i = 0; i < rep_aes ; i++) {
+
+        gettimeofday(&st, NULL);
+
+        ret = mbedtls_rsa_rsaes_oaep_encrypt(mbedtls_pk_rsa(pk), mbedtls_ctr_drbg_random, &ctr_drbg,
+                                             MBEDTLS_RSA_PUBLIC, label,
+                                             sizeof(label),
+                                             sizeof(plaintext), plaintext, buf);
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[index] = encryption_time;
+
+
+        if (ret != 0) {
+            printf(" failed\n  ! mbedtls_pk_encrypt returned -0x%04x\n", -ret);
+            return result;
+        }
+
+        LOGD("Encrypt was good");
+
+        //mbedtls_pk_free(&pk);
+
+
+        gettimeofday(&st, NULL);
+
+        ret = mbedtls_rsa_rsaes_oaep_decrypt(mbedtls_pk_rsa(privk), mbedtls_ctr_drbg_random,
+                                             &ctr_drbg2, MBEDTLS_RSA_PRIVATE, label,
+                                             sizeof(label), &olen_dec, buf, output_decrypted, 1024);
+        gettimeofday(&et, NULL);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        fill[index + 1] = decryption_time;
+        if (ret != 0) {
+            LOGD(" failed\n  ! mbedtls_pk_decrypt returned -0x%04x\n", -ret);
+        }
+
+        index += 2;
     }
-
 
     LOGD( " ok\n" );
 
     LOGD("RSA good");
 
 
-    env->SetIntArrayRegion(result, 0, 3, fill);
+    env->SetIntArrayRegion(result, 0, array_len, fill);
 
     return result;
 
