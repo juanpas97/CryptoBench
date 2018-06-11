@@ -424,11 +424,12 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(wcmd5);
 
                     WolfCrypt testmd5 = new WolfCrypt();
-                    int[] timesmd5 = testmd5.MD5(64);
+                    int[] timesmd5 = testmd5.MD5(64,repetitions_hash);
 
-                    System.out.println("Time to generate hash:" + timesmd5[1] + "ms\n");
-                    writer.write("Time to generate hash: " + timesmd5[1] + "ms\n");
-
+                    for(i = 0; i < timesmd5.length ; i++) {
+                        System.out.println("Time to generate hash:" + timesmd5[i] + "ms\n");
+                        writer.write("Time to generate hash: " + timesmd5[i] + "ms\n");
+                    }
 
                     writer.write(separate);
 
@@ -442,12 +443,14 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(wcdh);
 
                 WolfCrypt testDHwc = new WolfCrypt();
-                timesDH = testDHwc.DH();
+                timesDH = testDHwc.DH(repetitions_agree);
 
-                System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                writer.write("Time to key agreement" + timesDH[1] + "ms\n");
+                for(i = 0; i < timesDH.length ; i++) {
 
+                    System.out.println("Time to key agreement: " + timesDH[i] + "ms\n");
+                    writer.write("Time to key agreement: " + timesDH[i] + "ms\n");
 
+                }
                 writer.write(separate);
 
                 String wcecdh= "***********ECDH**************" + "\n";
@@ -455,10 +458,15 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(wcecdh);
 
                 WolfCrypt testECDHwc = new WolfCrypt();
-                timesECDH = testECDHwc.ECDH();
+                timesECDH = testECDHwc.ECDH(repetitions_agree);
 
-                System.out.println("Time to key agreement:" + timesECDH[1] + "ms\n");
-                writer.write("Time to key agreement" + timesECDH[1] + "ms\n");
+                for(i = 0; i < timesECDH.length ; i++) {
+
+                    System.out.println("Time to key agreement: " + timesECDH[i] + "ms\n");
+                    writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
+
+                }
+                writer.write(separate);
 
 
                 writer.write(separate);
@@ -468,15 +476,18 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                 writer.write(wcRSA);
 
                 WolfCrypt testRSAwc = new WolfCrypt();
-                timesRSA = testRSAwc.RSA(128);
+                int[] timesRSAwc = testRSAwc.RSA(128,repetitions_rsa);
 
-                System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
-                writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
+                index_array = 0;
+                for (i = 0; i < timesRSAwc.length/2 ;i++) {
+                    System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
+                    writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
 
 
-                System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
-                writer.write("Time to decrypt:" + timesRSA[1] + "ms\n");
-                ;
+                    System.out.println("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
+                    index_array += 2;
+                }
 
                 writer.write(separate_lib);
 

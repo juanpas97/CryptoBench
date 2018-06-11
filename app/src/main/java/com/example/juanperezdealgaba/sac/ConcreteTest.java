@@ -836,7 +836,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/RSA***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesRSA = test.RSA(64);
+                    int[] timesRSA = test.RSA(64,1);
 
                     System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
                     writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
@@ -958,7 +958,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] testMD5 = test.MD5(64);
+                    int[] testMD5 = test.MD5(64,1);
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     textview.append("Time to generate hash:" + testMD5[1] + "ns\n");
@@ -981,7 +981,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/DH***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] testDH = test.DH();
+                    int[] testDH = test.DH(1);
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");
@@ -1004,7 +1004,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 writer.write("\n************WolfCrypt/ECDH***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] testDH = test.ECDH();
+                    int[] testDH = test.ECDH(1);
                     System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
                     writer.write("Time to key agreement:" + testDH[1] + "ns\n");
                     textview.append("Time to key agreement:" + testDH[1] + "ns\n");

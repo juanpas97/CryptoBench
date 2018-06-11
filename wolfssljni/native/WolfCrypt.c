@@ -58,11 +58,11 @@ unsigned char decrypted_buffer[RSA_LENGTH];
 
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instance,jint rep_agree) {
 
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,rep_agree);
+    jint fill[rep_agree];
 
     jint error[1];
 
@@ -177,19 +177,20 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
         return error;
     }
 
-    gettimeofday(&st,NULL);
-    ret = wc_DhAgree(&key, agree, &agreeSz, priv, privSz, pub2, pubSz2);
-    gettimeofday(&et,NULL);
-    int key_agreement = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    for(int i = 0; i < rep_agree; i++) {
+        gettimeofday(&st, NULL);
+        ret = wc_DhAgree(&key, agree, &agreeSz, priv, privSz, pub2, pubSz2);
+        gettimeofday(&et, NULL);
+        int key_agreement = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = key_agreement;
-    if (ret != 0) {
-        LOGD("Error agreeing");
-        return error;
-    } else {
-        LOGD("Success at 1st agreeing");
+        fill[i] = key_agreement;
+        if (ret != 0) {
+            LOGD("Error agreeing");
+            return error;
+        } else {
+            LOGD("Success at 1st agreeing");
+        }
     }
-
     ret = wc_DhAgree(&key2, agree2, &agreeSz2, priv2, privSz2, pub, pubSz);
     if(ret != 0){
         LOGD("Error at 2nd agreeing");
@@ -203,7 +204,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
 
     LOGD("Diffie Hellman Finished");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, rep_agree, fill);
 
     return result;
 }
@@ -445,11 +446,11 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instance,jint blocksize, jint rep_hash) {
 
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,rep_hash);
+    jint fill[rep_hash];
 
     jint error[1];
 
@@ -478,11 +479,11 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
         LOGD("Failure GenerateByte"); //generating block failed!
     }
 
-    int i = 0;
+    /*int i = 0;
     for (int i = 0; i < 32; ++i) {
         LOGD("%x",data[i]);
     }
-
+*/
 
     printf("\n");
 
@@ -491,47 +492,53 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5(JNIEnv *env, jobject instan
         LOGD("wc_Initmd5 failed");
 
     } else {
-        gettimeofday(&st,NULL);
 
-        ret = wc_Md5Update(&md5, data, len);
+        for (int i = 0; i <rep_hash ; ++i) {
 
-        if (ret != 0) {
 
-            /* Md5 Update Failure Case. */
-            LOGD("Error in update");
+            gettimeofday(&st, NULL);
 
+            ret = wc_Md5Update(&md5, data, len);
+
+            if (ret != 0) {
+
+                /* Md5 Update Failure Case. */
+                LOGD("Error in update");
+
+            }
+
+            final = wc_Md5Final(&md5, hash);
+            if (final != 0) {
+
+                /* Md5 Final Failure Case. */
+                LOGD("Error in Md5Final");
+            }
+
+            gettimeofday(&et, NULL);
+
+            int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+            fill[i] = generation_time;
         }
-
-        final = wc_Md5Final(&md5, hash);
-        if (final != 0) {
-
-            /* Md5 Final Failure Case. */
-            LOGD("Error in Md5Final");
-        }
-
-        gettimeofday(&et,NULL);
-
-        int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-        fill[1] = generation_time;
         LOGD("Hash finished");
     }
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, rep_hash, fill);
 
     return result;
 
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa) {
 
+    int len_array = rep_rsa * 2;
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,len_array);
+    jint fill[len_array];
     struct timeval st,et;
 
-    RsaKey key;
+    RsaKey key,key_dec;
     RNG rng1;
     word32 index;
     int ret;
@@ -563,38 +570,55 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return result; }
     ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
     if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return result; }
-    gettimeofday(&st,NULL);
-    ret = wc_RsaPublicEncrypt_ex(data, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    gettimeofday(&et,NULL);
 
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int index1 = 0;
+    ret = wc_InitRsaKey(&key_dec, NULL);
+    if (ret != 0) { LOGD("Error 2 at wc_InitRsaKey: %i.", ret); return result; }
+    ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index1, &key_dec, PRIVATE_KEY_LENGTH);
+    if (ret != 0) { LOGD("Error 2 at wc_RsaPrivateKeyDecode: %i.", ret); return result; }
 
-    fill[0] = encryption_time;
+    int index_result = 0;
+    for (int i = 0; i < rep_rsa ; i++) {
 
-    if (ret < 0) { LOGD("Error at wc_RsaPublicEncrypt_ex: %i.", ret); return result; }
-    encrypted_len = ret;
-    LOGD("%i",encrypted_len);
+        gettimeofday(&st, NULL);
+        ret = wc_RsaPublicEncrypt_ex(data, IN_BUFFER_LENGTH, (byte *) encrypted_buffer, RSA_LENGTH,
+                                     &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1,
+                                     NULL, 0);
+        gettimeofday(&et, NULL);
 
-    LOGD("Finished encryption / RSA");
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    // decrypt data.
-    index = 0;
-    ret = wc_InitRsaKey(&key, NULL);
-    if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return result; }
-    ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index, &key, PRIVATE_KEY_LENGTH);
-    if (ret != 0) { LOGD("Error at wc_RsaPrivateKeyDecode: %i.", ret); return result; }
-    gettimeofday(&st,NULL);
-    ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    gettimeofday(&et,NULL);
+        fill[index_result] = encryption_time;
 
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        if (ret < 0) {
+            LOGD("Error at wc_RsaPublicEncrypt_ex: %i.", ret);
+            return result;
+        }
+        encrypted_len = ret;
+        LOGD("%i", encrypted_len);
 
-    fill[1] = decryption_time;
+        LOGD("Finished encryption / RSA");
 
-    if (ret < 0) { LOGD("Error at wc_RsaPrivateDecrypt_ex: %i.", ret); return result; }
-    decrypted_len = ret;
-    wc_FreeRsaKey(&key);
+        // decrypt data.
 
+
+        gettimeofday(&st, NULL);
+        ret = wc_RsaPrivateDecrypt_ex((const byte *) encrypted_buffer, encrypted_len,
+                                      (byte *) decrypted_buffer, RSA_LENGTH, &key_dec,
+                                      WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
+        gettimeofday(&et, NULL);
+
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index_result + 1] = decryption_time;
+
+        if (ret < 0) {
+            LOGD("Error at wc_RsaPrivateDecrypt_ex: %i.", ret);
+            return result;
+        }
+        decrypted_len = ret;
+        index +=2;
+    }
    /* // compare data.
     if (decrypted_len != IN_BUFFER_LENGTH) { LOGD("Decrypted length should be %i but it is %i.", IN_BUFFER_LENGTH, decrypted_len); return result; }
     for (int i = 0; i < IN_BUFFER_LENGTH; i++)
@@ -606,7 +630,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
     // got here means no error.
     LOGD("All went O.K.");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, len_array, fill);
 
     return result;
 }
@@ -770,12 +794,12 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
 
 }
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject instance) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject instance, jint rep_agree) {
 
     LOGD("Starting ECDH");
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,rep_agree);
+    jint fill[rep_agree];
     jintArray error[3];
 
     int ret;
@@ -825,23 +849,25 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject insta
         LOGD("Error is : %i", ret);
     }
 
-    gettimeofday(&st,NULL);
-    ret = wc_ecc_shared_secret(&priv, &pub, secret, &secretsize);
+    for(int i = 0; i < rep_agree; i++) {
+        gettimeofday(&st, NULL);
+        ret = wc_ecc_shared_secret(&priv, &pub, secret, &secretsize);
 
-    gettimeofday(&et,NULL);
+        gettimeofday(&et, NULL);
 
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = decryption_time;
+        fill[i] = decryption_time;
 
-    if(ret != 0){
-        LOGD("Error sharing secret");
-        LOGD("Error is : %i", ret);
+        if (ret != 0) {
+            LOGD("Error sharing secret");
+            LOGD("Error is : %i", ret);
+        }
     }
 
     LOGD("We are good");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, rep_agree, fill);
 
     return result;
 
