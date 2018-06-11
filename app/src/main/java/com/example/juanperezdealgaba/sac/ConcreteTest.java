@@ -1022,9 +1022,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
-                RSAImplementation test = new RSAImplementation();
+                RSAPrueba test = new RSAPrueba();
                 try {
-                    test.RSA(writer, textview, resulttime);
+                    test.testRSA(writer, textview, 128);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
