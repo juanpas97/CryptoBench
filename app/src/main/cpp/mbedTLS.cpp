@@ -414,7 +414,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
 
     jintArray result;
     int array_len = rep_aes * 2;
-    result = env->NewIntArray(array_len);
+    result = env->NewIntArray(rep_aes*2);
     jint fill[array_len];
 
 
@@ -484,6 +484,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
         }
         index += 2;
     }
+
     LOGD("We are good");
 
     env->SetIntArrayRegion(result, 0, array_len, fill);

@@ -617,7 +617,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
             return result;
         }
         decrypted_len = ret;
-        index +=2;
+        index_result +=2;
     }
    /* // compare data.
     if (decrypted_len != IN_BUFFER_LENGTH) { LOGD("Decrypted length should be %i but it is %i.", IN_BUFFER_LENGTH, decrypted_len); return result; }
@@ -636,28 +636,24 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA(JNIEnv *env, jobject instan
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes) {
 
     LOGD("Starting AESGCM");
+    int len_array = rep_aes * 2;
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
-
-    byte large_output[1024];
-
-    jint error[1];
-
-    struct timeval st,et;
+    result = (*env)->NewIntArray(env,len_array);
+    jint fill[len_array];
+    struct timeval st, et;
 
     Aes enc;
-    byte cipher[blocksize];
+    byte cipher[128];
 
     Aes dec;
-    byte plain[blocksize];
+    byte plain[128];
 
     int ret = 0;
 
-    RNG  rng;
+    RNG rng;
 
 
     unsigned char key[16] = {
@@ -666,12 +662,8 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
             0x09, 0xcf, 0x4f, 0x3c
     };
 
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
 
-    };
-
-    int szmsg = blocksize;
+    int szmsg = 128;
     byte msg[szmsg];
 
     const byte p[] =
@@ -713,88 +705,89 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCM(JNIEnv *env, jobject ins
         LOGD("Error generating block at msg"); //generating block failed!
     }
 
+    unsigned char iv[16] = {
+            0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
+            0xab, 0xf7,
 
-    LOGD("Begin of key");
+    };
 
-    for (int i = 0; i < 16 ; ++i) {
-        LOGD("%x",key[i]);
-    }
-
-    LOGD("Begin of IV");
-
-    for (int i = 0; i < 16 ; ++i) {
-        LOGD("%x",iv[i]);
-    }
-
-    XMEMSET(resultP, 0, sizeof(resultP));
 
     if (wc_AesInit(&enc, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init enc");
-    }else{
+    } else {
         LOGD("No problem at init enc");
     }
 
-    if (wc_AesInit(&dec, HEAP_HINT, devId) != 0){
+    if (wc_AesInit(&dec, HEAP_HINT, devId) != 0) {
         LOGD("Error in aes init dec");
-     }else{
+    } else {
         LOGD("No problem at init dec");
     }
 
     ret = wc_AesGcmSetKey(&enc, key, (int) sizeof(key));
-    if (ret != 0){
+    if (ret != 0) {
         LOGD("Error in AesSetKey Enc");
-    }else{
+    } else {
         LOGD("No problem at AesSetKey Enc");
     }
 
-    ret = wc_AesSetKey(&dec, key, (int) sizeof(key), iv, AES_DECRYPTION);
-    if (ret != 0){
+    ret = wc_AesGcmSetKey(&dec, key, (int) sizeof(key));
+    if (ret != 0) {
         LOGD("Error in AesSetKey Dec");
-    }   else{
+    } else {
         LOGD("No problem at AesSetKey Dec ");
     }
 
-    gettimeofday(&st,NULL);
-    ret = wc_AesGcmEncrypt(&enc, cipher, msg, (int) sizeof(msg),iv, sizeof(iv),resultT, sizeof(resultT),a,
-                           sizeof(a));
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int index_result = 0;
+    for (int i = 0; i < rep_aes ; i++) {
 
-    fill[0] = encryption_time;
 
-    if (ret != 0){
-        LOGD("Error encrypting");
-    }else{
-        LOGD("Encryption finished");
+        gettimeofday(&st, NULL);
+        ret = wc_AesGcmEncrypt(&enc, cipher, msg, (int) sizeof(msg), iv, sizeof(iv), resultT,
+                               sizeof(resultT), a,
+                               sizeof(a));
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index_result] = encryption_time;
+
+        if (ret != 0) {
+            LOGD("Error encrypting");
+        } else {
+            LOGD("Encryption finished");
+        }
+        gettimeofday(&st, NULL);
+        ret = wc_AesGcmDecrypt(&enc, resultP, cipher, (int) sizeof(cipher), iv, sizeof(iv), resultT,
+                               sizeof(resultT), a,
+                               sizeof(a));
+        gettimeofday(&et, NULL);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index_result + 1] = decryption_time;
+
+        if (ret != 0) {
+            LOGD("Error Decrypting");
+        } else {
+            LOGD("Decryption finished");
+        }
+
+
+        index_result +=2;
     }
 
-    gettimeofday(&st,NULL);
-    ret = wc_AesGcmDecrypt(&enc, resultP, cipher, (int) sizeof(cipher),iv, sizeof(iv),resultT, sizeof(resultT),a,
-                           sizeof(a));
-    gettimeofday(&et,NULL);
-
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[1] = decryption_time;
-
-    if(ret != 0){
-        LOGD("Error Decrypting");
-    }else{
-        LOGD("Decryption finished");
-    }
-
-    wc_AesFree(&enc);
-    wc_AesFree(&dec);
+    //wc_AesFree(&enc);
+    //wc_AesFree(&dec);
 
     LOGD("Finished AES/GCM");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, len_array, fill);
 
     return result;
 
 }
 JNIEXPORT jintArray JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject instance, jint rep_agree) {
+
 
     LOGD("Starting ECDH");
     jintArray result;
@@ -874,56 +867,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject insta
 }
 
 
-
-JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSA2(JNIEnv *env, jobject instance) {
-
-    RsaKey key;
-    RNG rng1;
-    word32 index;
-    int ret;
-
-    int encrypted_len;
-    int decrypted_len;
-
-
-    // encrypt data.
-    index = 0;
-    ret = wc_InitRng(&rng1);
-    if (ret != 0) { LOGD("Error at wc_InitRng: %i.", ret); return; }
-    ret = wc_InitRsaKey(&key, NULL);
-    if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return; }
-    ret = wc_RsaPublicKeyDecode((const byte*)public_key, &index, &key, PUBLIC_KEY_LENGTH);
-    if (ret != 0) { LOGD("Error at wc_RsaPublicKeyDecode: %i.", ret); return; }
-    ret = wc_RsaPublicEncrypt_ex((const byte *)in_buffer, IN_BUFFER_LENGTH, (byte*)encrypted_buffer, RSA_LENGTH, &key, &rng1, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    if (ret < 0) { LOGD("Error at wc_RsaPublicEncrypt_ex: %i.", ret); return; }
-    encrypted_len = ret;
-    LOGD("%i",encrypted_len);
-
-    LOGD("Finished encryption");
-
-    // decrypt data.
-    index = 0;
-    ret = wc_InitRsaKey(&key, NULL);
-    if (ret != 0) { LOGD("Error at wc_InitRsaKey: %i.", ret); return; }
-    ret = wc_RsaPrivateKeyDecode((const byte*)private_key, &index, &key, PRIVATE_KEY_LENGTH);
-    if (ret != 0) { LOGD("Error at wc_RsaPrivateKeyDecode: %i.", ret); return; }
-    ret = wc_RsaPrivateDecrypt_ex((const byte *)encrypted_buffer, encrypted_len, (byte*)decrypted_buffer, RSA_LENGTH, &key, WC_RSA_OAEP_PAD, WC_HASH_TYPE_SHA, WC_MGF1SHA1, NULL, 0);
-    if (ret < 0) { LOGD("Error at wc_RsaPrivateDecrypt_ex: %i.", ret); return; }
-    decrypted_len = ret;
-    wc_FreeRsaKey(&key);
-
-    // compare data.
-    if (decrypted_len != IN_BUFFER_LENGTH) { LOGD("Decrypted length should be %i but it is %i.", IN_BUFFER_LENGTH, decrypted_len); return; }
-    for (int i = 0; i < IN_BUFFER_LENGTH; i++)
-    {
-        if (decrypted_buffer[i] != in_buffer[i]) { LOGD("Byte at index %i should be %i but it is %i.", i, 0xFF & in_buffer[i], 0xFF & decrypted_buffer[i]); return; }
-    }
-
-    LOGD("Finished decryption");
-    // got here means no error.
-    LOGD("All went O.K.");
-}
 
 
 unsigned char public_key[PUBLIC_KEY_LENGTH] = {

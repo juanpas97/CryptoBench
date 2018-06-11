@@ -314,11 +314,13 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
 
+
                     mbedTLS testRSAmbed = new mbedTLS();
                     int[] timesRSA = testRSAmbed.RSA(128,repetitions_rsa);
 
                 int index_array = 0;
                 for (i = 0; i < timesRSA.length/2 ;i++) {
+
                     System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                     writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
 
@@ -405,15 +407,21 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     System.out.println(mbedGCM);
                     writer.write(mbedGCM);
 
+
                     WolfCrypt testGCM = new WolfCrypt();
-                    int[] timesAESGCM = testGCM.AESGCM(blocksize);
 
-                    System.out.println("Time to encrypt:" + timesAESGCM[0] + "ms\n");
-                    writer.write("Time to encrypt:" + timesAESGCM[0] + "ms\n");
+                    int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
+
+                    index_array = 0;
+                    for (i = 0; i < timesAESGCM.length/2 ;i++) {
+                        System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
+                        writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESGCM[1] + "ms\n");
-                    writer.write("Time to decrypt:" + timesAESGCM[1] + "ms\n");
+                        System.out.println("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
+                        writer.write("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
+                        index_array += 2;
+                    }
 
                     writer.write(separate);
 

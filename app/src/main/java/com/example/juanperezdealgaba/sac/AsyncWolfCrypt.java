@@ -92,7 +92,7 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
             text.append("**********AES-GCM************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESGCM(64);
+                int[] timesAES = test.AESGCM(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
