@@ -50,7 +50,7 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
             text.append("**********AES-CBC************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCBC(64);
+                int[] timesAES = test.AESCBC(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
@@ -71,7 +71,7 @@ public class AsyncWolfCrypt extends AsyncTask<WolfCryptParamsTest,Void,String> {
             text.append("**********AES-CTR************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCTR(64);
+                int[] timesAES = test.AESCTR(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");

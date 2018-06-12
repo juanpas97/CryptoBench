@@ -210,11 +210,12 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject instance, jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject instance, jint blocksize,jint rep_aes) {
 
+    int len_array = rep_aes * 2;
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,len_array);
+    jint fill[len_array];
 
     struct timeval st,et;
 
@@ -303,51 +304,55 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBC(JNIEnv *env, jobject ins
         LOGD("No problem at AesSetKey Dec ");
     }
 
-    gettimeofday(&st,NULL);
-    ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+    int index_array = 0;
+    for(int i = 0; i < rep_aes; i++) {
+        gettimeofday(&st, NULL);
+        ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[0] = encryption_time;
+        fill[index_array] = encryption_time;
 
-    if (ret != 0){
-        LOGD("Error encrypting");
-    }else{
-        LOGD("Encryption finished");
+        if (ret != 0) {
+            LOGD("Error encrypting");
+        } else {
+            LOGD("Encryption finished");
+        }
+
+        gettimeofday(&st, NULL);
+        ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
+        gettimeofday(&et, NULL);
+
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+
+        fill[index_array + 1] = decryption_time;
+
+        if (ret != 0) {
+            LOGD("Error Decrypting");
+        } else {
+            LOGD("Decryption finished");
+        }
+
+        index_array += 2;
     }
-
-    gettimeofday(&st,NULL);
-    ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
-    gettimeofday(&et,NULL);
-
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-    fill[1] = decryption_time;
-
-    if(ret != 0){
-        LOGD("Error Decrypting");
-    }else{
-        LOGD("Decryption finished");
-    }
-    
-
     wc_AesFree(&enc);
     wc_AesFree(&dec);
 
     LOGD("Finished AES/CBC 128");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, len_array, fill);
 
     return result;
 
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance,jint blocksize) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes) {
 
+    int len_array = rep_aes * 2;
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    jint fill[3];
+    result = (*env)->NewIntArray(env,len_array);
+    jint fill[len_array];
 
     jdouble error[1];
 
@@ -403,6 +408,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
         LOGD("No problem at init dec");
     }
 
+
     ret = wc_AesSetKey(&enc, key, (int) sizeof(key), iv, AES_ENCRYPTION);
     if (ret != 0){
         LOGD("Error in AesSetKey Enc");
@@ -417,29 +423,31 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject ins
         LOGD("No problem at AesSetKey Dec ");
     }
 
+    int index_array = 0;
+    for(int i = 0; i < rep_aes;i++) {
 
-    gettimeofday(&st,NULL);
-    wc_AesCtrEncrypt(&enc, cipher, msg, (int) sizeof(msg));
-    gettimeofday(&et,NULL);
-    int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        gettimeofday(&st, NULL);
+        wc_AesCtrEncrypt(&enc, cipher, msg, (int) sizeof(msg));
+        gettimeofday(&et, NULL);
+        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[0] = encryption_time;
+        fill[index_array] = encryption_time;
 
-    gettimeofday(&st,NULL);
-    wc_AesCtrEncrypt(&dec, plain, cipher, (int) sizeof(cipher));
-    gettimeofday(&et,NULL);
+        gettimeofday(&st, NULL);
+        wc_AesCtrEncrypt(&dec, plain, cipher, (int) sizeof(cipher));
+        gettimeofday(&et, NULL);
 
-    int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
-    fill[1] = decryption_time;
-
-
+        fill[index_array + 1] = decryption_time;
+        index_array += 2;
+    }
     wc_AesFree(&enc);
     wc_AesFree(&dec);
 
     LOGD("Finished AES/CTR");
 
-    (*env)->SetIntArrayRegion(env,result, 0, 3, fill);
+    (*env)->SetIntArrayRegion(env,result, 0, len_array, fill);
 
     return result;
 

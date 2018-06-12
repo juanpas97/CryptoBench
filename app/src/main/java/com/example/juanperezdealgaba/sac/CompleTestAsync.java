@@ -374,15 +374,18 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(wcCBC);
 
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESCBC(blocksize);
+                    int[] timesAES = test.AESCBC(blocksize,repetitions_aes);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
-                    writer.write("Time to encrypt:" + timesAES[0] + "ms\n");
+                    index_array = 0;
+                    for (i = 0; i < timesAES.length/2 ;i++) {
+                    System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
-                    writer.write("Time to decrypt:" + timesAES[1] + "ms\n");
-
+                    System.out.println("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
+                    index_array += 2;
+                    }
 
                     writer.write(separate);
 
@@ -392,15 +395,19 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(mbedCTR);
 
                     WolfCrypt testCTR = new WolfCrypt();
-                    int[] timesAESCTR = testCTR.AESCTR(blocksize);
+                    int[] timesAESCTR = testCTR.AESCTR(blocksize,repetitions_aes);
 
-                    System.out.println("Time to encrypt:" + timesAESCTR[0] + "ms\n");
-                    writer.write("Time to encrypt:" + timesAESCTR[0] + "ms\n");
+                    index_array = 0;
+                    for (i = 0; i < timesAESCTR.length/2 ;i++) {
+
+                    System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
+                    writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
 
 
-                    System.out.println("Time to decrypt:" + timesAESCTR[1] + "ms\n");
-                    writer.write("Time to decrypt:" + timesAESCTR[1] + "ms\n");
-
+                    System.out.println("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
+                    writer.write("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
+                    index_array += 2;
+                    }
                     writer.write(separate);
 
                     String mbedGCM= "***********AES/GCM**************" + "\n";
