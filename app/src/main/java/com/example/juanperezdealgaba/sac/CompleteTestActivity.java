@@ -1,6 +1,7 @@
 package com.example.juanperezdealgaba.sac;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,10 +21,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static android.util.Config.LOGD;
+
 public class CompleteTestActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_complete_test);
@@ -56,9 +60,68 @@ public class CompleteTestActivity extends AppCompatActivity{
 
             final Storage storage = new Storage(getApplicationContext());
 
+            Intent intent = getIntent();
+            Bundle extras = intent.getExtras();
+            int rep_shell,rep_aes_shell,rep_hash_shell,rep_agree_shell,rep_rsa_shell;
+
+        if ( extras != null ) {
+
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+                Log.d("BUNDLE", String.format("%s %s (%s)", key,
+                        value.toString(), value.getClass().getName()));
+            }
+
+            if ( extras.containsKey ( "test" ) ) {
+                System.out.println("We started shell");
+                String rep =extras.getString ( "test" );
+                rep_shell = Integer.parseInt(rep);
+            } else {
+                rep_shell = 1;
+            }
+
+            System.out.println("TEST SKIPPED");
+            if ( extras.containsKey ( "aes" ) ) {
+                System.out.println("AES SHELL");
+                String rep = extras.getString ( "aes" );
+                rep_aes_shell = Integer.parseInt(rep);
+                System.out.println("AES SHELL IS: " + rep_aes);
+            } else {
+                rep_aes_shell = 10;
+            }
+
+            if ( extras.containsKey ( "hash" ) ) {
+                String rep =extras.getString ( "hash" );
+                rep_hash_shell = Integer.parseInt(rep);
+            } else {
+                rep_hash_shell = 10;
+            }
+
+            if ( extras.containsKey ( "dh" ) ) {
+                String rep =extras.getString ( "dh" );
+                rep_agree_shell = Integer.parseInt(rep);
+            } else {
+                rep_agree_shell = 10;
+            }
+
+            if ( extras.containsKey ( "rsa" ) ) {
+                String rep =extras.getString ( "rsa" );
+                rep_rsa_shell = Integer.parseInt(rep);
+            } else {
+                rep_rsa_shell = 10;
+            }
+
+            System.out.println("Shell function");
+            CompleteTestParams paramsTest = new CompleteTestParams(storage, complete_test_results,rep_shell,rep_aes_shell,rep_hash_shell,rep_agree_shell,rep_rsa_shell);
+
+            CompleteTestAsync test = new CompleteTestAsync(CompleteTestActivity.this);
+            test.execute(paramsTest);
+        }
 
 
-            start_test.setOnClickListener(new View.OnClickListener() {
+
+
+        start_test.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
@@ -113,5 +176,4 @@ public class CompleteTestActivity extends AppCompatActivity{
                 }
             });
     }
-
 }

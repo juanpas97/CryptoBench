@@ -50,7 +50,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********AES-CBC************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCBC(64);
+                int[] timesAES = test.AESCBC(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -72,7 +72,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********AES-CTR************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESCTR(64);
+                int[] timesAES = test.AESCTR(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -94,7 +94,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********AES-GCM************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESGCM(64);
+                int[] timesAES = test.AESGCM(64,1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -116,7 +116,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********AES-OFB************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesAES = test.AESOFB(64);
+                int[] timesAES = test.AESOFB(64, 1);
 
                 System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
                 writer.write("Time to encrypt:" + timesAES[0] + "ns\n");
@@ -139,7 +139,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********RSA************\n");
 
             for(int i = 0; i < repetitions; i++) {
-                int[] timesRSA = test.RSA(3);
+                int[] timesRSA = test.RSA(3,1);
 
                 System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
                 writer.write("Time to encrypt:" + timesRSA[0] + "ms\n");
@@ -160,7 +160,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********MD5************\n");
 
                 for (int i = 0; i < repetitions; i++) {
-                    int[] testMD5 = test.MD5(64);
+                    int[] testMD5 = test.MD5(64,1);
                     System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
                     writer.write("Time to generate hash:" + testMD5[1] + "ns\n");
                     text.append("Time to generate hash:" + testMD5[1] + "ns\n");
@@ -176,7 +176,7 @@ public class AsyncOpenSSL extends AsyncTask<OpenSSLParamsTest,Void,String> {
             text.append("**********DH************\n");
 
             for (int i = 0; i < repetitions; i++) {
-                int[] testDH = test.DH();
+                int[] testDH = test.DH(1);
                 System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
                 writer.write("Time to key agreement:" + testDH[1] + "ms\n");
                 text.append("Time to key agreement:" + testDH[1] + "ms\n");

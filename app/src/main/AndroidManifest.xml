@@ -25,11 +25,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".ConcreteTest" />
-        <activity android:name=".SuperTestActivity" />
         <activity
             android:name=".CompleteTestActivity"
             android:label="Complete Test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.action.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
