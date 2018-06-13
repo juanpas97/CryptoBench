@@ -77,7 +77,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
     @Override
     protected TextView doInBackground(CompleteTestParams... params) {
-       Storage storage = params[0].storage;
+        Storage storage = params[0].storage;
         TextView results = params[0].results;
         int repetitions = params[0].repetitions;
         int repetitions_aes = params[0].rep_aes;

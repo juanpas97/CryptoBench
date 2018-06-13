@@ -563,3 +563,4 @@ JNIEXPORT jint JNICALL Java_com_wolfssl_WolfSSLSession_usePskIdentityHint
 }
 #endif
 #endif
+
