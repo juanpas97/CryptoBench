@@ -143,6 +143,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 start_test.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        results_special_test.setText("");
                         int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
                         int blocksize = Integer.parseInt(blocksize_value.getText().toString());
                         int key_time = Integer.parseInt(key_value.getText().toString());

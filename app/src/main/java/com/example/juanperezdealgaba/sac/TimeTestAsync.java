@@ -522,16 +522,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
             if (library.equals("WolfCrypt") && algo.equals("RSA")) {
                 System.out.println("************WolfCrypt/RSA**************");
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesRSA = test.RSA(128,1);
-
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
-                    algo_repet += 1;
-                }
+                    test.RSATime(128,key_duration,sec_duration);
 
                 System.out.println("Times executed:" + algo_repet + "\n");
 
@@ -543,18 +536,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("AES-CBC")) {
                 System.out.println("************WolfCrypt/AES-CBC**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESCBC(blocksize,1);
-
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
+                    test.AESCBCTime(blocksize,key_duration,sec_duration);
 
                 System.out.println("********************************");
             }
@@ -562,18 +545,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("AES-GCM")) {
                 System.out.println("************WolfCrypt/AES-GCM**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESGCM(blocksize,1);
-
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
+                    test.AESGCMTime(blocksize,key_duration,sec_duration);
 
                 System.out.println("********************************");
             }
@@ -581,18 +554,10 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("AES-CTR")) {
                 System.out.println("************WolfCrypt/AES-CTR**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+
                     WolfCrypt test = new WolfCrypt();
-                    int[] timesAES = test.AESCTR(blocksize,1);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
-
-
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("********************************");
             }
@@ -600,40 +565,29 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("MD5")) {
                 System.out.println("************WolfCrypt/MD5**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
-                    WolfCrypt test = new WolfCrypt();
-                    int[] testMD5 = test.MD5(blocksize,1);
-                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
-                    algo_repet += 1;
-                }
 
-                System.out.println("Times executed:" + algo_repet + "\n");
+                    WolfCrypt test = new WolfCrypt();
+                    test.MD5Time(blocksize,sec_duration);
+
 
                 System.out.println("********************************");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("DH")) {
+
                 System.out.println("************WolfCrypt/DH**************");
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     WolfCrypt test = new WolfCrypt();
-                    int[] testDH = test.DH(1);
-                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
-
-                    algo_repet += 1;
-                }
-
+                    test.DHTime(key_duration,sec_duration);
 
                 System.out.println("********************************");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("ECDH")) {
                 System.out.println("************WolfCrypt/ECDH**************");
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+
                     WolfCrypt test = new WolfCrypt();
-                    int[] testDH = test.ECDH(1);
-                    System.out.println("Time to key agreement:" + testDH[1] + "ns\n");
-                    algo_repet += 1;
-                }
+                    test.ECDHTime(sec_duration,key_duration);
+
 
                 System.out.println("Times executed:" + algo_repet + "\n");
 

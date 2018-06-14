@@ -1610,7 +1610,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
             repetitions  += 1;
         }
 
-    fprintf(report,"Times performed: %i ms\n",repetitions);
+    fprintf(report,"Times performed: %i \n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 
