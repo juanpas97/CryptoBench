@@ -400,18 +400,10 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("RSA")) {
                 System.out.println("***********mbedTLS/RSA**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+
                     mbedTLS test = new mbedTLS();
-                    int[] timesRSA = test.RSA(128,1);
+                    test.RSATime(128,key_duration,sec_duration);
 
-                    System.out.println("Time to encrypt:" + timesRSA[0] + "ms\n");
-
-
-                    System.out.println("Time to decrypt:" + timesRSA[1] + "ms\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
 
@@ -420,37 +412,22 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
             if (library.equals("mbedTLS") && algo.equals("AES-CBC")) {
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
+
                     mbedTLS test = new mbedTLS();
-                    int[] timesAES = test.AESCBC(blocksize,1);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ns\n");
-
-
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ns\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
             }
+
             if (library.equals("mbedTLS") && algo.equals("AES-CTR")) {
                 System.out.println("***********mbedTLS/AES**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
 
-                    int[] timesAES = test.AESCTR(blocksize,1);
-
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
+                    test.AESCTRTime(blocksize,key_duration,sec_duration);
 
 
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
             }
@@ -458,19 +435,10 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("AES-GCM")) {
                 System.out.println("***********mbedTLS/AES-GCM**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
 
-                    int[] timesAES = test.AESGCM(blocksize,1);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration);
 
-                    System.out.println("Time to encrypt:" + timesAES[0] + "ms\n");
-
-
-                    System.out.println("Time to decrypt:" + timesAES[1] + "ms\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
             }
@@ -478,14 +446,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("MD5")) {
                 System.out.println("***********mbedTLS/MD5**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    int[] testMD5 = test.MD5(blocksize,1);
-                    System.out.println("Time to generate hash:" + testMD5[1] + "ns\n");
-                    algo_repet += 1;
-                }
+                    test.MD5Time(blocksize,sec_duration);
 
-                System.out.println("Times executed:" + algo_repet + "\n");
 
                 System.out.println("***********************\n");
             }
@@ -493,14 +456,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("ECDH")) {
                 System.out.println("***********mbedTLS/ECDH**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     mbedTLS test = new mbedTLS();
-                    int[] testECDH = test.ECDH(1);
-                    System.out.println("Time to key agreement:" + testECDH[1] + "ms\n");
-                    algo_repet += 1;
-                }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
+                    test.ECDHTime(key_duration, sec_duration);
 
                 System.out.println("***********************\n");
             }
@@ -508,14 +465,10 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("DH")) {
                 System.out.println("***********mbedTLS/DH**************");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
-                    mbedTLS test = new mbedTLS();
-                    int[] testDH = test.DH(1);
-                    System.out.println("Time to key agreement:" + testDH[1] + "ms\n");
-                    algo_repet += 1;
-                }
 
-                System.out.println("Times executed:" + algo_repet + "\n");
+                    mbedTLS test = new mbedTLS();
+                    test.DHTime(key_duration,sec_duration);
+
 
                 System.out.println("***********************\n");
             }
@@ -594,15 +547,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("********************************");
             }
 
-
-
-
         }catch (IOException i){
             throw new RuntimeException(i);
         }
-        
-        
-
         return results;
     }
 

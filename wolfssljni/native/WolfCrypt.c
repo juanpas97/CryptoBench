@@ -1706,7 +1706,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject
     };
     FILE* report = create_file();
 
-    fprintf(report,"************WolfCrypt/AESCTR**************\n");
+    fprintf(report,"************WolfCrypt/AESGCM**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
     int repetitions_key = 0;

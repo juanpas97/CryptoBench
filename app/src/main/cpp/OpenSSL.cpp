@@ -851,7 +851,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
 
     FILE* report = create_file();
     if(report == NULL){
-        LOGD("Error rediang the file");
+        LOGD("Error reading the file");
 
     }
 
