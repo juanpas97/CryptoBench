@@ -3,10 +3,7 @@ package com.example.juanperezdealgaba.sac;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.widget.TextView;
-
-import com.snatik.storage.Storage;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -71,9 +68,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
         int sec_duration = ((int) maxDurationInMilliseconds / 1000);
 
-        maxDurationInMilliseconds = time_key * 60 * 1000;
+        long keymaxDurationInMilliseconds = time_key * 60 * 1000;
 
-        int key_duration = ((int) maxDurationInMilliseconds / 1000) ;
+        int key_duration = ((int) keymaxDurationInMilliseconds / 1000) ;
 
         long resulttime = startTime + maxDurationInMilliseconds;
         int algo_repet = 0;
@@ -102,16 +99,16 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
-                RSAPrueba test = new RSAPrueba();
+                RSA test = new RSA();
                 try {
-                    test.testRSA(writer, results, blocksize,1);
+                    test.testRSATime(writer, results, 128,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("RSA2")) {
-                RSAPrueba test = new RSAPrueba();
+                RSA test = new RSA();
                 try {
                     test.testRSA();
                 } catch (Exception i) {
@@ -122,7 +119,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("Bouncy Castle") && algo.equals("AES-CBC")) {
                 AESCBC test = new AESCBC();
                 try {
-                    test.testCBC(writer, results, blocksize,1 );
+                    test.testCBCTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -133,14 +130,13 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************Bouncy Castle/AES-CTR**************");
                 writer.write("\n************Bouncy Castle/AES-CTR***************\n");
 
-                while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     AESCTR test = new AESCTR();
                     try {
-                        test.testCTR();
+                        test.testCTRTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
-                }
+
 
                 System.out.println("********************************");
                 writer.write("********************************\n");
@@ -154,7 +150,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     AESGCM test = new AESGCM();
                     try {
-                        test.testGCM();
+                        test.testGCMTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -173,7 +169,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     AESOFB test = new AESOFB();
                     try {
-                        test.testOFB();
+                        test.testOFBTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -188,7 +184,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     MD5Implementation test = new MD5Implementation();
                     try {
-                        test.testmd5(writer, results, resulttime);
+                        test.testmd5Time(writer, results, maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -199,7 +195,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     DiffieHellman test = new DiffieHellman();
                     try {
-                        test.testDH();
+                        test.testDHTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -210,7 +206,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     ECDiffieHellmanImplementation test = new ECDiffieHellmanImplementation();
                     try {
-                        test.startDiffieHellman(writer, results, resulttime);
+                        test.startDiffieHellmanTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -218,7 +214,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             }
 
 
-            writer.close();
+
 
             if (library.equals("BoringSSL") && algo.equals("RSA")) {
                 System.out.println("***********BoringSSL/RSA**************");

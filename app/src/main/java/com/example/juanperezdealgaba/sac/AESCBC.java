@@ -133,4 +133,76 @@ public class AESCBC {
 
 
     }
+
+
+    public void testCBCTime(FileWriter writer, TextView Results, int blocksize, long rep_key,long rep_aes) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IllegalBlockSizeException,
+            BadPaddingException,DecoderException {
+
+        try {
+
+            Security.addProvider(new BouncyCastleProvider());
+
+            byte[] keyBytes = new byte[]{0x2b, 0x7e, 0x15, 0x16, 0x28, (byte) 0xae, (byte) 0xd2, (byte) 0xa6, (byte) 0xab, (byte) 0xf7,
+                    0x15, (byte) 0x88,
+                    0x09, (byte) 0xcf, 0x4f, 0x3c};
+
+            byte[] ivBytes = new byte[]{0x09, (byte) 0xcf, 0x15, (byte) 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, (byte) 0xae, 0x16, 0x28, (byte) 0xd2, (byte) 0xa6, (byte) 0xab, (byte) 0xf7};
+
+            RandomStringGenerator string = new RandomStringGenerator();
+            String input = string.generateRandomString(blocksize);
+
+            byte[] plaintext = input.getBytes();
+            Key key;
+            Cipher in, out;
+
+            in = Cipher.getInstance("AES/CBC/NoPadding", "SC");
+            out = Cipher.getInstance("AES/CBC/NoPadding", "SC");
+            int repetitions = 0;
+            long finishTime = System.currentTimeMillis()+rep_key;
+            while(System.currentTimeMillis() <= finishTime) {
+
+                long start = System.nanoTime();
+                key = new SecretKeySpec(keyBytes, "AES");
+
+                in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+                out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
+                long end = System.nanoTime();
+                long microseconds = (end - start) / 1000;
+                writer.write("Time to set key: " + microseconds + " ms\n" );
+                repetitions += 1;
+            }
+            writer.write("Times set key: " + repetitions + "\n");
+
+            repetitions = 0;
+            finishTime = System.currentTimeMillis() + rep_aes;
+            while(System.currentTimeMillis() <= finishTime) {
+                long start = System.nanoTime();
+                byte[] enc = in.doFinal(plaintext);
+                long end = System.nanoTime();
+                long microseconds = (end - start) / 1000;
+                writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
+
+                //System.out.println("Encrypted");
+                //for (int i = 0; i < enc.length; i++) {
+                //    System.out.println(Integer.toHexString(enc[i]));
+                //}
+
+                start = System.nanoTime();
+                byte[] dec = out.doFinal(enc);
+                end = System.nanoTime();
+                microseconds = (end - start) / 1000;
+                writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+                System.out.println("Decrypted");
+                //for (int i = 0; i < dec.length; i++) {
+                //  System.out.println(Integer.toHexString(dec[i]));
+                //}
+                repetitions +=1;
+            }
+            writer.write("Times performed" + repetitions);
+        }catch (IOException i){
+            throw new RuntimeException(i);
+        }
+
+
+    }
 }

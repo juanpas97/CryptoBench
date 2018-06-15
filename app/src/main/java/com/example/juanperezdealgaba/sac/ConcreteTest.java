@@ -153,6 +153,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                         TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                         test.execute(TimeParamsTest);
 
+
                         final String titel = System.getProperty("os.arch");
                         final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
                                 "EncryptAppReport");
@@ -160,6 +161,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             @Override
                             public Void doInBackground(Void... arg) {
                                 try {
+                                    writer_special.close();
                                     sender.sendMail("Special_test",
                                             "Special Test",
                                             "encr" +

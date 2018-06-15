@@ -104,6 +104,22 @@ public class ECDiffieHellmanImplementation {
 
     }
 
+    public void startDiffieHellmanTime(FileWriter writer, TextView results, long rep_key,long result_time) throws NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException,InvalidKeyException, IOException{
+        Security.addProvider(new BouncyCastleProvider());
+        System.out.println("***********Bouncy Castle-ECDH**************");
+        writer.write("\n**********Bouncy Castle-ECDH********\n");
+
+            ECDiffieHellman test = new ECDiffieHellman();
+            test.GenerateAgreementTime(writer,rep_key,result_time);
+
+
+
+        System.out.println("***********************\n");
+        writer.write("********************************\n");
+
+    }
+
 
 
 

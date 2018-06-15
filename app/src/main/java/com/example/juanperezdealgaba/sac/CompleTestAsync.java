@@ -1,18 +1,12 @@
 package com.example.juanperezdealgaba.sac;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.snatik.storage.Storage;
-
-import org.spongycastle.crypto.AsymmetricCipherKeyPair;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -197,7 +191,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCRSA);
 
 
-                    RSAPrueba testRSABC = new RSAPrueba();
+                    RSA testRSABC = new RSA();
                     testRSABC.testRSA(writer, results, 128, repetitions_rsa);
 
                     writer.write(separate);

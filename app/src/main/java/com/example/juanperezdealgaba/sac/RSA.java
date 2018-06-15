@@ -23,7 +23,7 @@ import javax.crypto.Cipher;
 
 
 
-public class RSAPrueba {
+public class RSA {
 
     public void testRSA(FileWriter writer, TextView results, int blocksize, int rep_rsa){
         Security.addProvider(new BouncyCastleProvider());
@@ -61,9 +61,79 @@ public class RSAPrueba {
 
                 byte[] decrypted = decrypt(encrypted, private_key_ready, writer);
                 String decrypted_fin = new String(decrypted,"UTF-8");
-                System.out.println("We start here:");
-                System.out.println(decrypted_fin);
+
             }
+
+
+
+        }catch (Exception o){
+            throw new RuntimeException(o);
+        }
+    }
+
+    public void testRSATime(FileWriter writer, TextView results, int blocksize, long rep_key ,long rep_rsa){
+        Security.addProvider(new BouncyCastleProvider());
+
+        try {
+            String public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy8Dbv8prpJ/0kKhlGeJY\n" +
+                    "ozo2t60EG8L0561g13R29LvMR5hyvGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+\n" +
+                    "vw1HocOAZtWK0z3r26uA8kQYOKX9Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQAp\n" +
+                    "fc9jB9nTzphOgM4JiEYvlV8FLhg9yZovMYd6Wwf3aoXK891VQxTr/kQYoq1Yp+68\n" +
+                    "i6T4nNq7NWC+UNVjQHxNQMQMzU6lWCX8zyg3yH88OAQkUXIXKfQ+NkvYQ1cxaMoV\n" +
+                    "PpY72+eVthKzpMeyHkBn7ciumk5qgLTEJAfWZpe4f4eFZj/Rc8Y8Jj2IS5kVPjUy\n" +
+                    "wQIDAQAB";
+
+            PublicKey public_key_ready;
+            PrivateKey private_key_ready;
+            RandomStringGenerator string = new RandomStringGenerator();
+
+            int repetitions = 0;
+            long finishTime = System.currentTimeMillis()+rep_key;
+            while(System.currentTimeMillis() <= finishTime) {
+                long start = System.nanoTime();
+
+                public_key_ready = getPublicKeyFromString(public_key);
+
+                private_key_ready = getPrivateKeyFromByte();
+
+                Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
+
+
+                cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
+
+                long end = System.nanoTime();
+                long microseconds = (end - start) / 1000;
+                writer.write("Time to set key: " + microseconds + " ms\n" );
+                repetitions += 1;
+            }
+            writer.write("Times set key: " + repetitions + "\n");
+
+            public_key_ready = getPublicKeyFromString(public_key);
+
+            private_key_ready = getPrivateKeyFromByte();
+
+            byte[] input = string.generateRandomString(blocksize).getBytes();
+
+            repetitions = 0;
+            finishTime = System.currentTimeMillis() + rep_rsa;
+            while(System.currentTimeMillis() <= finishTime) {
+                Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
+
+                // encrypt the plaintext using the public key
+                cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
+
+                long start = System.nanoTime();
+                byte[] encrypted = cipher.doFinal(input);
+                long end = System.nanoTime();
+                long result = (end - start) / 1000;
+                writer.write("Time to encrypt: " + result + " ms\n");
+
+
+                byte[] decrypted = decrypt(encrypted, private_key_ready, writer);
+                String decrypted_fin = new String(decrypted,"UTF-8");
+                repetitions +=1;
+            }
+            writer.write("Times performed" + repetitions);
 
 
 
@@ -174,7 +244,6 @@ public class RSAPrueba {
         long end = System.nanoTime();
         long result = (end - start) / 1000;
         writer.write("Time to decrypt: " + result + "ms\n");
-        System.out.println("File has been decrypted");
         return dectyptedText;
 
     }
