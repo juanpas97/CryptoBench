@@ -1,12 +1,22 @@
 package com.example.juanperezdealgaba.sac;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+
 
 class TimeTestParams {
     String library;
@@ -16,16 +26,20 @@ class TimeTestParams {
     int time_key;
     TextView results;
     FileWriter writer_special;
+    FileWriter writer_temp;
+    ConcreteTest test;
 
-    TimeTestParams(FileWriter writer, TextView results, int time,int time_key,String library,String algo, int blocksize) {
+    TimeTestParams(FileWriter writer, FileWriter writer_temp, ConcreteTest test, TextView results, int time, int time_key, String library, String algo, int blocksize) {
 
         this.writer_special = writer;
+        this.writer_temp = writer_temp;
         this.library = library;
         this.algo = algo;
         this.blocksize = blocksize;
         this.time = time;
         this.results = results;
         this.time_key = time_key;
+        this.test = test;
 
     }
 }
@@ -54,6 +68,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
     @Override
     protected TextView doInBackground(TimeTestParams... params) {
+
+        final Global global = new Global();
+
         FileWriter writer = params[0].writer_special;
         TextView results = params[0].results;
         int time = params[0].time;
@@ -61,6 +78,32 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
         String algo = params[0].algo;
         String library = params[0].library;
         int time_key = params[0].time_key;
+        global.writer_temp = params[0].writer_temp;
+
+        final IntentFilter intentfilter;
+        ConcreteTest context = params[0].test;
+
+
+
+        BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    float BatteryTemp;
+                    System.out.println("Before temp");
+                    BatteryTemp = (float) (intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
+                    System.out.println("The temperature is " + BatteryTemp);
+                    if (global.writer_temp != null) {
+                        global.writer_temp.write("The temperature is " + BatteryTemp + "\n");
+                    }
+                }catch (IOException i){
+                    throw new RuntimeException(i);
+                }
+            }
+        };
+
+        intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        context.registerReceiver(broadcastreceiver,intentfilter);
         
         long startTime = System.currentTimeMillis();
 
@@ -539,10 +582,11 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                 System.out.println("Times executed:" + algo_repet + "\n");
-
                 System.out.println("********************************");
             }
 
+            global.writer_temp.close();
+            global.writer_temp = null;
         }catch (IOException i){
             throw new RuntimeException(i);
         }

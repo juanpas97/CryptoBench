@@ -1,6 +1,11 @@
 package com.example.juanperezdealgaba.sac;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +21,11 @@ import android.widget.TextView;
 
 import com.snatik.storage.Storage;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class ConcreteTest extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -26,12 +33,16 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
     public static String library;
     public static String algo;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_concrete_test);
+
+
+
 
             final TextView results_special_test = findViewById(R.id.special_test_results);
 
@@ -47,8 +58,6 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             String path = storage.getExternalStorageDirectory();
 
-
-
         final String newDir = path + File.separator + "CryptoBench";
 
         final File report_special = new File(newDir, "Special_test.txt");
@@ -57,8 +66,15 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
         if (report_special.exists())
             report_special.delete();
 
+        final File report_temperature = new File(newDir, "temperature.txt");
+        report_temperature.mkdirs();
+
+        if (report_temperature.exists())
+            report_temperature.delete();
+
             try {
                 final FileWriter writer_special = new FileWriter(report_special);
+                final FileWriter writer_temp = new FileWriter(report_temperature);
 
                 Spinner spinner_algo = findViewById(R.id.spinner_algo);
 // Create an ArrayAdapter using the string array and a default spinner layout
@@ -144,17 +160,19 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onClick(View view) {
                         results_special_test.setText("");
+
                         int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
                         int blocksize = Integer.parseInt(blocksize_value.getText().toString());
                         int key_time = Integer.parseInt(key_value.getText().toString());
-
-                        TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, results_special_test,repetitions,key_time, library, algo, blocksize);
+                        ConcreteTest context = ConcreteTest.this;
+                        TimeTestParams TimeParamsTest = new TimeTestParams(writer_special,writer_temp,context, results_special_test,repetitions,key_time, library, algo, blocksize);
 
                         TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                         test.execute(TimeParamsTest);
 
 
-                        final String titel = System.getProperty("os.arch");
+
+
                         final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
                                 "EncryptAppReport");
                         new AsyncTask<Void, Void, Void>() {
@@ -176,9 +194,31 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             }
                         }.execute();
 
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            public Void doInBackground(Void... arg) {
+                                try {
+                                    writer_special.close();
+                                    sender.sendMail("Temperature test",
+                                            "Temperature test",
+                                            "encr" +
+                                                    "yptapp.report@gmail.com",
+                                            "encryptapp.report@gmail.com",
+                                            report_temperature);
+                                    System.out.println("E-mail sent");
+                                } catch (Exception e) {
+                                    Log.e("SendMail", e.getMessage(), e);
+                                }
+                                return null;
+                            }
+                        }.execute();
+
+
 
                     }
                 });
+
+
 
             }catch (IOException i){
                 throw new RuntimeException(i);
@@ -186,11 +226,8 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    public void createAlgo (String library, String algo, TextView textview, final File report,int repetitions){
 
 
-
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
