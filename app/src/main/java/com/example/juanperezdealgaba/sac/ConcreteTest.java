@@ -41,9 +41,6 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_concrete_test);
 
-
-
-
             final TextView results_special_test = findViewById(R.id.special_test_results);
 
             final EditText minutes_repetition = findViewById(R.id.minutes_text);
@@ -54,27 +51,23 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             results_special_test.setMovementMethod(new ScrollingMovementMethod());
 
-            Storage storage = new Storage(getApplicationContext());
+            final Storage storage = new Storage(getApplicationContext());
 
-            String path = storage.getExternalStorageDirectory();
-
+        String path = storage.getExternalStorageDirectory();
         final String newDir = path + File.separator + "CryptoBench";
-
         final File report_special = new File(newDir, "Special_test.txt");
         report_special.mkdirs();
 
         if (report_special.exists())
             report_special.delete();
 
-        final File report_temperature = new File(newDir, "temperature.txt");
-        report_temperature.mkdirs();
+        final Global global = new Global();
 
-        if (report_temperature.exists())
-            report_temperature.delete();
 
-            try {
-                final FileWriter writer_special = new FileWriter(report_special);
-                final FileWriter writer_temp = new FileWriter(report_temperature);
+
+
+
+
 
                 Spinner spinner_algo = findViewById(R.id.spinner_algo);
 // Create an ArrayAdapter using the string array and a default spinner layout
@@ -161,14 +154,23 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                     public void onClick(View view) {
                         results_special_test.setText("");
 
-                        int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
-                        int blocksize = Integer.parseInt(blocksize_value.getText().toString());
-                        int key_time = Integer.parseInt(key_value.getText().toString());
-                        ConcreteTest context = ConcreteTest.this;
-                        TimeTestParams TimeParamsTest = new TimeTestParams(writer_special,writer_temp,context, results_special_test,repetitions,key_time, library, algo, blocksize);
+                        try {
+                            final File report_temperature = new File(newDir, "temperature.txt");
+                            report_temperature.mkdirs();
 
-                        TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
-                        test.execute(TimeParamsTest);
+                            if (report_temperature.exists())
+                                report_temperature.delete();
+                            final FileWriter writer_special = new FileWriter(report_special);
+                            global.writer_temp = new FileWriter(report_temperature);
+
+                            int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
+                            int blocksize = Integer.parseInt(blocksize_value.getText().toString());
+                            int key_time = Integer.parseInt(key_value.getText().toString());
+                            ConcreteTest context = ConcreteTest.this;
+                            TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions, key_time, library, algo, blocksize);
+
+                            TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
+                            test.execute(TimeParamsTest);
 
 
 
@@ -198,7 +200,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             @Override
                             public Void doInBackground(Void... arg) {
                                 try {
-                                    writer_special.close();
+                                    global.writer_temp.close();
                                     sender.sendMail("Temperature test",
                                             "Temperature test",
                                             "encr" +
@@ -212,21 +214,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                                 return null;
                             }
                         }.execute();
-
-
-
+                        }catch (IOException i){
+                            throw new RuntimeException(i);
+                        }
                     }
                 });
 
 
-
-            }catch (IOException i){
-                throw new RuntimeException(i);
-            }
-
     }
-
-
 
 
     @Override
