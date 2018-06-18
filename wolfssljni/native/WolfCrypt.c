@@ -55,6 +55,24 @@ unsigned char in_buffer[IN_BUFFER_LENGTH];
 unsigned char encrypted_buffer[RSA_LENGTH];
 unsigned char decrypted_buffer[RSA_LENGTH];
 
+FILE *create_file_text(const char *title)
+{
+    char title_location[100];
+    strcpy(title_location,"/sdcard/CryptoBench/Special_test_");
+    //char temp[6] ="abcd";
+    //strcpy(temp,title);
+    strcat(title_location, title);
+    strcat(title_location,".txt");
+    LOGD("title location is: %s",title_location);
+    FILE *report = NULL;
+    report = fopen(title_location, "ab+");
+    if (report) {
+        LOGD("Report created");
+        return report;
+    }
+    return NULL; // error
+}
+
 FILE *create_file()
 {
     FILE *report = NULL;
@@ -880,9 +898,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDH(JNIEnv *env, jobject insta
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
+    FILE* report = create_file_text(title);
     fprintf(report,"************WolfCrypt/DH**************\n");
 
     struct timeval st,et;
@@ -1038,10 +1057,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DHTime(JNIEnv *env, jobject ins
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDHTime(JNIEnv *env, jobject instance, jint rep_key,jint rep_agree) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDHTime(JNIEnv *env, jobject instance, jint rep_key,jint rep_agree,jstring title_rand) {
 
-
-    FILE* report = create_file();
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
+    FILE* report = create_file_text(title);
     fprintf(report,"************WolfCrypt/ECDH**************\n");
 
     int ret;
@@ -1140,11 +1159,14 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_ECDHTime(JNIEnv *env, jobject i
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject instance,jint blocksize, jint rep_hash) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject instance,jint blocksize, jint rep_hash,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
+
+    FILE* report = create_file_text(title);
     fprintf(report,"************WolfCrypt/MD5**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
+
 
     struct timeval st,et;
     Md5 md5;
@@ -1229,13 +1251,14 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject in
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa,jstring title_rand) {
 
     int len_array = rep_rsa * 2;
     jintArray result;
     result = (*env)->NewIntArray(env,len_array);
     jint fill[len_array];
     struct timeval st,et;
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
 
     RsaKey key,key_dec;
     RNG rng1;
@@ -1261,7 +1284,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject in
         LOGD("Failure GenerateByte"); //generating block failed!
     }
 
-    FILE* report = create_file();
+    FILE* report = create_file_text(title);
     if(report == NULL){
         LOGD("Error reading the file");
 
@@ -1361,10 +1384,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject in
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject instance, jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject instance, jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
 
-
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
     struct timeval st,et;
 
     Aes enc;
@@ -1406,7 +1429,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
     }
 
 
-    FILE* report = create_file();
+    FILE* report = create_file_text(title);
     if(report == NULL){
         LOGD("Error reading the file");
 
@@ -1506,9 +1529,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
 }
 
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
+    FILE* report = create_file_text(title);
 
     Aes enc;
     byte cipher[blocksize];
@@ -1630,8 +1654,9 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
 }
 
 JNIEXPORT jintArray JNICALL
-Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
+    const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
     LOGD("Starting AESGCM");
     int len_array = rep_aes * 2;
     jintArray result;
@@ -1702,9 +1727,8 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject
     unsigned char iv[16] = {
             0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
             0xab, 0xf7,
-
     };
-    FILE* report = create_file();
+    FILE* report = create_file_text(title);
 
     fprintf(report,"************WolfCrypt/AESGCM**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);

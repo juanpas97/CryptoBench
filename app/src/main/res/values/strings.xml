@@ -14,7 +14,7 @@
     <string name="rep_hash">Hash:</string>
 
     <string-array name="libraries_array">
-        <item>Library</item>
+        <item></item>
         <item>Bouncy Castle</item>
         <item>WolfCrypt</item>
         <item>OpenSSL</item>
@@ -23,7 +23,7 @@
     </string-array>
 
     <string-array name="algo_array">
-        <item>Algorithms</item>
+        <item></item>
         <item>RSA</item>
         <item>MD5</item>
         <item>AES-CBC</item>

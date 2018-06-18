@@ -172,8 +172,6 @@ public  class  MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent specialtest = new Intent(view.getContext(), ConcreteTest.class);
-                String message = "Special Test";
-                specialtest.putExtra(EXTRA_MESSAGE, message);
                 startActivity(specialtest);
             }
         });

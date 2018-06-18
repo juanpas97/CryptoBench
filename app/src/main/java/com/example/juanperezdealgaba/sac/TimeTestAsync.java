@@ -32,8 +32,9 @@ class TimeTestParams {
     FileWriter writer_temp;
     ConcreteTest test;
     Storage storage;
+    String title;
 
-    TimeTestParams(FileWriter writer,FileWriter writer_temp, Storage storage, ConcreteTest test, TextView results, int time, int time_key, String library, String algo, int blocksize) {
+    TimeTestParams(FileWriter writer,FileWriter writer_temp, Storage storage, ConcreteTest test, TextView results, int time, int time_key, String library, String algo, int blocksize,String title) {
 
         this.writer_special = writer;
         this.storage = storage;
@@ -45,6 +46,7 @@ class TimeTestParams {
         this.time_key = time_key;
         this.test = test;
         this.writer_temp = writer_temp;
+        this.title = title;
 
     }
 }
@@ -90,6 +92,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
         String library = params[0].library;
         int time_key = params[0].time_key;
         Storage storage = params[0].storage;
+        String title = params[0].title;
 
         BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
             @Override
@@ -155,25 +158,30 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
                 RSA test = new RSA();
                 try {
+                    System.out.println("************Bouncy Castle/RSA**************");
+                    writer.write("\n************Bouncy Castle/RSA***************\n");
+
                     test.testRSATime(writer, results, 128,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+
+                    System.out.println("********************************");
+                    writer.write("********************************\n");
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
             }
 
-            if (library.equals("Bouncy Castle") && algo.equals("RSA2")) {
-                RSA test = new RSA();
-                try {
-                    test.testRSA();
-                } catch (Exception i) {
-                    throw new RuntimeException(i);
-                }
-            }
+
 
             if (library.equals("Bouncy Castle") && algo.equals("AES-CBC")) {
                 AESCBC test = new AESCBC();
                 try {
+                    System.out.println("************Bouncy Castle/AES-CBC**************");
+                    writer.write("\n************Bouncy Castle/AES-CBC***************\n");
+
                     test.testCBCTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+
+                    System.out.println("********************************");
+                    writer.write("********************************\n");
                 } catch (Exception i) {
                     throw new RuntimeException(i);
                 }
@@ -275,7 +283,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     BoringSSL test = new BoringSSL();
-                    test.RSATime(128,key_duration,sec_duration);
+                    test.RSATime(128,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -286,7 +294,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                 BoringSSL test = new BoringSSL();
-                test.AESCBCTime(blocksize,key_duration,sec_duration);
+                test.AESCBCTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -296,7 +304,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/AES-CTR**************");
 
                     BoringSSL test = new BoringSSL();
-                    test.AESCTRTime(blocksize,key_duration,sec_duration);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
 
                 System.out.println("***********************\n");
             }
@@ -305,7 +313,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/AES-GCM**************");
 
                     BoringSSL test = new BoringSSL();
-                    test.AESGCMTime(blocksize,key_duration,sec_duration);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
 
                 System.out.println("***********************\n");
             }
@@ -316,7 +324,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     BoringSSL test = new BoringSSL();
-                    test.AESOFBTime(blocksize,key_duration,sec_duration);
+                    test.AESOFBTime(blocksize,key_duration,sec_duration,title);
 
 
 
@@ -329,7 +337,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                 BoringSSL test = new BoringSSL();
-                test.MD5Time(blocksize,sec_duration);
+                test.MD5Time(blocksize,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -340,7 +348,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     BoringSSL test = new BoringSSL();
-                    test.DHTime(key_duration,sec_duration);
+                    test.DHTime(key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -352,7 +360,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     BoringSSL test = new BoringSSL();
-                    test.ECDHTime(time_key,sec_duration);
+                    test.ECDHTime(time_key,sec_duration,title);
 
                 System.out.println("***********************\n");
 
@@ -364,7 +372,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                 OpenSSL test = new OpenSSL();
-                test.RSATime(128,key_duration,sec_duration);
+                test.RSATime(128,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -375,7 +383,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -386,7 +394,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESCTRTime(blocksize,key_duration,sec_duration);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -396,7 +404,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/AES-GCM**************");
 
                     OpenSSL test = new OpenSSL();
-                    test.AESGCMTime(blocksize,key_duration,sec_duration);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
 
                 System.out.println("***********************\n");
             }
@@ -406,7 +414,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESOFBTime(blocksize,key_duration,sec_duration);
+                    test.AESOFBTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -417,7 +425,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.MD5Time(blocksize,sec_duration);
+                    test.MD5Time(blocksize,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -428,7 +436,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.DHTime(key_duration,sec_duration);
+                    test.DHTime(key_duration,sec_duration,title);
 
 
 
@@ -441,7 +449,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/DH**************");
 
                     OpenSSL test = new OpenSSL();
-                    test.ECDHTime(key_duration,sec_duration);
+                    test.ECDHTime(key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -452,7 +460,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.RSATime(128,key_duration,sec_duration);
+                    test.RSATime(128,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -464,7 +472,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -475,7 +483,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                     mbedTLS test = new mbedTLS();
 
-                    test.AESCTRTime(blocksize,key_duration,sec_duration);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
 
 
 
@@ -487,7 +495,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                     mbedTLS test = new mbedTLS();
 
-                    test.AESGCMTime(blocksize,key_duration,sec_duration);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -497,7 +505,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********mbedTLS/MD5**************");
 
                     mbedTLS test = new mbedTLS();
-                    test.MD5Time(blocksize,sec_duration);
+                    test.MD5Time(blocksize,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -507,7 +515,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********mbedTLS/ECDH**************");
 
                     mbedTLS test = new mbedTLS();
-                    test.ECDHTime(key_duration, sec_duration);
+                    test.ECDHTime(key_duration, sec_duration,title);
 
                 System.out.println("***********************\n");
             }
@@ -517,7 +525,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.DHTime(key_duration,sec_duration);
+                    test.DHTime(key_duration,sec_duration,title);
 
 
                 System.out.println("***********************\n");
@@ -527,7 +535,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/RSA**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.RSATime(128,key_duration,sec_duration);
+                    test.RSATime(128,key_duration,sec_duration,title);
 
                 System.out.println("Times executed:" + algo_repet + "\n");
 
@@ -540,7 +548,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/AES-CBC**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
 
                 System.out.println("********************************");
             }
@@ -549,7 +557,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/AES-GCM**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESGCMTime(blocksize,key_duration,sec_duration);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
 
                 System.out.println("********************************");
             }
@@ -559,7 +567,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESCTRTime(blocksize,key_duration,sec_duration);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
 
 
                 System.out.println("********************************");
@@ -570,7 +578,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     WolfCrypt test = new WolfCrypt();
-                    test.MD5Time(blocksize,sec_duration);
+                    test.MD5Time(blocksize,sec_duration,title);
 
 
                 System.out.println("********************************");
@@ -580,7 +588,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                 System.out.println("************WolfCrypt/DH**************");
                     WolfCrypt test = new WolfCrypt();
-                    test.DHTime(key_duration,sec_duration);
+                    test.DHTime(key_duration,sec_duration,title);
 
                 System.out.println("********************************");
             }
@@ -589,7 +597,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/ECDH**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.ECDHTime(sec_duration,key_duration);
+                    test.ECDHTime(sec_duration,key_duration,title);
 
 
                 System.out.println("Times executed:" + algo_repet + "\n");

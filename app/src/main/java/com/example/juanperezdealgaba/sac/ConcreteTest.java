@@ -51,23 +51,98 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             results_special_test.setMovementMethod(new ScrollingMovementMethod());
 
-            final Storage storage = new Storage(getApplicationContext());
-
-        String path = storage.getExternalStorageDirectory();
-        final String newDir = path + File.separator + "CryptoBench";
-        final File report_special = new File(newDir, "Special_test.txt");
-        report_special.mkdirs();
-
-        if (report_special.exists())
-            report_special.delete();
-
+        final int[] repetitions = new int[1];
+        final int[] blocksize = new int[1];
+        final int[] key_time = new int[1];
         final Global global = new Global();
 
+        final Storage storage = new Storage(getApplicationContext());
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if ( extras != null ) {
+
+            int key_rep;
+            for (String key : extras.keySet()) {
+                System.out.println("BEFORE BUNDLE");
+                Object value = extras.get(key);
+                Log.d("BUNDLE", String.format("%s %s (%s)", key,
+                        value.toString(), value.getClass().getName()));
+            }
+
+            if ( extras.containsKey ( "lib" ) ) {
+                System.out.println("We started shell");
+                String rep = extras.getString ( "lib" );
+                if(rep.equals("Bouncy")){
+                    library = "Bouncy Castle";
+                }
+                library = rep;
+            }
+
+            if ( extras.containsKey ( "algo" ) ) {
+                System.out.println("AES SHELL");
+                String rep = extras.getString ( "algo" );
+                algo = rep;
+            } else {
+                algo = "RSA";
+            }
+
+            if ( extras.containsKey ( "min" ) ) {
+                String rep =extras.getString ( "min" );
+                repetitions[0] = Integer.parseInt(rep);
+            } else {
+                repetitions[0] = 1;
+            }
+
+            if ( extras.containsKey ( "blocksize" ) ) {
+                String rep =extras.getString ( "blocksize" );
+                blocksize[0] = Integer.parseInt(rep);
+            } else {
+                blocksize[0] = 1024;
+            }
+
+            if ( extras.containsKey ( "key" ) ) {
+                String rep =extras.getString ( "key" );
+                key_rep = Integer.parseInt(rep);
+            } else {
+                key_rep = 1;
+            }
+
+            System.out.println("Shell function");
+
+            RandomStringGenerator rand = new RandomStringGenerator();
+            String title = rand.generateRandomString(5);
+            System.out.println("the random string is : " + title);
+            try {
+                String path = storage.getExternalStorageDirectory();
+                final String newDir = path + File.separator + "CryptoBench";
+                final File report_special = new File(newDir, "Special_test_" + title + ".txt");
+                report_special.mkdirs();
+
+                if (report_special.exists())
+                    report_special.delete();
 
 
+                final File report_temperature = new File(newDir, "temperature_" + title + ".txt");
+                report_temperature.mkdirs();
+
+                if (report_temperature.exists())
+                    report_temperature.delete();
+
+                final FileWriter writer_special = new FileWriter(report_special);
+                global.writer_temp = new FileWriter(report_temperature);
 
 
+                ConcreteTest context = ConcreteTest.this;
+                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title);
 
+                TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
+                test.execute(TimeParamsTest);
+            }catch (IOException i){
+                throw new RuntimeException(i);
+            }
+        }
 
                 Spinner spinner_algo = findViewById(R.id.spinner_algo);
 // Create an ArrayAdapter using the string array and a default spinner layout
@@ -155,7 +230,20 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                         results_special_test.setText("");
 
                         try {
-                            final File report_temperature = new File(newDir, "temperature.txt");
+
+                            RandomStringGenerator rand = new RandomStringGenerator();
+                            String title = rand.generateRandomString(5);
+
+                            String path = storage.getExternalStorageDirectory();
+                            final String newDir = path + File.separator + "CryptoBench";
+                            final File report_special = new File(newDir, "Special_test_"+title+".txt");
+                            report_special.mkdirs();
+
+                            if (report_special.exists())
+                                report_special.delete();
+
+
+                            final File report_temperature = new File(newDir, "temperature_" + title + ".txt");
                             report_temperature.mkdirs();
 
                             if (report_temperature.exists())
@@ -163,16 +251,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             final FileWriter writer_special = new FileWriter(report_special);
                             global.writer_temp = new FileWriter(report_temperature);
 
-                            int repetitions = Integer.parseInt(minutes_repetition.getText().toString());
-                            int blocksize = Integer.parseInt(blocksize_value.getText().toString());
-                            int key_time = Integer.parseInt(key_value.getText().toString());
+                            repetitions[0] = Integer.parseInt(minutes_repetition.getText().toString());
+                            blocksize[0] = Integer.parseInt(blocksize_value.getText().toString());
+                            key_time[0] = Integer.parseInt(key_value.getText().toString());
                             ConcreteTest context = ConcreteTest.this;
-                            TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions, key_time, library, algo, blocksize);
+                            TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title);
 
                             TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                             test.execute(TimeParamsTest);
-
-
 
 
                         final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
@@ -182,6 +268,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             public Void doInBackground(Void... arg) {
                                 try {
                                     writer_special.close();
+                                    global.writer_temp.close();
                                     sender.sendMail("Special_test",
                                             "Special Test",
                                             "encr" +
@@ -200,7 +287,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             @Override
                             public Void doInBackground(Void... arg) {
                                 try {
-                                    global.writer_temp.close();
+
                                     sender.sendMail("Temperature test",
                                             "Temperature test",
                                             "encr" +

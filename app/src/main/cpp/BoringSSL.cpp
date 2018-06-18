@@ -41,6 +41,24 @@ FILE *create_file()
     return NULL; // error
 }
 
+FILE *create_file_text(const char *title)
+{
+    char title_location[100];
+    strcpy(title_location,"/sdcard/CryptoBench/Special_test_");
+    //char temp[6] ="abcd";
+    //strcpy(temp,title);
+    strcat(title_location, title);
+    strcat(title_location,".txt");
+    LOGD("title location is: %s",title_location);
+    FILE *report = NULL;
+    report = fopen(title_location, "ab+");
+    if (report) {
+        LOGD("Report created");
+        return report;
+    }
+    return NULL; // error
+}
+
 RSA * createRSA(unsigned char * key,int value){
     RSA *rsa= NULL;
     BIO *keybio ;
@@ -857,13 +875,13 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDH(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa, jstring title_rand) {
 
-
+    const char *title = env->GetStringUTFChars(title_rand, 0);
     struct timeval st,et;
     int repetitions_rsa = 0,repetitions_key = 0;
 
-   FILE* report = create_file();
+   FILE* report = create_file_text(title);
     if(report == NULL){
         LOGD("Error rediang the file");
 
@@ -1011,11 +1029,11 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject in
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5Time(JNIEnv *env, jobject instance,
-                                                         jint blocksize, jint rep_hash) {
+                                                         jint blocksize, jint rep_hash,jstring title_rand) {
 
     struct timeval st,et;
-
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
 
     fprintf(report,"************BoringSSL/MD5**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
@@ -1072,9 +1090,10 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5Time(JNIEnv *env, jobject in
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_juanperezdealgaba_sac_BoringSSL_DHTime(JNIEnv *env, jobject instance,jint rep_key,
-                                                        jint rep_agree) {
+                                                        jint rep_agree,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
     struct timeval st, et;
 
     LOGD("Starting");
@@ -1187,9 +1206,10 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DHTime(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
     struct timeval st,et;
     int repetitions = 0;
     fprintf(report,"************BoringSSL/RSA**************\n");
@@ -1249,12 +1269,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject i
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,int rep_key,int rep_aes) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,int rep_key,int rep_aes,jstring title_rand) {
 
     LOGD("AES/CBC");
 
-
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
     fprintf(report,"************BoringSSL/AESCBC**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
     struct timeval st,et;
@@ -1347,9 +1367,10 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
     fprintf(report,"************BoringSSL/AESCTR**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
@@ -1479,12 +1500,13 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
     LOGD("AES/GCM");
 
+    const char *title = env->GetStringUTFChars(title_rand, 0);
 
-    FILE* report = create_file();
+    FILE* report = create_file_text(title);
     fprintf(report,"************BoringSSL/AESGCM**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
@@ -1661,11 +1683,11 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes) {
+Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand) {
 
     LOGD("AES/OFB");
-
-    FILE* report = create_file();
+    const char *title = env->GetStringUTFChars(title_rand, 0);
+    FILE* report = create_file_text(title);
     fprintf(report,"************BoringSSL/AESOFB**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
