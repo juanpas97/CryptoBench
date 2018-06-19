@@ -861,10 +861,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
             return ;
         }
 
-        LOGD("Encrypt was good");
+        now = time(NULL);
+        repetitions_rsa  += 1;
+    }
+    LOGD("Finished encryption");
 
-        //mbedtls_pk_free(&pk);
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions_rsa);
 
+    start = time(NULL);
+    now = time(NULL);
+    repetitions_rsa = 0;
+
+    /* Initialise the decryption operation. */
+    while ((now - start) <= rep_rsa) {
 
         gettimeofday(&st, NULL);
         ret = mbedtls_rsa_rsaes_oaep_decrypt(mbedtls_pk_rsa(privk), mbedtls_ctr_drbg_random,
@@ -883,7 +892,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
 
     LOGD("We are good");
 
-    fprintf(report, "Times performed: %i \n",repetitions_rsa);
+    fprintf(report, "Times performed decryption: %i \n",repetitions_rsa);
     fprintf(report,"*****************************");
     fclose (report);
 
@@ -1300,7 +1309,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
             LOGD("\n mbedtls encryption failed");
         }
 
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    LOGD("Finished encryption");
 
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions);
+
+    start = time(NULL);
+    now = time(NULL);
+    repetitions = 0;
+
+    /* Initialise the decryption operation. */
+    while ((now - start) <= rep_aes) {
         gettimeofday(&st, NULL);
         status = mbedtls_aes_crypt_cbc(&ctx_dec, MBEDTLS_AES_DECRYPT, blocksize, iv2, OutputMessage,
                                        compare);
@@ -1316,7 +1337,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
         repetitions  += 1;
     }
 
-    fprintf(report,"Times performed: %i \n",repetitions);
+    fprintf(report,"Times performed decrpytion: %i \n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 
@@ -1397,6 +1418,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
     start = time(NULL);
     now = time(NULL);
     repetitions = 0;
+    int ret = 0;
     while ((now - start) <= rep_aes) {
         gettimeofday(&st, NULL);
         int ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, iv, stream_block,
@@ -1411,6 +1433,19 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
 
         fprintf(report, "Time to encrypt: %i ms\n", encryption_time);
 
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    LOGD("Finished encryption");
+
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions);
+
+    start = time(NULL);
+    now = time(NULL);
+    repetitions = 0;
+
+    /* Initialise the decryption operation. */
+    while ((now - start) <= rep_aes) {
         gettimeofday(&st, NULL);
         ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, iv, stream_block, enc_out,
                                     plain_out);
@@ -1428,7 +1463,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
         repetitions += 1;
     }
 
-    fprintf(report, "Times performed: %i \n", repetitions);
+    fprintf(report, "Times performed decrpytion: %i \n", repetitions);
     fprintf(report, "*****************************");
     fclose(report);
     mbedtls_aes_free(&aes);
@@ -1521,6 +1556,20 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
 
         fprintf(report, "Time to encrypt: %i ms\n", encryption_time);
 
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    LOGD("Finished encryption");
+
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions);
+
+    start = time(NULL);
+    now = time(NULL);
+    repetitions = 0;
+    int ret = 0;
+    /* Initialise the decryption operation. */
+    while ((now - start) <= rep_aes) {
+
         gettimeofday(&st, NULL);
 
         ret = mbedtls_gcm_auth_decrypt(&ctx, sizeof(encrypted), iv, sizeof(iv), NULL, 0, tag,
@@ -1539,7 +1588,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
         repetitions += 1;
     }
 
-    fprintf(report, "Times performed: %i \n", repetitions);
+    fprintf(report, "Times performed decrpytion: %i \n", repetitions);
     fprintf(report, "*****************************");
     fclose(report);
 

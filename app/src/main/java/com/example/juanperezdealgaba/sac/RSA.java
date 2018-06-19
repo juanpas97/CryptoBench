@@ -116,6 +116,7 @@ public class RSA {
 
             repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_rsa;
+            byte[] encrypted = new byte[0];
             while(System.currentTimeMillis() <= finishTime) {
                 Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
 
@@ -123,17 +124,22 @@ public class RSA {
                 cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
 
                 long start = System.nanoTime();
-                byte[] encrypted = cipher.doFinal(input);
+                encrypted = cipher.doFinal(input);
                 long end = System.nanoTime();
                 long result = (end - start) / 1000;
                 writer.write("Time to encrypt: " + result + " ms\n");
 
-
+                repetitions +=1;
+            }
+            writer.write("Times performed encryption" + repetitions+" ms\n");
+            repetitions = 0;
+            finishTime = System.currentTimeMillis() + rep_rsa;
+            while(System.currentTimeMillis() <= finishTime) {
                 byte[] decrypted = decrypt(encrypted, private_key_ready, writer);
                 String decrypted_fin = new String(decrypted,"UTF-8");
                 repetitions +=1;
             }
-            writer.write("Times performed" + repetitions);
+            writer.write("Times performed decryption" + repetitions +" ms\n");
 
 
 

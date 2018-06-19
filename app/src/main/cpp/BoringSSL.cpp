@@ -975,50 +975,58 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject in
         repetitions_key += 1;
         now_key = time(NULL);
     }
+
+    int encrypted_length;
     fprintf(report,"Key set: %i times\n", repetitions_key);
     time_t start = time(NULL);
     time_t now = time(NULL);
 
+    struct timeval ste, ete;
     while ((now - start) <= rep_rsa) {
 
-
-        gettimeofday(&st, NULL);
-        int encrypted_length = RSA_public_encrypt(strlen(plainText),
+        gettimeofday(&ste, NULL);
+        encrypted_length = RSA_public_encrypt(strlen(plainText),
                                                   reinterpret_cast<const unsigned char *>(plainText),
                                                   encrypted, rsa, RSA_PKCS1_OAEP_PADDING);
-        gettimeofday(&et, NULL);
-        int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
+        gettimeofday(&ete, NULL);
+        int encryption_time = ((ete.tv_sec - ste.tv_sec) * 1000000) + (ete.tv_usec - ste.tv_usec);
         fprintf(report,"Time to encrypt: %i ms\n", encryption_time);
-
         if (encrypted_length == -1) {
             LOGD("Public Encrypt failed ");
             exit(0);
         }
-
-        //int decrypted_length = private_decrypt(encrypted, encrypted_length,
-        //reinterpret_cast<unsigned char *>(privateKey), decrypted);
-
-        RSA *rsa_priv = createRSA(reinterpret_cast<unsigned char *>(privateKey), 0);
-        gettimeofday(&st, NULL);
-        int decrypted_length = RSA_private_decrypt(encrypted_length, encrypted, decrypted, rsa_priv,
-                                                   RSA_PKCS1_OAEP_PADDING);
-        gettimeofday(&et, NULL);
-        int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
-        fprintf(report,"Time to decrypt: %i ms\n", decryption_time );
-
-        if (decrypted_length == -1) {
-            LOGD("Private Decrypt failed ");
-            exit(0);
-        }
-
         repetitions_rsa += 1;
         now = time(NULL);
     }
+    fprintf(report, "Times performed encryption: %i \n",repetitions_rsa);
+
+
+        //int decrypted_length = private_decrypt(encrypted, encrypted_length,
+        //reinterpret_cast<unsigned char *>(privateKey), decrypted);
+        start = time(NULL);
+        now = time(NULL);
+        repetitions_rsa = 0;
+        LOGD("Started decrypt");
+        RSA *rsa_priv = createRSA(reinterpret_cast<unsigned char *>(privateKey), 0);
+        while ((now - start) <= rep_rsa) {
+            gettimeofday(&ste, NULL);
+        int decrypted_length = RSA_private_decrypt(encrypted_length, encrypted, decrypted, rsa_priv,
+                                                   RSA_PKCS1_OAEP_PADDING);
+            gettimeofday(&ete, NULL);
+            int decryption_time = ((ete.tv_sec - ste.tv_sec) * 1000000) + (ete.tv_usec - ste.tv_usec);
+            fprintf(report,"Time to decrypt: %i ms\n", decryption_time);
+        repetitions_rsa += 1;
+        now = time(NULL);
+            if (decrypted_length == -1) {
+                LOGD("Private Decrypt failed ");
+                exit(0);
+            }
+    }
+    LOGD("Finish decryption");
 
     LOGD("We are good");
 
-    fprintf(report, "Times performed: %i \n",repetitions_rsa);
+    fprintf(report, "Times performed decryption: %i \n",repetitions_rsa);
     fprintf(report,"*****************************");
     fclose (report);
 
@@ -1333,7 +1341,14 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject
         int encryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
         fprintf(report,"Time to encrypt: %i ms\n", encryption_time);
-
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    fprintf(report,"Times performed encryption: %i ms \n",repetitions);
+    start= time(NULL);
+    now = time(NULL);
+    repetitions = 0;
+        while ((now - start) <= rep_aes) {
         /* AES-128 bit CBC Decryption */
 
         clock_t begin1 = clock();
@@ -1348,7 +1363,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject
         repetitions  += 1;
     }
 
-    fprintf(report,"Times performed: %i ms \n",repetitions);
+    fprintf(report,"Times performed decryption: %i ms \n",repetitions);
 
     /* Printing and Verifying */
     //print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
@@ -1444,6 +1459,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject
     now = time(NULL);
     repetitions = 0;
     while ((now - start) <= rep_aes) {
+        gettimeofday(&st, NULL);
 
         if (1 != EVP_EncryptUpdate(ctx, enc_out, &len, aes_input, sizeof(aes_input))) {
             LOGD("Error updating encryption");
@@ -1457,12 +1473,18 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject
 
         fprintf(report,"Time to encrypt: %i ms\n", encryption_time);
 
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    fprintf(report,"Times performed encrpytion: %i ms \n",repetitions);
 
         EVP_CIPHER_CTX_set_padding(ctx, 0);
         memcpy(iv_to_use, iv, 16);
         //memset(iv, 0x00, AES_BLOCK_SIZE); // don't forget to set iv vector again, else you can't decrypt data properly
-        gettimeofday(&st, NULL);
 
+        repetitions = 0;
+        while ((now - start) <= rep_aes) {
+            gettimeofday(&st, NULL);
 
         if (1 != EVP_DecryptUpdate(ctx_dec, dec_out, &len, enc_out, ciphertext_len))
             LOGD("Error updating Decryption");
@@ -1472,13 +1494,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject
         plaintext_len += len;
         gettimeofday(&et, NULL);
         int decryption_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
-
         fprintf(report,"Time to decrypt: %i ms\n", decryption_time);
         now = time(NULL);
         repetitions  += 1;
     }
 
-    fprintf(report,"Times performed: %i ms \n",repetitions);
+    fprintf(report,"Times performed decrpytion: %i ms \n",repetitions);
 
     EVP_CIPHER_CTX_free(ctx);
 
@@ -1576,9 +1597,6 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
         if(!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
             LOGD("Error at CTX control");
 
-        LOGD("We are good");
-
-        /* Initialise key and IV */
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
         gettimeofday(&et,NULL);
         int generation_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
@@ -1596,8 +1614,8 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
     start = time(NULL);
     now = time(NULL);
     repetitions = 0;
-    while ((now - start) <= rep_aes) {
 
+    while ((now - start) <= rep_aes) {
 
         if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL))
             LOGD("Error at encryptInit");
@@ -1610,14 +1628,12 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
         if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, aes_key, iv)) LOGD("Error initializasing");
 
 
-        /* Initialise the decryption operation. */
         if(!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_gcm(), NULL, NULL, NULL))
             LOGD("Error at DecryptaInit");
 
         if(!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
             LOGD("Error at CTX control");
 
-        LOGD("We are good");
 
         /* Initialise key and IV */
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
@@ -1645,12 +1661,20 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
             LOGD("Error getting tag");
 
         LOGD("Finished encryption");
+        now = time(NULL);
+        repetitions  += 1;
+    }
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions);
 
-
+        start = time(NULL);
+        now = time(NULL);
+        repetitions = 0;
+        while ((now - start) <= rep_aes) {
+            if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
         gettimeofday(&st, NULL);
         if (!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
             LOGD("Error decryptupdate");
-        plaintext_len_dec = len_dec;
+            plaintext_len_dec = len_dec;
 
         if (!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_TAG, 16, tag))
             LOGD("Error at ctrl tag");
@@ -1673,7 +1697,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
         repetitions  += 1;
     }
 
-    fprintf(report,"Times performed: %i ms\n",repetitions);
+    fprintf(report,"Times performed decryption: %i ms\n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 
@@ -1790,11 +1814,19 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject
 
         ciphertext_len += len;
 
+        now = time(NULL);
+        repetitions  += 1;
+    }
         LOGD("Finished encryption");
 
+    fprintf(report,"Times performed encryption: %i ms\n",repetitions);
+
+    start = time(NULL);
+    now = time(NULL);
+    repetitions = 0;
 
         /* Initialise the decryption operation. */
-        LOGD("We are good");
+        while ((now - start) <= rep_aes) {
 
         /* Initialise key and IV */
         if (!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv))
@@ -1823,7 +1855,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject
         now = time(NULL);
     }
 
-    fprintf(report,"Times performed: %i ms\n",repetitions);
+    fprintf(report,"Times performed decryption: %i ms\n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 

@@ -1346,9 +1346,19 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject in
 
         LOGD("Finished encryption / RSA");
 
+        repetitions_rsa += 1;
+        now = time(NULL);
+    }
+
+    LOGD("We are good");
+
+    fprintf(report, "Times performed encryption: %i \n", repetitions_rsa);
         // decrypt data.
 
-
+    repetitions_rsa = 0;
+    start = time(NULL);
+    now = time(NULL);
+    while ((now - start) <= rep_rsa) {
         gettimeofday(&st, NULL);
         ret = wc_RsaPrivateDecrypt_ex((const byte *) encrypted_buffer, encrypted_len,
                                       (byte *) decrypted_buffer, RSA_LENGTH, &key_dec,
@@ -1371,7 +1381,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_RSATime(JNIEnv *env, jobject in
 
     LOGD("We are good");
 
-    fprintf(report, "Times performed: %i \n", repetitions_rsa);
+    fprintf(report, "Times performed decryption: %i \n", repetitions_rsa);
     fprintf(report,"*****************************");
     fclose (report);
 
@@ -1497,6 +1507,19 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
             LOGD("Encryption finished");
         }
 
+        repetitions += 1;
+        now = time(NULL);
+    }
+
+    LOGD("We are good");
+
+    fprintf(report, "Times performed encryption: %i \n", repetitions);
+    // decrypt data.
+
+    repetitions = 0;
+    start = time(NULL);
+    now = time(NULL);
+    while ((now - start) <= rep_aes) {
         gettimeofday(&st, NULL);
         ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
         gettimeofday(&et, NULL);
@@ -1515,7 +1538,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
         repetitions  += 1;
     }
 
-    fprintf(report,"Times performed: %i \n",repetitions);
+    fprintf(report,"Times performed decryption: %i \n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
     wc_AesFree(&enc);
@@ -1630,6 +1653,19 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
 
         fprintf(report,"Time to encrypt: %i ms\n", encryption_time);
 
+        repetitions += 1;
+        now = time(NULL);
+    }
+
+    LOGD("We are good");
+
+    fprintf(report, "Times performed encryption: %i \n", repetitions);
+    // decrypt data.
+
+    repetitions = 0;
+    start = time(NULL);
+    now = time(NULL);
+    while ((now - start) <= rep_aes) {
         gettimeofday(&st, NULL);
         wc_AesCtrEncrypt(&dec, plain, cipher, (int) sizeof(cipher));
         gettimeofday(&et, NULL);
@@ -1641,7 +1677,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
         now = time(NULL);
     }
 
-    fprintf(report,"Times performed: %i \n",repetitions);
+    fprintf(report,"Times performed decryption: %i \n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 
@@ -1794,6 +1830,22 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject
         } else {
             LOGD("Encryption finished");
         }
+
+
+        repetitions += 1;
+        now = time(NULL);
+    }
+
+    LOGD("We are good");
+
+    fprintf(report, "Times performed encryption: %i \n", repetitions);
+    // decrypt data.
+
+    repetitions = 0;
+    start = time(NULL);
+    now = time(NULL);
+    while ((now - start) <= rep_aes) {
+
         gettimeofday(&st, NULL);
         ret = wc_AesGcmDecrypt(&enc, resultP, cipher, (int) sizeof(cipher), iv, sizeof(iv), resultT,
                                sizeof(resultT), a,
@@ -1815,7 +1867,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject
         now = time(NULL);
     }
 
-    fprintf(report,"Times performed: %i \n",repetitions);
+    fprintf(report,"Times performed decryption: %i \n",repetitions);
     fprintf(report,"*****************************");
     fclose(report);
 

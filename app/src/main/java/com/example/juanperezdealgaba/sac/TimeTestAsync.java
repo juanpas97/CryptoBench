@@ -220,7 +220,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                 System.out.println("********************************");
                 writer.write("********************************\n");
-                results.append("********************************\n");
+
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("AES-OFB")) {

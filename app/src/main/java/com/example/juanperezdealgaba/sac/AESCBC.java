@@ -172,25 +172,25 @@ public class AESCBC {
                 repetitions += 1;
             }
             writer.write("Times set key: " + repetitions + "\n");
-
+            byte[] enc = new byte[0];
             repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_aes;
             while(System.currentTimeMillis() <= finishTime) {
                 long start = System.nanoTime();
-                byte[] enc = in.doFinal(plaintext);
+                enc = in.doFinal(plaintext);
                 long end = System.nanoTime();
                 long microseconds = (end - start) / 1000;
                 writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
-
-                //System.out.println("Encrypted");
-                //for (int i = 0; i < enc.length; i++) {
-                //    System.out.println(Integer.toHexString(enc[i]));
-                //}
-
-                start = System.nanoTime();
+                repetitions +=1;
+            }
+            writer.write("Times performed encryption" + repetitions + "\n");
+            repetitions = 0;
+            finishTime = System.currentTimeMillis() + rep_aes;
+            while(System.currentTimeMillis() <= finishTime) {
+                long start = System.nanoTime();
                 byte[] dec = out.doFinal(enc);
-                end = System.nanoTime();
-                microseconds = (end - start) / 1000;
+                long end = System.nanoTime();
+                long microseconds = (end - start) / 1000;
                 writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
                 System.out.println("Decrypted");
                 //for (int i = 0; i < dec.length; i++) {
@@ -198,7 +198,7 @@ public class AESCBC {
                 //}
                 repetitions +=1;
             }
-            writer.write("Times performed" + repetitions);
+            writer.write("Times performed decryption" + repetitions + "\n");
         }catch (IOException i){
             throw new RuntimeException(i);
         }

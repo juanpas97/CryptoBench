@@ -1,0 +1,53 @@
+# Cryptobench
+
+Cryptobench is an Android app developed as part of my bachelorthesis that benchmarks different cryptographic algorithms from different security providers. The app uses java and native (C and C++) code to see the performance differences between each provider.
+
+## Algorithms
+
+At the moment Cryptobench supports the following algorithms from the following providers:
+
+|                          | Bouncy Castle/ Spongy Castle | mbedTLS            | WolfCrypt          | OpenSSL            | BoringSSL          |
+|--------------------------|------------------------------|--------------------|--------------------|--------------------|--------------------|
+| RSA/OAEP/1024-bit key    | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| MD-5                     | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| Diffie-Hellman(RFC-5114) | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| ECDH(SECP-256r1)         | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| AES-CBC/NoPadding/128    | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| AES-CTR/NoPadding/128    | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| AES-GCM/NoPadding/128    | :heavy_check_mark:           | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| AES-OFB/NoPadding/128    | :heavy_check_mark:           | Not provided       | Not provided       | :heavy_check_mark: | :heavy_check_mark: |
+
+
+## Tests
+
+CryptoBench supports 2 different types of test, Complete Test and Special Test:
+
+ * Complete Test: In this test the app will try every algorithm from every provider a finite number of times. The app will try the different AES algorithms and MD-5 from 128 bytes to 1024 bytes, RSA with a 128 bytes message, Diffie-Hellman and ECDH. The user can specify how many times does the app must try the different algorithms.
+ <br />
+ The repetitions value is a general value that will be used to repeat every test.
+ This test is useful to set the mean, the standard deviation and the fastest and slowest time of the different algorithms.
+ 
+ If the user wants, once the app is installed, this test can be triggered through the ADB terminal running the following command:
+ 
+ ```
+ am start -n com.example.juanperezdealgaba.sac/.CompleteTestActivity -e test 1 -e aes 20 -e hash 7 -e dh 5 -e rsa 15
+ ```
+ 
+ This will start an activity with the desired values.
+ 
+ * Complete Test: In this test the app wil perform an algorithm from a provider a given amount of times (minutes). This test will be used how much does the CPU temperature of the device changes during the different process and also to determine specific time measures as the byte/ microseconds of the algorithms. This test will also spend an amount of time starting the structures, the RNGS, assigning data,... to see the differences between each provider.
+
+ This test can also be started directly from the ADB terminal using the command: 
+
+ ```
+ am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo RSA -e min 3 -e  blocksize 128 -e key 1
+ ```
+Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL. Possible values for "algo" are: RSA, AESCBC,AESOFB,AESCBC,AESGCM,AESCTR,DH,ECDH and MD5.
+
+ ### Notes
+ * Some algorithms have fixed values, for example RSA will always encrypt and decrypt a 128 bytes message and the blocksize in DH and ECDH is completely ignored as we are measuring the key agreement.
+
+### Known Bugs
+ * First time that app is started, it will crash. This is because it tries to created files before the app asked for read/write permission. If you granted the permission, the next time you open the app this will be fixed.
+ 
+ * If you want to use an algorithm from a provider that doesn´t support it, the app will crash. (For example, AESOFB from mbedTLS).

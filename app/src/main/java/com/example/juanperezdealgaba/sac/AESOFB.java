@@ -128,7 +128,8 @@ public class AESOFB {
                 0x09, (byte)0xcf, 0x4f, 0x3c};
         byte[] ivBytes = new byte[] {  0x09, (byte) 0xcf,0x15,(byte) 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,(byte)0xae,0x16, 0x28,(byte) 0xd2,(byte) 0xa6,(byte) 0xab,(byte) 0xf7 };
         Cipher cipher = Cipher.getInstance("AES/OFB/NoPadding", "SC");
-
+        byte[] cipherText = new byte[0];
+        ByteArrayOutputStream bOut;
 
         int repetitions = 0;
         long finishTime = System.currentTimeMillis()+rep_key;
@@ -152,7 +153,7 @@ public class AESOFB {
             long start = System.nanoTime();
             ByteArrayInputStream bIn = new ByteArrayInputStream(input);
             CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            bOut = new ByteArrayOutputStream();
 
             int ch;
             while ((ch = cIn.read()) >= 0) {
@@ -163,22 +164,26 @@ public class AESOFB {
             long microseconds = (end - start) / 1000;
             writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
 
-            byte[] cipherText = bOut.toByteArray();
+            cipherText = bOut.toByteArray();
 
 
-            // decryption pass
-            start = System.nanoTime();
+            repetitions +=1;
+        }
+        writer.write("Times performed encryption" + repetitions);
+        repetitions = 0;
+        finishTime = System.currentTimeMillis() + rep_aes;
+        while(System.currentTimeMillis() <= finishTime) {
+            long start = System.nanoTime();
             bOut = new ByteArrayOutputStream();
             CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
             cOut.write(cipherText);
             cOut.close();
-
+            long end = System.nanoTime();
+            long microseconds = (end - start) / 1000;
             writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
-            //System.out.println("plain : " + new String(bOut.toByteArray()));
-
             repetitions +=1;
         }
-        writer.write("Times performed" + repetitions);
+        writer.write("Times performed decryption" + repetitions);
 
 
     }

@@ -164,13 +164,15 @@ public class AESCTR {
                 }
                 writer.write("Times set key: " + repetitions + "\n");
 
+                ByteArrayOutputStream bOut;
+                byte[] cipherText = new byte[0];
                 repetitions = 0;
                 finishTime = System.currentTimeMillis() + rep_aes;
                 while(System.currentTimeMillis() <= finishTime) {
                         long start = System.nanoTime();
                         ByteArrayInputStream bIn = new ByteArrayInputStream(input);
                         CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-                        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+                        bOut = new ByteArrayOutputStream();
 
                         int ch;
                         while ((ch = cIn.read()) >= 0) {
@@ -181,22 +183,27 @@ public class AESCTR {
                         long microseconds = (end - start) / 1000;
                         writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
 
-                        byte[] cipherText = bOut.toByteArray();
-
+                        cipherText = bOut.toByteArray();
+                        repetitions +=1;
+                }
+                writer.write("Times performed encryption" + repetitions + "\n");
+                repetitions = 0;
+                finishTime = System.currentTimeMillis() + rep_aes;
+                while(System.currentTimeMillis() <= finishTime) {
                         // decryption pass
 
-                        start = System.nanoTime();
+                        long start = System.nanoTime();
                         bOut = new ByteArrayOutputStream();
                         CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
                         cOut.write(cipherText);
                         cOut.close();
-                        end = System.nanoTime();
-                        microseconds = (end - start) / 1000;
+                        long end = System.nanoTime();
+                        long microseconds = (end - start) / 1000;
                         writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
 
                         repetitions +=1;
                 }
-                writer.write("Times performed" + repetitions);
+                writer.write("Times performed decrpytion" + repetitions + "\n");
 
 
         }
