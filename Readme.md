@@ -49,6 +49,8 @@ Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL
 
  * If the user leaves any of the fields in "Special Test" empty, they will be replaced with the default one. (Minutes = 1, Blocksize = 1024 and key = 1)
 
+ * The results of the folder /CryptoBench/ cannot be read by the Android file reader, in a PC there shouldn´t be any problem.
+
 ### Known Bugs
  * First time that app is started, it will crash. This is because it tries to created files before the app asked for read/write permission. If you granted the permission, the next time you open the app this will be fixed.
  
