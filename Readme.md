@@ -47,7 +47,11 @@ Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL
  ### Notes
  * Some algorithms have fixed values, for example RSA will always encrypt and decrypt a 128 bytes message and the blocksize in DH and ECDH is completely ignored as we are measuring the key agreement.
 
+ * If the user leaves any of the fields in "Special Test" empty, they will be replaced with the default one. (Minutes = 1, Blocksize = 1024 and key = 1)
+
 ### Known Bugs
  * First time that app is started, it will crash. This is because it tries to created files before the app asked for read/write permission. If you granted the permission, the next time you open the app this will be fixed.
  
  * If you want to use an algorithm from a provider that doesn´t support it, the app will crash. (For example, AESOFB from mbedTLS).
+
+ * If a test is cancelled, you will have to restart the app to keep using it. As your results won´t be saved.

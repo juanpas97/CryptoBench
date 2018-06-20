@@ -77,7 +77,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 if(rep.equals("Bouncy")){
                     library = "Bouncy Castle";
                 }
-                library = rep;
+                else {
+                    library = rep;
+                }
             }
 
             if ( extras.containsKey ( "algo" ) ) {
@@ -250,15 +252,30 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                                 report_temperature.delete();
                             final FileWriter writer_special = new FileWriter(report_special);
                             global.writer_temp = new FileWriter(report_temperature);
-
-                            repetitions[0] = Integer.parseInt(minutes_repetition.getText().toString());
-                            blocksize[0] = Integer.parseInt(blocksize_value.getText().toString());
-                            key_time[0] = Integer.parseInt(key_value.getText().toString());
+                            if (minutes_repetition.getText().toString().equals("")) {
+                                repetitions[0] = 1;
+                            }else{
+                                repetitions[0] = Integer.parseInt(minutes_repetition.getText().toString());
+                            }
+                            if (blocksize_value.getText().toString().equals("")) {
+                                blocksize[0] = 1024;
+                            }else{
+                                blocksize[0] = Integer.parseInt(blocksize_value.getText().toString());
+                            }
+                            if (key_value.getText().toString().equals("")) {
+                                key_time[0] = 1;
+                            }else{
+                                key_time[0] = Integer.parseInt(key_value.getText().toString());
+                            }
                             ConcreteTest context = ConcreteTest.this;
-                            TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title);
+                            if (library != null && algo != null && key_time[0] != 0 && blocksize[0] != 0 && repetitions[0] != 0) {
+                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title);
 
-                            TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
-                            test.execute(TimeParamsTest);
+                                    TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
+                                    test.execute(TimeParamsTest);
+                                }
+
+
 
 
                         final GMailSender sender = new GMailSender("encryptapp.report@gmail.com",
