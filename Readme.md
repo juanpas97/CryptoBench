@@ -42,7 +42,7 @@ CryptoBench supports 2 different types of test, Complete Test and Special Test:
  ```
  am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo RSA -e min 3 -e  blocksize 128 -e key 1
  ```
-Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL. Possible values for "algo" are: RSA, AESCBC,AESOFB,AESCBC,AESGCM,AESCTR,DH,ECDH and MD5.
+Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL. Possible values for "algo" are: RSA, AES-CBC,AES-OFB,AES-GCM,AES-CTR,DH,ECDH and MD5.
 
  ### Notes
  * Some algorithms have fixed values, for example RSA will always encrypt and decrypt a 128 bytes message and the blocksize in DH and ECDH is completely ignored as we are measuring the key agreement.
