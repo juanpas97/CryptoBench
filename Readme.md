@@ -44,6 +44,16 @@ CryptoBench supports 2 different types of test, Complete Test and Special Test:
  ```
 Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL. Possible values for "algo" are: RSA, AES-CBC,AES-OFB,AES-GCM,AES-CTR,DH,ECDH and MD5.
 
+The adb commands can be chained with the "wait" to automatize all the tests.
+
+```
+ am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo AES-CBC -e min 3 -e  blocksize 128 -e key 1 && wait 8m && am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo RSA -e min 3 -e  blocksize 128 -e key 1
+ ```
+
+As we are starting a new activity for every test, you have to take into account the time the test
+need to be performed, if not the two activities will run at the same time and the temperature 
+of the device will not be measured in a "trusted environment". 
+
  ### Notes
  * Some algorithms have fixed values, for example RSA will always encrypt and decrypt a 128 bytes message and the blocksize in DH and ECDH is completely ignored as we are measuring the key agreement.
 
