@@ -35,7 +35,7 @@ CryptoBench supports 2 different types of test, Complete Test and Special Test:
  
  This will start an activity with the desired values.
  
- * Complete Test: In this test the app wil perform an algorithm from a provider a given amount of times (minutes). This test will be used how much does the CPU temperature of the device changes during the different process and also to determine specific time measures as the byte/ microseconds of the algorithms. This test will also spend an amount of time starting the structures, the RNGS, assigning data,... to see the differences between each provider.
+ * Special Test: In this test the app wil perform an algorithm from a provider a given amount of times (minutes). This test will be used how much does the CPU temperature of the device changes during the different process and also to determine specific time measures as the byte/ microseconds of the algorithms. This test will also spend an amount of time starting the structures, the RNGS, assigning data,... to see the differences between each provider.
 
  This test can also be started directly from the ADB terminal using the command: 
 

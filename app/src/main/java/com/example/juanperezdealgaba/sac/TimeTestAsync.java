@@ -18,7 +18,8 @@ import com.snatik.storage.Storage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.Calendar;
+import java.util.Date;
 
 
 class TimeTestParams {
@@ -99,11 +100,11 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             public void onReceive(Context context, Intent intent) {
                 try {
                     float BatteryTemp;
-                    System.out.println("Before temp");
+                    Date currentTime = Calendar.getInstance().getTime();
                     BatteryTemp = (float) (intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0)) / 10;
-                    System.out.println("The temperature is " + BatteryTemp);
+                    System.out.println(currentTime + ": "+ "The temperature is " + BatteryTemp);
                     if (writer_temp != null) {
-                        writer_temp.write("The temperature is " + BatteryTemp + "\n");
+                        writer_temp.write(currentTime + ":" + "The temperature is " + BatteryTemp + "\n");
                     }
                 }catch (IOException i){
                     throw new RuntimeException(i);
@@ -140,9 +141,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             String model = Build.MODEL;
 
             final String model_cpu = System.getProperty("os.arch");
+            Date currentTime = Calendar.getInstance().getTime();
 
-
-            writer.write("Super Test Results\n");
+            writer.write("SpecialTest Results\n");
             writer.write("-----------------------------------\n");
             writer.write("CPU Model: " + model_cpu + "\n");
             writer.write("Android Version: " + myVersion + "\n");
@@ -150,10 +151,23 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             writer.write("Manufacturer: " + manufacturer + "\n");
             writer.write("Device: " + device + "\n");
             writer.write("Model: " + model + "\n");
+            writer.write("Hour of test " + currentTime + "\n");
             writer.write("\n");
             writer.write("\n");
             writer.write("\n");
 
+            writer_temp.write("Special Test Temperature  Results\n");
+            writer_temp.write("-----------------------------------\n");
+            writer_temp.write("CPU Model: " + model_cpu + "\n");
+            writer_temp.write("Android Version: " + myVersion + "\n");
+            writer_temp.write("SDK Version: " + sdkVersion + "\n");
+            writer_temp.write("Manufacturer: " + manufacturer + "\n");
+            writer_temp.write("Device: " + device + "\n");
+            writer_temp.write("Model: " + model + "\n");
+            writer_temp.write("Hour of test " + currentTime + "\n");
+            writer_temp.write("\n");
+            writer_temp.write("\n");
+            writer_temp.write("\n");
 
             if (library.equals("Bouncy Castle") && algo.equals("RSA")) {
                 RSA test = new RSA();
@@ -616,7 +630,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
     protected void onPostExecute(final TextView report) {
         dialog.dismiss();
         report.setText("\n"+ "Test finished successfully"+"\n"+"\n"+"  Find your results at " +
-                "CryptoBench/Report.txt");
+                "CryptoBench/");
         super.onPostExecute(report);
     }
 

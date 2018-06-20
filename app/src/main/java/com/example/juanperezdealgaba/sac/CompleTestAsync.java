@@ -16,6 +16,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -101,7 +103,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             String model = Build.MODEL;
 
             final String model_cpu = System.getProperty("os.arch");
-
+            Date currentTime = Calendar.getInstance().getTime();
 
             writer.write("Super Test Results\n");
             writer.write("-----------------------------------\n");
@@ -111,7 +113,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             writer.write("Manufacturer: " + manufacturer + "\n");
             writer.write("Device: " + device + "\n");
             writer.write("Model: " + model + "\n");
-
+            writer.write("Hour of test " + currentTime + "\n");
 
             writer.write("\n");
             writer.write("\n");
