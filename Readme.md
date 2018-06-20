@@ -54,4 +54,4 @@ Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL
  
  * If you want to use an algorithm from a provider that doesn´t support it, the app will crash. (For example, AESOFB from mbedTLS).
 
- * If a test is cancelled, you will have to restart the app to keep using it. As your results won´t be saved.
+ * If a test is cancelled or the phone is chagend from vertical to horizontal (or vice versa), you will have to restart the app to keep using it. As your results won´t be saved.
