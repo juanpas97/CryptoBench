@@ -62,7 +62,7 @@ of the device will not be measured in a "trusted environment".
  * The results of the folder /CryptoBench/ cannot be read by the Android file reader, in a PC there shouldn´t be any problem.
 
 ### Known Bugs
- * First time that app is started, it will crash. This is because it tries to created files before the app asked for read/write permission. If you granted the permission, the next time you open the app this will be fixed.
+ * First time that app is started, it will crash. This is because it tries to create files before the app asked for read/write permission. If you granted the permission, the next time you open the app this will be fixed.
  
  * If you want to use an algorithm from a provider that doesn´t support it, the app will crash. (For example, AESOFB from mbedTLS).
 
