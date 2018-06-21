@@ -34,8 +34,9 @@ class TimeTestParams {
     ConcreteTest test;
     Storage storage;
     String title;
+    int total_rep;
 
-    TimeTestParams(FileWriter writer,FileWriter writer_temp, Storage storage, ConcreteTest test, TextView results, int time, int time_key, String library, String algo, int blocksize,String title) {
+    TimeTestParams(FileWriter writer,FileWriter writer_temp, Storage storage, ConcreteTest test, TextView results, int time, int time_key, String library, String algo, int blocksize,String title,int total_rep) {
 
         this.writer_special = writer;
         this.storage = storage;
@@ -48,6 +49,7 @@ class TimeTestParams {
         this.test = test;
         this.writer_temp = writer_temp;
         this.title = title;
+        this.total_rep = total_rep;
 
     }
 }
@@ -94,6 +96,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
         int time_key = params[0].time_key;
         Storage storage = params[0].storage;
         String title = params[0].title;
+        int total_rep = params[0].total_rep;
 
         BroadcastReceiver broadcastreceiver = new BroadcastReceiver() {
             @Override
@@ -175,7 +178,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                     System.out.println("************Bouncy Castle/RSA**************");
                     writer.write("\n************Bouncy Castle/RSA***************\n");
 
-                    test.testRSATime(writer, results, 128,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                    test.testRSATime(writer, results, 128,keymaxDurationInMilliseconds,maxDurationInMilliseconds,2);
 
                     System.out.println("********************************");
                     writer.write("********************************\n");
@@ -192,7 +195,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                     System.out.println("************Bouncy Castle/AES-CBC**************");
                     writer.write("\n************Bouncy Castle/AES-CBC***************\n");
 
-                    test.testCBCTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                    test.testCBCTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds,total_rep);
 
                     System.out.println("********************************");
                     writer.write("********************************\n");
@@ -208,7 +211,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                     AESCTR test = new AESCTR();
                     try {
-                        test.testCTRTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                        test.testCTRTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds,2);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -226,7 +229,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     AESGCM test = new AESGCM();
                     try {
-                        test.testGCMTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                        test.testGCMTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds,total_rep);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -245,7 +248,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     AESOFB test = new AESOFB();
                     try {
-                        test.testOFBTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                        test.testOFBTime(writer, results, blocksize,keymaxDurationInMilliseconds,maxDurationInMilliseconds,2);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -260,7 +263,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     MD5Implementation test = new MD5Implementation();
                     try {
-                        test.testmd5Time(writer, results, maxDurationInMilliseconds);
+                        test.testmd5Time(writer, results, maxDurationInMilliseconds,blocksize, 2);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -271,7 +274,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     DiffieHellman test = new DiffieHellman();
                     try {
-                        test.testDHTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                        test.testDHTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds,2);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }
@@ -282,7 +285,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     ECDiffieHellmanImplementation test = new ECDiffieHellmanImplementation();
                     try {
-                        test.startDiffieHellmanTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds);
+                        test.startDiffieHellmanTime(writer, results,keymaxDurationInMilliseconds,maxDurationInMilliseconds,2);
                     } catch (Exception i) {
                         throw new RuntimeException(i);
                     }

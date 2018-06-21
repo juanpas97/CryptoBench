@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.KeyFactory;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Security;
@@ -20,13 +22,15 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
-
+import javax.crypto.NoSuchPaddingException;
 
 
 public class RSA {
 
-    public void testRSA(FileWriter writer, TextView results, int blocksize, int rep_rsa){
+    public void testRSA(FileWriter writer, TextView results, int blocksize, int rep_rsa,int total_rep){
         Security.addProvider(new BouncyCastleProvider());
+
+        byte[] encrypted = new byte[0];
 
         try {
             String public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy8Dbv8prpJ/0kKhlGeJY\n" +
@@ -45,33 +49,67 @@ public class RSA {
 
             byte[] input = string.generateRandomString(blocksize).getBytes();
 
-            for(int i = 0; i<rep_rsa;i++) {
 
-                Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
-
-                // encrypt the plaintext using the public key
+            Cipher cipher = null;
+            try {
+                cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            }
+            for (int i = 0; i < total_rep; i++) {
                 cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
-
+                int repetitions = 0;
                 long start = System.nanoTime();
-                byte[] encrypted = cipher.doFinal(input);
+                for (int j = 0; j < rep_rsa - 1; j++) {
+                    encrypted = cipher.doFinal(input);
+                    repetitions += 1;
+                }
+
                 long end = System.nanoTime();
-                long result = (end - start) / 1000;
-                writer.write("Time to encrypt: " + result + " ms\n");
+                long elapsedTime = end - start;
+                double seconds = (double) elapsedTime / 1000000000.0;
 
-
-                byte[] decrypted = decrypt(encrypted, private_key_ready, writer);
-                String decrypted_fin = new String(decrypted,"UTF-8");
-
+                try {
+                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Repetitions encrypt: " + repetitions + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
+            for (int i = 0; i < total_rep; i++) {
+                byte[] decryptedText = null;
+                int repetitions = 0;
+                // decrypt the text using the private key
+                cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
+                cipher.init(Cipher.DECRYPT_MODE, private_key_ready);
+                long start = System.nanoTime();
+                for (int j = 0; j < rep_rsa - 1; j++) {
+                    decryptedText = cipher.doFinal(encrypted);
+                    repetitions += 1;
+                }
 
+                long end = System.nanoTime();
+                long elapsedTime = end - start;
+                double seconds = (double) elapsedTime / 1000000000.0;
+
+                try {
+                    writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }catch (Exception o){
             throw new RuntimeException(o);
         }
     }
 
-    public void testRSATime(FileWriter writer, TextView results, int blocksize, long rep_key ,long rep_rsa){
+    public void testRSATime(FileWriter writer, TextView results, int blocksize, long rep_key ,long rep_rsa,int total_rep){
         Security.addProvider(new BouncyCastleProvider());
 
         try {
@@ -89,57 +127,87 @@ public class RSA {
 
             int repetitions = 0;
             long finishTime = System.currentTimeMillis()+rep_key;
+            long start = System.nanoTime();
             while(System.currentTimeMillis() <= finishTime) {
-                long start = System.nanoTime();
-
                 public_key_ready = getPublicKeyFromString(public_key);
-
                 private_key_ready = getPrivateKeyFromByte();
-
                 Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
-
 
                 cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
 
-                long end = System.nanoTime();
-                long microseconds = (end - start) / 1000;
-                writer.write("Time to set key: " + microseconds + " ms\n" );
                 repetitions += 1;
             }
-            writer.write("Times set key: " + repetitions + "\n");
+            long end = System.nanoTime();
+            long elapsedTime = end - start;
+            double seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Time setting key: " + (repetitions/seconds) + " times/second" + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             public_key_ready = getPublicKeyFromString(public_key);
 
             private_key_ready = getPrivateKeyFromByte();
 
             byte[] input = string.generateRandomString(blocksize).getBytes();
-
-            repetitions = 0;
-            finishTime = System.currentTimeMillis() + rep_rsa;
             byte[] encrypted = new byte[0];
-            while(System.currentTimeMillis() <= finishTime) {
+            for (int i = 0; i < total_rep; i++) {
+                repetitions = 0;
+                finishTime = System.currentTimeMillis() + rep_rsa;
+
                 Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
-
-                // encrypt the plaintext using the public key
                 cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
+                 start = System.nanoTime();
+                while (System.currentTimeMillis() <= finishTime) {
 
-                long start = System.nanoTime();
-                encrypted = cipher.doFinal(input);
-                long end = System.nanoTime();
-                long result = (end - start) / 1000;
-                writer.write("Time to encrypt: " + result + " ms\n");
+                    encrypted = cipher.doFinal(input);
+                    repetitions += 1;
+                }
 
-                repetitions +=1;
+                 end = System.nanoTime();
+                elapsedTime = end - start;
+                seconds = (double) elapsedTime / 1000000000.0;
+
+                try {
+                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Repetitions decrypt: " + repetitions + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            writer.write("Times performed encryption" + repetitions+" ms\n");
-            repetitions = 0;
-            finishTime = System.currentTimeMillis() + rep_rsa;
-            while(System.currentTimeMillis() <= finishTime) {
-                byte[] decrypted = decrypt(encrypted, private_key_ready, writer);
-                String decrypted_fin = new String(decrypted,"UTF-8");
-                repetitions +=1;
+
+            try {
+                writer.write("\n");
+                writer.write("\n");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            writer.write("Times performed decryption" + repetitions +" ms\n");
+
+            for (int i = 0; i < total_rep; i++) {
+                byte[] decryptedText = null;
+                repetitions = 0;
+                // decrypt the text using the private key
+                Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
+                finishTime = System.currentTimeMillis()+rep_key;
+                cipher.init(Cipher.DECRYPT_MODE, private_key_ready);
+                start = System.nanoTime();
+                while (System.currentTimeMillis() <= finishTime) {
+                    decryptedText = cipher.doFinal(encrypted);
+                    repetitions += 1;
+                }
+
+                 end = System.nanoTime();
+                elapsedTime = end - start;
+                seconds = (double) elapsedTime / 1000000000.0;
+
+                try {
+                    writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Repetitions decrypt: " + repetitions + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
 
 

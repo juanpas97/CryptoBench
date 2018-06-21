@@ -121,7 +121,6 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             String separate = "*********************************************" + "\n";
             String separate_lib = "*********************************************" + "\n"+ "\n"+ "\n"+ "\n";
 
-            for (int i= 0; i< repetitions; i++) {
 
 
                     String BC = "***********Bouncy Castle**************" + "\n";
@@ -142,7 +141,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(BCCBC);
 
                         AESCBC testCBC = new AESCBC();
-                        testCBC.testCBC(writer, results, blocksize, repetitions_aes);
+                        testCBC.testCBC(writer, results, blocksize, repetitions_aes,repetitions);
 
                         writer.write(separate);
 
@@ -151,7 +150,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(BCCTR);
 
                         AESCTR testCTR = new AESCTR();
-                        testCTR.testCTR(writer, results, blocksize, repetitions_aes);
+                        testCTR.testCTR(writer, results, blocksize, repetitions_aes,repetitions);
 
                         writer.write(separate);
 
@@ -160,7 +159,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(BCGCM);
 
                         AESGCM testGCM = new AESGCM();
-                        testGCM.testGCM(writer, results, blocksize, repetitions_aes);
+                        testGCM.testGCM(writer, results, blocksize, repetitions_aes,repetitions);
 
                         writer.write(separate);
 
@@ -169,7 +168,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(BCOFB);
 
                         AESOFB testOFB = new AESOFB();
-                        testOFB.testOFB(writer, results, blocksize, repetitions_aes);
+                        testOFB.testOFB(writer, results, blocksize, repetitions_aes,2);
 
                         writer.write(separate);
 
@@ -179,7 +178,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(BCMD5);
 
                         MD5Implementation testmd5 = new MD5Implementation();
-                        testmd5.testmd5(writer, results, blocksize, repetitions_hash);
+                        testmd5.testmd5(writer, results, blocksize, repetitions_hash,repetitions);
 
                         writer.write(separate);
 
@@ -194,7 +193,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
                     RSA testRSABC = new RSA();
-                    testRSABC.testRSA(writer, results, 128, repetitions_rsa);
+                    testRSABC.testRSA(writer, results, 128, repetitions_rsa,repetitions);
 
                     writer.write(separate);
 
@@ -231,7 +230,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
 
                         int index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
 
                             System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
@@ -252,7 +251,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
 
                             System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
@@ -270,7 +269,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         writer.write(mbedGCM);
 
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
                             mbedTLS testGCM = new mbedTLS();
                             int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
 
@@ -312,7 +311,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesRSA = testRSAmbed.RSA(128, repetitions_rsa);
 
                     int index_array = 0;
-                    for (i = 0; i < timesRSA.length / 2; i++) {
+                    for (int i = 0; i < timesRSA.length / 2; i++) {
 
                         System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                         writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
@@ -333,7 +332,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     mbedTLS testDHmbed = new mbedTLS();
                     int[] timesDH = testDHmbed.DH(repetitions_agree);
 
-                    for (i = 0; i < timesDH.length; i++) {
+                    for (int i = 0; i < timesDH.length; i++) {
                         System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
                         writer.write("Time to key agreement: " + timesDH[1] + "ms\n");
                     }
@@ -346,7 +345,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     mbedTLS testECDHmbed = new mbedTLS();
                     int[] timesECDH = testECDHmbed.ECDH(repetitions_agree);
 
-                    for (i = 0; i < timesECDH.length; i++) {
+                    for (int i = 0; i < timesECDH.length; i++) {
                         System.out.println("Time to key agreement:" + timesECDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
                     }
@@ -370,7 +369,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
 
@@ -391,7 +390,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAESCTR.length / 2; i++) {
+                        for (int i = 0; i < timesAESCTR.length / 2; i++) {
 
                             System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
@@ -413,7 +412,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAESGCM.length / 2; i++) {
+                        for (int i = 0; i < timesAESGCM.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
 
@@ -433,7 +432,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         WolfCrypt testmd5 = new WolfCrypt();
                         int[] timesmd5 = testmd5.MD5(64, repetitions_hash);
 
-                        for (i = 0; i < timesmd5.length; i++) {
+                        for (int i = 0; i < timesmd5.length; i++) {
                             System.out.println("Time to generate hash:" + timesmd5[i] + "ms\n");
                             writer.write("Time to generate hash: " + timesmd5[i] + "ms\n");
                         }
@@ -451,7 +450,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     WolfCrypt testDHwc = new WolfCrypt();
                     timesDH = testDHwc.DH(repetitions_agree);
 
-                    for (i = 0; i < timesDH.length; i++) {
+                    for (int i = 0; i < timesDH.length; i++) {
 
                         System.out.println("Time to key agreement: " + timesDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesDH[i] + "ms\n");
@@ -466,7 +465,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     WolfCrypt testECDHwc = new WolfCrypt();
                     timesECDH = testECDHwc.ECDH(repetitions_agree);
 
-                    for (i = 0; i < timesECDH.length; i++) {
+                    for (int i = 0; i < timesECDH.length; i++) {
 
                         System.out.println("Time to key agreement: " + timesECDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
@@ -485,7 +484,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     int[] timesRSAwc = testRSAwc.RSA(128, repetitions_rsa);
 
                     index_array = 0;
-                    for (i = 0; i < timesRSAwc.length / 2; i++) {
+                    for (int i = 0; i < timesRSAwc.length / 2; i++) {
                         System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                         writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
 
@@ -514,7 +513,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         OpenSSL testmd5 = new OpenSSL();
                         int[] timesmd5 = testmd5.MD5(blocksize, repetitions_hash);
 
-                        for (i = 0; i < repetitions_hash; i++) {
+                        for (int i = 0; i < repetitions_hash; i++) {
                             System.out.println("Time to generate hash:" + timesmd5[i] + "ms\n");
                             writer.write("Time to generate hash: " + timesmd5[i] + "ms\n");
                         }
@@ -528,7 +527,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
 
@@ -548,7 +547,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
 
@@ -568,7 +567,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < repetitions_aes; i++) {
+                        for (int i = 0; i < repetitions_aes; i++) {
                             System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
 
@@ -588,7 +587,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESOFB = testofb.AESOFB(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < repetitions_aes; i++) {
+                        for (int i = 0; i < repetitions_aes; i++) {
                             System.out.println("Time to encrypt:" + timesAESOFB[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESOFB[index_array] + "ms\n");
 
@@ -611,7 +610,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testDHopen = new OpenSSL();
                     timesDH = testDHopen.DH(repetitions_agree);
 
-                    for (i = 0; i < repetitions_agree; i++ ) {
+                    for (int i = 0; i < repetitions_agree; i++ ) {
                         System.out.println("Time to key agreement:" + timesDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesDH[i] + "ms\n");
                     }
@@ -625,7 +624,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     OpenSSL testECDHopen = new OpenSSL();
                     timesECDH = testECDHopen.ECDH(repetitions_agree);
 
-                    for (i = 0; i < repetitions_agree;i++) {
+                    for (int i = 0; i < repetitions_agree;i++) {
                         System.out.println("Time to key agreement:" + timesECDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
                     }
@@ -640,7 +639,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     timesRSA = testRSA.RSA(128, repetitions_rsa);
 
                     index_array = 0;
-                    for (i = 0; i < repetitions_rsa; i++) {
+                    for (int i = 0; i < repetitions_rsa; i++) {
                         System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                         writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
 
@@ -669,7 +668,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         BoringSSL testmd5 = new BoringSSL();
                         int[] timesmd5 = testmd5.MD5(blocksize,repetitions_hash);
 
-                        for (i = 0; i < repetitions_hash;i++) {
+                        for (int i = 0; i < repetitions_hash;i++) {
                             System.out.println("Time to generate hash:" + timesmd5[i] + "ms\n");
                             writer.write("Time to generate hash: " + timesmd5[i] + "ms\n");
                         }
@@ -684,7 +683,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         BoringSSL test = new BoringSSL();
                         int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
                         index_array = 0;
-                        for (i = 0; i < timesAES.length / 2; i++) {
+                        for (int i = 0; i < timesAES.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
 
@@ -704,7 +703,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < repetitions_aes; i++) {
+                        for (int i = 0; i < repetitions_aes; i++) {
                             System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
 
@@ -725,7 +724,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < repetitions_aes; i++) {
+                        for (int i = 0; i < repetitions_aes; i++) {
                             System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
 
@@ -745,7 +744,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         int[] timesAESOFB = testofb.AESOFB(blocksize, repetitions_aes);
 
                         index_array = 0;
-                        for (i = 0; i < repetitions_aes; i++) {
+                        for (int i = 0; i < repetitions_aes; i++) {
                             System.out.println("Time to encrypt:" + timesAESOFB[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAESOFB[index_array] + "ms\n");
 
@@ -768,7 +767,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL testDHboring = new BoringSSL();
                     timesDH = testDHboring.DH(repetitions_agree);
 
-                    for ( i = 0; i < repetitions_agree; i++){
+                    for (int  i = 0; i < repetitions_agree; i++){
                         System.out.println("Time to key agreement:" + timesDH[i] + "ms\n");
                     writer.write("Time to key agreement: " + timesDH[i] + "ms\n");
                 }
@@ -782,7 +781,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     BoringSSL testECDHboring = new BoringSSL();
                     timesECDH = testECDHboring.ECDH(repetitions_agree);
 
-                    for(i = 0; i < repetitions_agree; i++) {
+                    for(int i = 0; i < repetitions_agree; i++) {
                         System.out.println("Time to key agreement:" + timesECDH[i] + "ms\n");
                         writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
                     }
@@ -797,7 +796,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     timesRSA = testRSAboring.RSA(128,repetitions_rsa);
 
                     index_array = 0;
-                    for(i = 0; i < repetitions_rsa; i++) {
+                    for(int i = 0; i < repetitions_rsa; i++) {
                         System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                         writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
 
@@ -809,7 +808,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     writer.write(separate_lib);
 
-                }
+
 
             writer.close();
 

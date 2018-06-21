@@ -62,17 +62,16 @@ public class ECDiffieHellman {
         return MessageDigest.isEqual(aSecret, bSecret);
     }
 
-    public void GenerateAgreementTime(FileWriter writer, long rep_key, long rep_agree) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException {
+    public void GenerateAgreementTime(FileWriter writer, long rep_key, long rep_agree,int rep_total) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException, InvalidKeyException {
         byte[] aSecret;
         byte[] bSecret;
 
-        try {
 
 
             int repetitions = 0;
             long finishTime = System.currentTimeMillis() + rep_key;
+            long start = System.nanoTime();
             while (System.currentTimeMillis() <= finishTime) {
-                long start = System.nanoTime();
                 ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256r1");
 
                 KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
@@ -91,63 +90,70 @@ public class ECDiffieHellman {
 
                 bKeyAgree.init(bKeyPair.getPrivate());
 
-                long end = System.nanoTime();
-                long microseconds = (end - start) / 1000;
-
-                writer.write("Time to set key: " + microseconds + " ms\n");
                 repetitions += 1;
             }
-            writer.write("Times set key: " + repetitions + "\n");
-
-
-        //
-        // agreement
-        //
-
-        ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256r1");
-
-        KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
-
-        g.initialize(ecSpec, new SecureRandom());
-
-        KeyPair aKeyPair = g.generateKeyPair();
-
-        KeyAgreement aKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
-
-        aKeyAgree.init(aKeyPair.getPrivate());
-
-        KeyPair bKeyPair = g.generateKeyPair();
-
-        KeyAgreement bKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
-
-        bKeyAgree.init(bKeyPair.getPrivate());
-
-
-        aKeyAgree.doPhase(bKeyPair.getPublic(), true);
-        bKeyAgree.doPhase(aKeyPair.getPublic(), true);
-
-
-        repetitions = 0;
-        finishTime = System.currentTimeMillis() + rep_agree;
-        while (System.currentTimeMillis() <= finishTime) {
-            long start = System.nanoTime();
-            aSecret = aKeyAgree.generateSecret();
             long end = System.nanoTime();
-            long microseconds = (end - start) / 1000;
-            bSecret = bKeyAgree.generateSecret();
+            long elapsedTime = end - start;
+            double seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Time setting key: " + (repetitions / seconds) + " times/second" + "\n");
+                writer.write("Repetitions setting key: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //
+            // agreement
+            //
+
+            ECParameterSpec ecSpec = ECNamedCurveTable.getParameterSpec("secp256r1");
+
+            KeyPairGenerator g = KeyPairGenerator.getInstance("ECDH", "SC");
+
+            g.initialize(ecSpec, new SecureRandom());
+
+            KeyPair aKeyPair = g.generateKeyPair();
+
+            KeyAgreement aKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
+
+            aKeyAgree.init(aKeyPair.getPrivate());
+
+            KeyPair bKeyPair = g.generateKeyPair();
+
+            KeyAgreement bKeyAgree = KeyAgreement.getInstance("ECDH", "SC");
+
+            bKeyAgree.init(bKeyPair.getPrivate());
+
+
+            aKeyAgree.doPhase(bKeyPair.getPublic(), true);
+            bKeyAgree.doPhase(aKeyPair.getPublic(), true);
+
+            for (int i = 0; i < rep_total; i++){
+                repetitions = 0;
+            finishTime = System.currentTimeMillis() + rep_agree;
+            start = System.nanoTime();
+            while (System.currentTimeMillis() <= finishTime) {
+
+                aSecret = aKeyAgree.generateSecret();
+
+
+                //bSecret = bKeyAgree.generateSecret();
 
 //        System.out.println(Arrays.toString(aSecret));
 //        System.out.println(Arrays.toString(bSecret));
 
-            System.out.println(MessageDigest.isEqual(aSecret, bSecret));
-            writer.write("Time to generate key agreement: " + microseconds + " ms" + "\n");
-            //System.out.println("plain : " + new String(bOut.toByteArray()));
-
-            repetitions +=1;
-        }
-            writer.write("Times performed" + repetitions);
-        } catch (IOException i) {
-            throw new RuntimeException(i);
+                //System.out.println(MessageDigest.isEqual(aSecret, bSecret));
+                repetitions += 1;
+            }
+            end = System.nanoTime();
+             elapsedTime = end - start;
+             seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
+                writer.write("Repetitions: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
         }
     }
-}

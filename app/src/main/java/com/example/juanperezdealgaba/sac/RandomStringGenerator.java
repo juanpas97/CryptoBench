@@ -32,7 +32,7 @@ public class RandomStringGenerator {
         return randomstring;
     }
 
-    public String generateRandomString(int blocksize) {
+    public static String generateRandomString(int blocksize) {
         Random rand = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         char[] chars = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',

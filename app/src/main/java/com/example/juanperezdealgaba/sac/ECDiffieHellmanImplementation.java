@@ -30,8 +30,8 @@ import static com.example.juanperezdealgaba.sac.ECDiffieHellman.GetTimestamp;
 public class ECDiffieHellmanImplementation {
 
 
-    public void startDiffieHellman(FileWriter writer, TextView results, int rep_agree) throws NoSuchAlgorithmException, NoSuchProviderException,
-            InvalidAlgorithmParameterException,InvalidKeyException, IOException{
+    public void startDiffieHellman(FileWriter writer, TextView results, int rep_agree, int total_rep) throws NoSuchAlgorithmException, NoSuchProviderException,
+            InvalidAlgorithmParameterException,InvalidKeyException, IOException {
         Security.addProvider(new BouncyCastleProvider());
 
 
@@ -55,28 +55,32 @@ public class ECDiffieHellmanImplementation {
 
         //
         // agreement
-        //
-        aKeyAgree.doPhase(bKeyPair.getPublic(), true);
-        bKeyAgree.doPhase(aKeyPair.getPublic(), true);
+        for (int i = 0; i < total_rep; i++) {
+            aKeyAgree.doPhase(bKeyPair.getPublic(), true);
+            bKeyAgree.doPhase(aKeyPair.getPublic(), true);
+            int repetitions = 0;
+            long start = System.nanoTime();
+            for (int j = 0; j < rep_agree; j++) {
 
-    for(int i = 0; i < rep_agree; i++) {
-        long start = System.nanoTime();
 
-        byte[] aSecret = aKeyAgree.generateSecret();
+                byte[] aSecret = aKeyAgree.generateSecret();
 
-        long end = System.nanoTime();
-        long result = (end - start) / 1000;
-        writer.write("Time to generate key agreement :" + result + " ms\n");
-        byte[] bSecret = bKeyAgree.generateSecret();
+                //byte[] bSecret = bKeyAgree.generateSecret();
+                repetitions += 1;
+            }
+            //System.out.println(MessageDigest.isEqual(aSecret, bSecret));
+            long end = System.nanoTime();
+            long elapsedTime_key = end - start;
+            double seconds_key = (double) elapsedTime_key / 1000000000.0;
 
-        System.out.println(MessageDigest.isEqual(aSecret, bSecret));
+            try {
+                writer.write("Time setting key: " + (repetitions / seconds_key) + " key agreements/second" + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
-
-        //results.append("Time to generate key agreement :" + timeKeyAgreement+ "\n");
-
-
-    }
-
     public void startDiffieHellman(FileWriter writer, TextView results, long result_time) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
@@ -104,14 +108,14 @@ public class ECDiffieHellmanImplementation {
 
     }
 
-    public void startDiffieHellmanTime(FileWriter writer, TextView results, long rep_key,long result_time) throws NoSuchAlgorithmException, NoSuchProviderException,
+    public void startDiffieHellmanTime(FileWriter writer, TextView results, long rep_key,long result_time,int rep_total) throws NoSuchAlgorithmException, NoSuchProviderException,
             InvalidAlgorithmParameterException,InvalidKeyException, IOException{
         Security.addProvider(new BouncyCastleProvider());
         System.out.println("***********Bouncy Castle-ECDH**************");
         writer.write("\n**********Bouncy Castle-ECDH********\n");
 
             ECDiffieHellman test = new ECDiffieHellman();
-            test.GenerateAgreementTime(writer,rep_key,result_time);
+            test.GenerateAgreementTime(writer,rep_key,result_time,rep_total);
 
 
 

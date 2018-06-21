@@ -138,7 +138,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
 
                 ConcreteTest context = ConcreteTest.this;
-                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title);
+                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,3);
 
                 TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                 test.execute(TimeParamsTest);
@@ -270,7 +270,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             }
                             ConcreteTest context = ConcreteTest.this;
                             if (library != null && algo != null && key_time[0] != 0 && blocksize[0] != 0 && repetitions[0] != 0) {
-                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title);
+                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title,2);
 
                                     TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                                     test.execute(TimeParamsTest);

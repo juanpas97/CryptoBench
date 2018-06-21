@@ -73,7 +73,7 @@ public class AESCTR {
 
         }
 
-        public void testCTR(FileWriter writer, TextView results, int blocksize, int rep_aes) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
+        public void testCTR(FileWriter writer, TextView results, int blocksize, int rep_aes,int total_rep) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
                 Security.addProvider(new BouncyCastleProvider());
 
                 RandomStringGenerator string = new RandomStringGenerator();
@@ -96,41 +96,67 @@ public class AESCTR {
                 cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
                 cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 
-                for(int i = 0; i < rep_aes; i++) {
+                ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
+                for (int i = 0; i < total_rep; i++){
+                        int repetitions = 0;
+
                         long start = System.nanoTime();
+                        for (int j = 0; j < rep_aes - 1; j++) {
                         ByteArrayInputStream bIn = new ByteArrayInputStream(input);
                         CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-                        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+
 
                         int ch;
                         while ((ch = cIn.read()) >= 0) {
                                 bOut.write(ch);
+                                }
+
                         }
 
                         long end = System.nanoTime();
-                        long microseconds = (end - start) / 1000;
-                        writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
+                        long elapsedTime = end - start;
+                        double seconds = (double) elapsedTime / 1000000000.0;
+
+                        try {
+                                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                        } catch (IOException e) {
+                                e.printStackTrace();
+                        }
+                }
 
                         byte[] cipherText = bOut.toByteArray();
 
 
                         // decryption pass
 
-                        start = System.nanoTime();
-                        bOut = new ByteArrayOutputStream();
-                        CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
-                        cOut.write(cipherText);
-                        cOut.close();
-                        end = System.nanoTime();
-                        microseconds = (end - start) / 1000;
-                        writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+                for (int i = 0; i < total_rep; i++) {
+                        int repetitions = 0;
+                        long start = System.nanoTime();
+                        for (int j = 0; j < rep_aes - 1; i++) {
+                                bOut = new ByteArrayOutputStream();
+                                CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
+                                cOut.write(cipherText);
+                                cOut.close();
+                        }
+                                long end = System.nanoTime();
+                                long elapsedTime = end - start;
+                                double seconds = (double) elapsedTime / 1000000000.0;
+
+                                try {
+                                        writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                                } catch (IOException e) {
+                                        e.printStackTrace();
+                                }
+                                System.out.println("Decrypted");
+                                //for (int i = 0; i < dec.length; i++) {
+                                //  System.out.println(Integer.toHexString(dec[i]));
+                                //}
+
+                        }
                 }
 
-
-        }
-
-
-        public void testCTRTime(FileWriter writer, TextView results, int blocksize,long rep_key ,long rep_aes) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
+        public void testCTRTime(FileWriter writer, TextView results, int blocksize,long rep_key ,long rep_aes,int total_rep) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
                 Security.addProvider(new BouncyCastleProvider());
 
                 RandomStringGenerator string = new RandomStringGenerator();
@@ -152,60 +178,84 @@ public class AESCTR {
 
                 int repetitions = 0;
                 long finishTime = System.currentTimeMillis()+rep_key;
+                long start_key = System.nanoTime();
                 while(System.currentTimeMillis() <= finishTime) {
-                        long start = System.nanoTime();
                         cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
                         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 
-                        long end = System.nanoTime();
-                        long microseconds = (end - start) / 1000;
-                        writer.write("Time to set key: " + microseconds + " ms\n" );
                         repetitions += 1;
                 }
-                writer.write("Times set key: " + repetitions + "\n");
+                long end_key = System.nanoTime();
+                long elapsedTime_key = end_key - start_key;
+                double seconds_key = (double)elapsedTime_key / 1000000000.0;
 
+                try {
+                        writer.write("Time setting key: " + (repetitions/seconds_key) + " times/second" + "\n");
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
                 ByteArrayOutputStream bOut;
                 byte[] cipherText = new byte[0];
-                repetitions = 0;
-                finishTime = System.currentTimeMillis() + rep_aes;
-                while(System.currentTimeMillis() <= finishTime) {
+                for (int i = 0; i < total_rep; i++) {
+                        repetitions = 0;
+                        finishTime = System.currentTimeMillis() + rep_aes;
                         long start = System.nanoTime();
-                        ByteArrayInputStream bIn = new ByteArrayInputStream(input);
-                        CipherInputStream cIn = new CipherInputStream(bIn, cipher);
-                        bOut = new ByteArrayOutputStream();
+                        while (System.currentTimeMillis() <= finishTime) {
 
-                        int ch;
-                        while ((ch = cIn.read()) >= 0) {
-                                bOut.write(ch);
+                                ByteArrayInputStream bIn = new ByteArrayInputStream(input);
+                                CipherInputStream cIn = new CipherInputStream(bIn, cipher);
+                                bOut = new ByteArrayOutputStream();
+
+                                int ch;
+                                while ((ch = cIn.read()) >= 0) {
+                                        bOut.write(ch);
+                                }
+
+
+                                cipherText = bOut.toByteArray();
+                                repetitions += 1;
                         }
 
+
                         long end = System.nanoTime();
-                        long microseconds = (end - start) / 1000;
-                        writer.write("Time to encrypt: " + microseconds + " ms" + "\n");
+                        long elapsedTime = end - start;
+                        double seconds = (double) elapsedTime / 1000000000.0;
 
-                        cipherText = bOut.toByteArray();
-                        repetitions +=1;
+                        try {
+                                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                                writer.write("Repetitions encrypt: " + repetitions + "\n");
+                        } catch (IOException e) {
+                                e.printStackTrace();
+                        }
                 }
-                writer.write("Times performed encryption" + repetitions + "\n");
-                repetitions = 0;
-                finishTime = System.currentTimeMillis() + rep_aes;
-                while(System.currentTimeMillis() <= finishTime) {
-                        // decryption pass
 
+                for (int i = 0; i < total_rep; i++) {
+                        repetitions = 0;
+                        finishTime = System.currentTimeMillis() + rep_aes;
                         long start = System.nanoTime();
-                        bOut = new ByteArrayOutputStream();
-                        CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
-                        cOut.write(cipherText);
-                        cOut.close();
+                        while (System.currentTimeMillis() <= finishTime) {
+                                // decryption pass
+
+
+                                bOut = new ByteArrayOutputStream();
+                                CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
+                                cOut.write(cipherText);
+                                cOut.close();
+
+                                repetitions += 1;
+                        }
                         long end = System.nanoTime();
-                        long microseconds = (end - start) / 1000;
-                        writer.write("Time to decrypt: " + microseconds + " ms" + "\n");
+                        long elapsedTime = end - start;
+                        double seconds = (double) elapsedTime / 1000000000.0;
+                        try {
+                                writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                                writer.write("Repetitions decrypt: " + repetitions + "\n");
 
-                        repetitions +=1;
+                        } catch (IOException e) {
+                                e.printStackTrace();
+                        }
+
                 }
-                writer.write("Times performed decrpytion" + repetitions + "\n");
-
-
         }
 
 

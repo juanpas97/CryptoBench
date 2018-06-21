@@ -95,7 +95,7 @@ public class DiffieHellman {
 
     public  void testDH(FileWriter writer, TextView results,int rep_agree) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
 
-        try {
+
             Security.addProvider(new BouncyCastleProvider());
             AlgorithmParameterGenerator paramGen = AlgorithmParameterGenerator.getInstance("DH");
             paramGen.init(2048); // number of bits
@@ -149,28 +149,32 @@ public class DiffieHellman {
 
             aKeyAgree.doPhase(kp2.getPublic(), true);
             bKeyAgree.doPhase(kp.getPublic(), true);
-
+            int repetitions = 0;
+            long start = System.nanoTime();
             for(int i = 0; i < rep_agree; i++) {
-                long start = System.nanoTime();
+
                 byte[] ASharedSecret = aKeyAgree.generateSecret();
-                long end = System.nanoTime();
-                long result = (end - start) / 1000;
-                byte[] BSharedSecret = bKeyAgree.generateSecret();
-                writer.write("Time to generate key agreement : " + result + " ms\n");
-                //System.out.println("Result:");
-                //System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
+                //long end = System.nanoTime();
+                //long result = (end - start) / 1000;
+                //byte[] BSharedSecret = bKeyAgree.generateSecret();
+                repetitions += 1;
+            }
+            long end = System.nanoTime();
+            long elapsedTime = end - start;
+            double seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Time setting key: " + (repetitions / seconds) + " times/second" + "\n");
+                writer.write("Repetitions setting key: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
 
-        }catch(IOException i){
-            throw new RuntimeException(i);
-        }
-
     }
 
-    public  void testDHTime(FileWriter writer, TextView results,long rep_key,long rep_agree) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
+    public  void testDHTime(FileWriter writer, TextView results,long rep_key,long rep_agree,int rep_total) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException,InvalidParameterSpecException,InvalidKeyException{
 
-        try {
+
             Security.addProvider(new BouncyCastleProvider());
             AlgorithmParameterGenerator paramGen = AlgorithmParameterGenerator.getInstance("DH");
             paramGen.init(2048); // number of bits
@@ -201,40 +205,46 @@ public class DiffieHellman {
 
 //A
             int repetitions = 0;
+            long start = System.nanoTime();
             long finishTime = System.currentTimeMillis() + rep_key;
             while (System.currentTimeMillis() <= finishTime) {
-                long start = System.nanoTime();
-            KeyPairGenerator akpg = KeyPairGenerator.getInstance("DiffieHellman");
 
-            DHParameterSpec param = new DHParameterSpec(p512, g512);
+                KeyPairGenerator akpg = KeyPairGenerator.getInstance("DiffieHellman");
 
-            akpg.initialize(param);
-            KeyPair kp = akpg.generateKeyPair();
+                DHParameterSpec param = new DHParameterSpec(p512, g512);
+
+                akpg.initialize(param);
+                KeyPair kp = akpg.generateKeyPair();
 
 //B
-            KeyPairGenerator bkpg = KeyPairGenerator.getInstance("DiffieHellman");
+                KeyPairGenerator bkpg = KeyPairGenerator.getInstance("DiffieHellman");
 
-            DHParameterSpec param2 = new DHParameterSpec(p512, g512);
-            System.out.println("Prime: " + p512);
-            System.out.println("Base: " + g512);
-            bkpg.initialize(param2);
-            KeyPair kp2 = bkpg.generateKeyPair();
+                DHParameterSpec param2 = new DHParameterSpec(p512, g512);
+                System.out.println("Prime: " + p512);
+                System.out.println("Base: " + g512);
+                bkpg.initialize(param2);
+                KeyPair kp2 = bkpg.generateKeyPair();
 
 
-            KeyAgreement aKeyAgree = KeyAgreement.getInstance("DiffieHellman");
-            KeyAgreement bKeyAgree = KeyAgreement.getInstance("DiffieHellman");
+                KeyAgreement aKeyAgree = KeyAgreement.getInstance("DiffieHellman");
+                KeyAgreement bKeyAgree = KeyAgreement.getInstance("DiffieHellman");
 
-            aKeyAgree.init(kp.getPrivate());
-            bKeyAgree.init(kp2.getPrivate());
+                aKeyAgree.init(kp.getPrivate());
+                bKeyAgree.init(kp2.getPrivate());
 
-            aKeyAgree.doPhase(kp2.getPublic(), true);
-            bKeyAgree.doPhase(kp.getPublic(), true);
-                long end = System.nanoTime();
-                long microseconds = (end - start) / 1000;
-                writer.write("Time to set key: " + microseconds + " ms\n");
+                aKeyAgree.doPhase(kp2.getPublic(), true);
+                bKeyAgree.doPhase(kp.getPublic(), true);
                 repetitions += 1;
             }
-            writer.write("Times set key: " + repetitions + "\n");
+            long end = System.nanoTime();
+            long elapsedTime = end - start;
+            double seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Time setting key: " + (repetitions / seconds) + " times/second" + "\n");
+                writer.write("Repetitions setting key: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             KeyPairGenerator akpg = KeyPairGenerator.getInstance("DiffieHellman");
 
@@ -264,27 +274,29 @@ public class DiffieHellman {
             bKeyAgree.doPhase(kp.getPublic(), true);
 
 
-            repetitions = 0;
+            for (int i = 0; i < rep_total; i++){
+                repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_agree;
+            start = System.nanoTime();
             while (System.currentTimeMillis() <= finishTime) {
-                long start = System.nanoTime();
                 byte[] ASharedSecret = aKeyAgree.generateSecret();
-                long end = System.nanoTime();
+                    end = System.nanoTime();
                 long result = (end - start) / 1000;
-                byte[] BSharedSecret = bKeyAgree.generateSecret();
-                writer.write("Time to generate key agreement : " + result + " ms\n");
-                //System.out.println("Result:");
+                //byte[] BSharedSecret = bKeyAgree.generateSecret();
+
                 //System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
-                System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
-                //System.out.println("plain : " + new String(bOut.toByteArray()));
 
-                repetitions +=1;
+                repetitions += 1;
             }
-            writer.write("Times performed" + repetitions);
-
-
-        }catch(IOException i){
-            throw new RuntimeException(i);
+            end = System.nanoTime();
+            elapsedTime = end - start;
+            seconds = (double) elapsedTime / 1000000000.0;
+            try {
+                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
+                writer.write("Repetitions: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

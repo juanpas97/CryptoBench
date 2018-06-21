@@ -17,152 +17,75 @@ import java.util.Random;
 
 public class MD5Implementation {
 
-        public void testmd5(FileWriter writer, TextView results,int blocksize,int rep_hash) throws IOException{
+        public void testmd5(FileWriter writer, TextView results,int blocksize,int rep_hash,int total_rep) throws IOException{
             RandomStringGenerator input = new RandomStringGenerator();
 
         byte[] inputBytes = input.generateRandomString(blocksize).getBytes();
 
 
-
         MD5Digest examplemd5 = new MD5Digest();
-        examplemd5.update(inputBytes, 0, inputBytes.length);
 
-        for(int i = 0; i < rep_hash;i++) {
-            byte[] hash = new byte[examplemd5.getDigestSize()];
+        for (int i = 0; i < total_rep; i++) {
+            int repetitions = 0;
+            byte[] hash = new byte[0];
             long StartHash = System.nanoTime();
-            examplemd5.doFinal(hash, 0);
-            long endHash = System.nanoTime();
-            long timeHash = (endHash - StartHash) / 1000;
-
-            //System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
-            //System.out.println("Output (hex): " + new String(Hex.encode(hash)));
-
-            System.out.println("Time to generate Hash: " + timeHash + "ms\n");
-            writer.write("Time to generate Hash: " + timeHash + "ms\n");
-            //results.append("Time to generate Hash:" + timeHash + "ms\n");
-        }
-
-
-    }
-
-        public void testmd5(String input, FileWriter writer, TextView results) throws IOException{
-
-        byte[] inputBytes = input.getBytes();
-
-
-
-        MD5Digest examplemd5 = new MD5Digest();
-        examplemd5.update(inputBytes, 0, inputBytes.length);
-
-        byte[] hash = new byte[examplemd5.getDigestSize()];
-        long StartHash =System.nanoTime();
-        examplemd5.doFinal(hash, 0);
-        long endHash =System.nanoTime();
-        long timeHash = (endHash - StartHash);
-
-        System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
-        System.out.println("Output (hex): " + new String(Hex.encode(hash)));
-
-        System.out.println("Time to generate Hash:" + timeHash + "ms\n");
-        writer.write("Time to generate Hash:" + timeHash + "ms\n");
-        results.append("Time to generate Hash:" + timeHash + "ms\n");
-
-
-    }
-
-    public void testmd5(String input){
-
-        byte[] inputBytes = input.getBytes();
-
-        System.out.println("***********MD5**************");
-
-
-        MD5Digest md5 = new MD5Digest();
-        md5.update(inputBytes, 0, inputBytes.length);
-
-        byte[] hash = new byte[md5.getDigestSize()];
-        long StartHash =System.nanoTime();
-        md5.doFinal(hash, 0);
-        long endHash =System.nanoTime();
-        long timeHash = (endHash - StartHash);
-
-        System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
-        System.out.println("Output (hex): " + new String(Hex.encode(hash)));
-
-        System.out.println("Time to generate Hash:" + timeHash + "ms\n");
-        System.out.println("********************************");
-
-    }
-
-    public void testmd5(FileWriter writer, TextView results,long result_time) throws IOException{
-
-        System.out.println("***********Bouncy Castle/MD-5**************");
-        writer.write("\n**********Bouncy Castle/MD-5********\n");
-        results.append("*******Bouncy Castle/MD-5******\n");
-        int algo_repet = 0;
-        while (System.currentTimeMillis() < result_time) {
-                RandomStringGenerator string = new RandomStringGenerator();
-                String input = RandomStringGenerator.generateRandomString();
-
-                byte[] inputBytes = input.getBytes();
-
-                MD5Digest examplemd5 = new MD5Digest();
+            for (int j = 0; j < rep_hash; j++) {
+                hash = new byte[examplemd5.getDigestSize()];
                 examplemd5.update(inputBytes, 0, inputBytes.length);
+                repetitions += 1;
+            }
+            long end = System.nanoTime();
+            long elapsedTime = end - StartHash;
+            double seconds = (double) elapsedTime / 1000000000.0;
 
-                byte[] hash = new byte[examplemd5.getDigestSize()];
-                long StartHash = System.nanoTime();
-                examplemd5.doFinal(hash, 0);
-                long endHash = System.nanoTime();
-                long timeHash = (endHash - StartHash);
+            try {
+                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                writer.write("Repetitions decrypt: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-                System.out.println("Input (hex): " + new String(Hex.encode(inputBytes)));
-                System.out.println("Output (hex): " + new String(Hex.encode(hash)));
-
-                System.out.println("Time to generate Hash:" + timeHash + "ms\n");
-                writer.write("Time to generate Hash:" + timeHash + "ms\n");
-                results.append("Time to generate Hash:" + timeHash + "ms\n");
-            algo_repet += 1;
         }
-
-                System.out.println("Times executed:" + algo_repet + "\n");
-                writer.write("Times executed:" + algo_repet + "\n");
-                results.append("Times executed:" + algo_repet + "\n");
-                System.out.println("***********************\n");
-                writer.write("********************************\n");
-                results.append("**********************************\n");
-
     }
 
-    public void testmd5Time(FileWriter writer, TextView results,long rep_aes) throws IOException{
+
+
+    public void testmd5Time(FileWriter writer, TextView results,long rep_aes,int blocksize,int total_rep) throws IOException {
 
         System.out.println("***********Bouncy Castle/MD-5**************");
         writer.write("\n**********Bouncy Castle/MD-5********\n");
 
         int repetitions = 0;
-        long finishTime = System.currentTimeMillis() + rep_aes;
-        while(System.currentTimeMillis() <= finishTime) {
-            RandomStringGenerator string = new RandomStringGenerator();
-            String input = RandomStringGenerator.generateRandomString();
 
-            byte[] inputBytes = input.getBytes();
-
+        RandomStringGenerator string = new RandomStringGenerator();
+        for (int i = 0; i < total_rep; i++) {
             MD5Digest examplemd5 = new MD5Digest();
-            examplemd5.update(inputBytes, 0, inputBytes.length);
+            byte[] hash = new byte[0];
+            String input = RandomStringGenerator.generateRandomString(blocksize);
+            long finishTime = System.currentTimeMillis() + rep_aes;
+            long start = System.nanoTime();
+            while (System.currentTimeMillis() <= finishTime) {
 
-            byte[] hash = new byte[examplemd5.getDigestSize()];
-            long StartHash = System.nanoTime();
-            examplemd5.doFinal(hash, 0);
-            long endHash = System.nanoTime();
-            long timeHash = (endHash - StartHash);
+                byte[] inputBytes = input.getBytes();
+                examplemd5.update(inputBytes, 0, inputBytes.length);
+                hash = new byte[examplemd5.getDigestSize()];
 
+                repetitions += 1;
+            }
+            long end = System.nanoTime();
+            long elapsedTime = end - start;
+            double seconds = (double) elapsedTime / 1000000000.0;
 
-            writer.write("Time to generate Hash:" + timeHash + "ms\n");
-            repetitions +=1;
+            try {
+                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                writer.write("Repetitions decrypt: " + repetitions + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("***********************\n");
+            writer.write("********************************\n");
+
         }
-        writer.write("Times performed" + repetitions);
-
-        System.out.println("***********************\n");
-        writer.write("********************************\n");
-
     }
 }
