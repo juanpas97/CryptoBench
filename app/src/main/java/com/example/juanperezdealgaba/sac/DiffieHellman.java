@@ -163,6 +163,7 @@ public class DiffieHellman {
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
             try {
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time setting key: " + (repetitions / seconds) + " times/second" + "\n");
                 writer.write("Repetitions setting key: " + repetitions + "\n");
             } catch (IOException e) {
@@ -292,6 +293,7 @@ public class DiffieHellman {
             elapsedTime = end - start;
             seconds = (double) elapsedTime / 1000000000.0;
             try {
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
                 writer.write("Repetitions: " + repetitions + "\n");
             } catch (IOException e) {

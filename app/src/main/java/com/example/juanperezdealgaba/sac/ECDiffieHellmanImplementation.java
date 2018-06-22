@@ -74,7 +74,9 @@ public class ECDiffieHellmanImplementation {
             double seconds_key = (double) elapsedTime_key / 1000000000.0;
 
             try {
-                writer.write("Time setting key: " + (repetitions / seconds_key) + " key agreements/second" + "\n");
+                writer.write("Seconds:" + seconds_key + "\n" );
+                writer.write("Key agreement: " + (repetitions / seconds_key) + " key agreement/second" + "\n");
+                writer.write("Repetitions:" + repetitions + "\n" );
             } catch (IOException e) {
                 e.printStackTrace();
             }

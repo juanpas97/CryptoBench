@@ -98,6 +98,8 @@ public class ECDiffieHellman {
             try {
                 writer.write("Time setting key: " + (repetitions / seconds) + " times/second" + "\n");
                 writer.write("Repetitions setting key: " + repetitions + "\n");
+                writer.write("Seconds:" + seconds + "\n" );
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

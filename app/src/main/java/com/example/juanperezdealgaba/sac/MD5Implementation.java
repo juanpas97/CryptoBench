@@ -39,8 +39,9 @@ public class MD5Implementation {
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions decrypt: " + repetitions + "\n");
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
+                writer.write("Time to hash: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -77,8 +78,9 @@ public class MD5Implementation {
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions decrypt: " + repetitions + "\n");
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
+                writer.write("Time to hasht: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }

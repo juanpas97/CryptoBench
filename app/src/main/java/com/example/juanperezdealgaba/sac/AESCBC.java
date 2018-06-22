@@ -116,12 +116,17 @@ public class AESCBC {
         }
 
         enc = in.doFinal(plaintext);
+        repetitions += 1;
         long end = System.nanoTime();
         long elapsedTime = end - start;
         double seconds = (double) elapsedTime / 1000000000.0;
-
+        System.out.println("Finish enc");
         try {
+            writer.write("repetitions:" + repetitions + "\n" );
+            writer.write("Seconds:" + seconds + "\n" );
             writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,16 +139,19 @@ public class AESCBC {
         for (int i = 0; i < total_rep; i++) {
             int repetitions = 0;
             long start = System.nanoTime();
-            for (int j = 0; j < rep_aes - 1; i++) {
+            for (int j = 0; j < rep_aes - 1; j++) {
                 dec = out.update(enc);
                 repetitions += 1;
             }
+            repetitions += 1;
             dec = out.doFinal(enc);
             long end = System.nanoTime();
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -220,8 +228,9 @@ public class AESCBC {
                 seconds = (double) elapsedTime / 1000000000.0;
 
                 try {
+                    writer.write("repetitions:" + repetitions + "\n" );
+                    writer.write("Seconds:" + seconds + "\n" );
                     writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                    writer.write("Repetitions encrypt: " + repetitions + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -241,8 +250,9 @@ public class AESCBC {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions decrypt: " + repetitions + "\n");
 
             } catch (IOException e) {
                 e.printStackTrace();

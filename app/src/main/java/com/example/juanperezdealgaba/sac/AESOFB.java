@@ -53,7 +53,7 @@ public class AESOFB {
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
 
         ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-
+        byte[] cipherText;
         for (int i = 0; i < total_rep; i++){
             int repetitions = 0;
 
@@ -67,21 +67,24 @@ public class AESOFB {
                 while ((ch = cIn.read()) >= 0) {
                     bOut.write(ch);
                 }
-
+                repetitions += 1;
             }
-
+            repetitions +=1;
+            bOut.close();
             long end = System.nanoTime();
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        byte[] cipherText = bOut.toByteArray();
+        cipherText = bOut.toByteArray();
 
 
         // decryption pass
@@ -89,17 +92,20 @@ public class AESOFB {
         for (int i = 0; i < total_rep; i++) {
             int repetitions = 0;
             long start = System.nanoTime();
-            for (int j = 0; j < rep_aes - 1; i++) {
+            for (int j = 0; j < rep_aes; j++) {
                 bOut = new ByteArrayOutputStream();
                 CipherOutputStream cOut = new CipherOutputStream(bOut, cipher);
                 cOut.write(cipherText);
                 cOut.close();
+                repetitions += 1;
             }
             long end = System.nanoTime();
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -178,6 +184,8 @@ public class AESOFB {
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
                 writer.write("Repetitions encrypt: " + repetitions + "\n");
             } catch (IOException e) {
@@ -204,6 +212,8 @@ public class AESOFB {
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
             try {
+                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
                 writer.write("Repetitions decrypt: " + repetitions + "\n");
 

@@ -88,73 +88,67 @@ public class AESGCM {
         String input = string.generateRandomString(blocksize);
 
         byte[] plaintext = input.getBytes();
-
-        Key key;
+        Key key = null;
         Cipher in, out;
 
-        key = new SecretKeySpec(keyBytes, "AES");
+        in = Cipher.getInstance("AES/CBC/NoPadding", "SC");
+        out = Cipher.getInstance("AES/CBC/NoPadding", "SC");
 
-        in = Cipher.getInstance("AES/GCM/NoPadding", "SC");
-        out = Cipher.getInstance("AES/GCM/NoPadding", "SC");
 
-        in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
-        out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
-
-        /*System.out.println("Plaintext");
-        for(int i = 0; i < plaintext.length;i++){
-            System.out.println(Integer.toHexString(plaintext[i]));
-        }*/
         byte[] enc = new byte[0];
-        for (int i = 0; i < total_rep; i++){
+        for (int i = 0; i < total_rep; i++) {
+            key = new SecretKeySpec(keyBytes, "AES");
+            in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+            out.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
             int repetitions = 0;
 
             long start = System.nanoTime();
             for (int j = 0; j < rep_aes - 1; j++) {
-
-                enc = in.update(plaintext);
+                    enc = in.update(plaintext);
+                    repetitions += 1;
+                }
                 repetitions += 1;
-            }
+                enc = in.doFinal(plaintext);
 
-            enc = in.doFinal(plaintext);
-            long end = System.nanoTime();
-            long elapsedTime = end - start;
-            double seconds = (double) elapsedTime / 1000000000.0;
+                long end = System.nanoTime();
+                long elapsedTime = end - start;
+                double seconds = (double) elapsedTime / 1000000000.0;
 
-            try {
-                writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                try {
+                    writer.write("repetitions encrypt:" + repetitions + "\n");
+                    writer.write("Seconds:" + seconds + "\n");
+                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
         }
-        //System.out.println("Encrypted");
-        //for (int i = 0; i < enc.length; i++) {
-        //    System.out.println(Integer.toHexString(enc[i]));
-        //}
         byte[] dec;
         for (int i = 0; i < total_rep; i++) {
             int repetitions = 0;
             long start = System.nanoTime();
-            for (int j = 0; j < rep_aes - 1; i++) {
-                dec = out.update(enc);
-                repetitions += 1;
+
+            for (int j = 0; j < rep_aes - 1; j++) {
+                    dec = out.update(enc);
+                    repetitions += 1;
             }
+            repetitions += 1;
             dec = out.doFinal(enc);
-            long end = System.nanoTime();
-            long elapsedTime = end - start;
-            double seconds = (double) elapsedTime / 1000000000.0;
+                long end = System.nanoTime();
+                long elapsedTime = end - start;
+                double seconds = (double) elapsedTime / 1000000000.0;
 
-            try {
-                writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                try {
+                    writer.write("repetitions decrypt:" + repetitions + "\n");
+                    writer.write("Seconds:" + seconds + "\n");
+                    writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             System.out.println("Decrypted");
-            //for (int i = 0; i < dec.length; i++) {
-            //  System.out.println(Integer.toHexString(dec[i]));
-            //}
-
         }
-
 
     }
 
@@ -218,8 +212,9 @@ public class AESGCM {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions encrypt:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions encrypt: " + repetitions + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -239,8 +234,9 @@ public class AESGCM {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
+                writer.write("repetitions decrypt:" + repetitions + "\n" );
+                writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions decrypt: " + repetitions + "\n");
 
             } catch (IOException e) {
                 e.printStackTrace();
