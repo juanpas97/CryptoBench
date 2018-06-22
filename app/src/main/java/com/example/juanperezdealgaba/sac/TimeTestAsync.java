@@ -477,7 +477,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.RSATime(128,key_duration,sec_duration,title);
+                    test.RSATime(128,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -489,7 +489,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -500,7 +500,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                     mbedTLS test = new mbedTLS();
 
-                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title,2);
 
 
 
@@ -512,7 +512,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                     mbedTLS test = new mbedTLS();
 
-                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -522,7 +522,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********mbedTLS/MD5**************");
 
                     mbedTLS test = new mbedTLS();
-                    test.MD5Time(blocksize,sec_duration,title);
+                    test.MD5Time(blocksize,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -532,7 +532,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********mbedTLS/ECDH**************");
 
                     mbedTLS test = new mbedTLS();
-                    test.ECDHTime(key_duration, sec_duration,title);
+                    test.ECDHTime(key_duration, sec_duration,title,2);
 
                 System.out.println("***********************\n");
             }
@@ -542,7 +542,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     mbedTLS test = new mbedTLS();
-                    test.DHTime(key_duration,sec_duration,title);
+                    test.DHTime(key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");

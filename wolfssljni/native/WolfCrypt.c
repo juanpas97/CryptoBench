@@ -1239,11 +1239,6 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject in
         LOGD("Failure GenerateByte"); //generating block failed!
     }
 
-    /*int i = 0;
-    for (int i = 0; i < 32; ++i) {
-        LOGD("%x",data[i]);
-    }
-*/
 
     for (int i = 0; i < rep_total; ++i) {
 
@@ -1568,7 +1563,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
     for(int i = 0; i < rep_total; i++) {
         time_t start = time(NULL);
         time_t now = time(NULL);
-        int repetitions = 0;
+        repetitions = 0;
         gettimeofday(&st, NULL);
         while ((now - start) <= rep_aes) {
             ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
@@ -1583,7 +1578,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        result_agree = (repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -1713,10 +1708,10 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
     }
     gettimeofday(&et, NULL);
     double time_key = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions_key * blocksize) / time_key;
+    double result_agree = repetitions_key / time_key;
     fprintf(report, "Repetitions: %i \n", repetitions_key);
     fprintf(report, "Seconds: %f \n", time_key);
-    fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+    fprintf(report, "Time set key: %f keys set/second \n", result_agree);
 
 
     for(int i = 0; i < rep_total; i++){
@@ -1758,7 +1753,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
         double result_agree = (repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
-        fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
     }
     fprintf(report,"*****************************");
     fclose(report);

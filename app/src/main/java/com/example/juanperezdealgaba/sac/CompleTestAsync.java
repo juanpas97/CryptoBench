@@ -220,139 +220,69 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     String mbed = "***********mbedTLS**************" + "\n";
                     System.out.println(mbed);
                     writer.write(mbed);
-
+                    writer.close();
                     for (int blocksize = 128; blocksize <= 1024; ) {
                         String block = "*************BLOCKSIZE: " + blocksize + "******************" + "\n";
-                        writer.write(block);
                         String mbedCBC = "***********AES/CBC**************" + "\n";
                         System.out.println(mbedCBC);
-                        writer.write(mbedCBC);
 
                         mbedTLS test = new mbedTLS();
-                        int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
+                        test.AESCBC(blocksize, repetitions_aes,repetitions);
 
-                        int index_array = 0;
-                        for (int i = 0; i < timesAES.length / 2; i++) {
-
-                            System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
-
-
-                            System.out.println("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-
-                        writer.write(separate);
 
                         String mbedCTR = "***********AES/CTR**************" + "\n";
                         System.out.println(mbedCTR);
-                        writer.write(mbedCTR);
 
                         mbedTLS testCTR = new mbedTLS();
-                        int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
+                        testCTR.AESCTR(blocksize, repetitions_aes,repetitions);
 
-                        index_array = 0;
-                        for (int i = 0; i < timesAES.length / 2; i++) {
-
-                            System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
-
-
-                            System.out.println("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-
-                        writer.write(separate);
 
                         String mbedGCM = "***********AES/GCM**************" + "\n";
                         System.out.println(mbedGCM);
-                        writer.write(mbedGCM);
 
-                        index_array = 0;
-                        for (int i = 0; i < timesAES.length / 2; i++) {
+
                             mbedTLS testGCM = new mbedTLS();
-                            int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
+                            testGCM.AESGCM(blocksize, repetitions_aes,repetitions);
 
-                            System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
-
-
-                            System.out.println("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-                        writer.write(separate);
 
                         String mbedmd5 = "***********MD5**************" + "\n";
                         System.out.println(mbedmd5);
-                        writer.write(mbedmd5);
 
                         mbedTLS testmd5 = new mbedTLS();
-                        int[] timesmd5 = testmd5.MD5(blocksize, repetitions_hash);
-
-                        for (int index = 0; index < repetitions_hash; index++) {
-
-                            System.out.println("Time to generate hash:" + timesmd5[index] + "ms\n");
-                            writer.write("Time to generate hash: " + timesmd5[index] + "ms\n");
-                        }
-
-                        writer.write(separate);
+                        testmd5.MD5(blocksize, repetitions_hash,repetitions);
 
                         blocksize = blocksize * 2;
 
                     }
 
+
+
                     String mbedRSA = "***********RSA**************" + "\n";
                     System.out.println(mbedRSA);
-                    writer.write(mbedRSA);
-
 
                     mbedTLS testRSAmbed = new mbedTLS();
-                    int[] timesRSA = testRSAmbed.RSA(128, repetitions_rsa);
+                    testRSAmbed.RSA(128, repetitions_rsa,repetitions);
 
-                    int index_array = 0;
-                    for (int i = 0; i < timesRSA.length / 2; i++) {
-
-                        System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
-                        writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
-
-
-                        System.out.println("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
-                        writer.write("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
-
-                        index_array += 2;
-                    }
-
-                    writer.write(separate);
 
                     String mbeddh = "***********DH**************" + "\n";
                     System.out.println(mbeddh);
-                    writer.write(mbeddh);
+
 
                     mbedTLS testDHmbed = new mbedTLS();
-                    //int[] timesDH = testDHmbed.DH(repetitions_agree);
+                    testDHmbed.DH(repetitions_agree,repetitions);
 
-                    writer.write(separate);
 
                     String mbedecdh = "***********ECDH**************" + "\n";
                     System.out.println(mbedecdh);
-                    writer.write(mbedecdh);
 
                     mbedTLS testECDHmbed = new mbedTLS();
-                    int[] timesECDH = testECDHmbed.ECDH(repetitions_agree);
+                    testECDHmbed.ECDH(repetitions_agree,repetitions);
 
-                    for (int i = 0; i < timesECDH.length; i++) {
-                        System.out.println("Time to key agreement:" + timesECDH[i] + "ms\n");
-                        writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
-                    }
-                    writer.write(separate_lib);
 
                     String wc = "***********WolfCrypt**************" + "\n";
                     System.out.println(wc);
-                    writer.write(wc);
-                    writer.close();
+
+
                     for (int blocksize = 128; blocksize <= 1024; ) {
 
                         String block = "*************BLOCKSIZE: " + blocksize + "******************" + "\n";
@@ -400,7 +330,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
 
                     WolfCrypt testDHwc = new WolfCrypt();
-                    testDHwc.DH(repetitions_agree,2);
+                    testDHwc.DH(repetitions_agree,repetitions);
 
                     String wcecdh = "***********ECDH**************" + "\n";
                     System.out.println(wcecdh);
@@ -447,7 +377,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                         OpenSSL test = new OpenSSL();
                         int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
 
-                        index_array = 0;
+                        int index_array = 0;
                         for (int i = 0; i < timesAES.length / 2; i++) {
                             System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
                             writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
@@ -543,7 +473,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(openecdh);
 
                     OpenSSL testECDHopen = new OpenSSL();
-                    timesECDH = testECDHopen.ECDH(repetitions_agree);
+                    int [] timesECDH = testECDHopen.ECDH(repetitions_agree);
 
                     for (int i = 0; i < repetitions_agree;i++) {
                         System.out.println("Time to key agreement:" + timesECDH[i] + "ms\n");
@@ -557,9 +487,9 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(openRSA);
 
                     OpenSSL testRSA = new OpenSSL();
-                    timesRSA = testRSA.RSA(128, repetitions_rsa);
+                    int[] timesRSA = testRSA.RSA(128, repetitions_rsa);
 
-                    index_array = 0;
+                    int index_array = 0;
                     for (int i = 0; i < repetitions_rsa; i++) {
                         System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
                         writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
