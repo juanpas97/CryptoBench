@@ -116,6 +116,7 @@ public class AESCTR {
                                 repetitions += 1;
 
                         }
+
                         repetitions += 1;
 
                         long end = System.nanoTime();

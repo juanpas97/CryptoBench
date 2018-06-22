@@ -294,8 +294,9 @@ public class DiffieHellman {
             seconds = (double) elapsedTime / 1000000000.0;
             try {
                 writer.write("Seconds:" + seconds + "\n" );
-                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
                 writer.write("Repetitions: " + repetitions + "\n");
+                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -88,7 +88,6 @@ public class ECDiffieHellmanImplementation {
         Security.addProvider(new BouncyCastleProvider());
         System.out.println("***********Bouncy Castle-ECDH**************");
         writer.write("\n**********Bouncy Castle-ECDH********\n");
-        results.append("*******Bouncy Castle-ECDH******\n");
         int algo_repet = 0;
         while (System.currentTimeMillis() < result_time) {
             long startKeyAgreement = System.nanoTime();
@@ -96,17 +95,13 @@ public class ECDiffieHellmanImplementation {
             long endKeyAgreement = System.nanoTime();
             long timeKeyAgreement = (endKeyAgreement - startKeyAgreement);
             writer.write("Time to generate key agreement :" + timeKeyAgreement + "\n");
-            results.append("Time to generate key agreement :" + timeKeyAgreement + "\n");
             algo_repet += 1;
         }
 
         System.out.println("Times executed:" + algo_repet + "\n");
         writer.write("Times executed:" + algo_repet + "\n");
-        results.append("Times executed:" + algo_repet + "\n");
-
         System.out.println("***********************\n");
         writer.write("********************************\n");
-        results.append("**********************************\n");
 
     }
 

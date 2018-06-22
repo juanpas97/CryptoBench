@@ -146,7 +146,6 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 throw new RuntimeException(i);
             }
         }
-
                 Spinner spinner_algo = findViewById(R.id.spinner_algo);
 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

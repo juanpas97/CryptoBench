@@ -146,7 +146,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             final String model_cpu = System.getProperty("os.arch");
             Date currentTime = Calendar.getInstance().getTime();
 
-            writer.write("SpecialTest Results\n");
+            writer.write("Special Test Results\n");
             writer.write("-----------------------------------\n");
             writer.write("CPU Model: " + model_cpu + "\n");
             writer.write("Android Version: " + myVersion + "\n");
@@ -552,7 +552,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/RSA**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.RSATime(128,key_duration,sec_duration,title);
+                    test.RSATime(128,key_duration,sec_duration,title,2);
 
                 System.out.println("Times executed:" + algo_repet + "\n");
 
@@ -565,7 +565,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/AES-CBC**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title,2);
 
                 System.out.println("********************************");
             }
@@ -574,7 +574,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/AES-GCM**************");
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title,2);
 
                 System.out.println("********************************");
             }
@@ -584,7 +584,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     WolfCrypt test = new WolfCrypt();
-                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("********************************");
@@ -595,7 +595,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     WolfCrypt test = new WolfCrypt();
-                    test.MD5Time(blocksize,sec_duration,title);
+                    test.MD5Time(blocksize,sec_duration,title,2);
 
 
                 System.out.println("********************************");
@@ -605,19 +605,19 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
                 System.out.println("************WolfCrypt/DH**************");
                     WolfCrypt test = new WolfCrypt();
-                    test.DHTime(key_duration,sec_duration,title);
+                    test.DHTime(key_duration,sec_duration,title,2);
 
                 System.out.println("********************************");
             }
 
             if (library.equals("WolfCrypt") && algo.equals("ECDH")) {
                 System.out.println("************WolfCrypt/ECDH**************");
-
+                writer.write("\n");
+                writer.write("\n");
                     WolfCrypt test = new WolfCrypt();
-                    test.ECDHTime(sec_duration,key_duration,title);
+                    test.ECDHTime(sec_duration,key_duration,title,2);
 
 
-                System.out.println("Times executed:" + algo_repet + "\n");
                 System.out.println("********************************");
             }
 

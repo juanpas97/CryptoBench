@@ -83,6 +83,8 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
         try {
 
+
+            int[] timesDH;
             String path = storage.getExternalStorageDirectory();
 
             final String newDir = path + File.separator + "CryptoBench";
@@ -93,7 +95,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
             if (report.exists())
                 report.delete();
 
-            final FileWriter writer = new FileWriter(report);
+            FileWriter writer = new FileWriter(report);
 
 
             String myVersion = android.os.Build.VERSION.RELEASE;
@@ -211,7 +213,7 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(BCECDH);
 
                     ECDiffieHellmanImplementation testECDH = new ECDiffieHellmanImplementation();
-                    testECDH.startDiffieHellman(writer, results, repetitions_agree);
+                    testECDH.startDiffieHellman(writer, results, repetitions_agree,repetitions);
 
                     writer.write(separate_lib);
 
@@ -330,12 +332,8 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     writer.write(mbeddh);
 
                     mbedTLS testDHmbed = new mbedTLS();
-                    int[] timesDH = testDHmbed.DH(repetitions_agree);
+                    //int[] timesDH = testDHmbed.DH(repetitions_agree);
 
-                    for (int i = 0; i < timesDH.length; i++) {
-                        System.out.println("Time to key agreement:" + timesDH[1] + "ms\n");
-                        writer.write("Time to key agreement: " + timesDH[1] + "ms\n");
-                    }
                     writer.write(separate);
 
                     String mbedecdh = "***********ECDH**************" + "\n";
@@ -354,147 +352,70 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
                     String wc = "***********WolfCrypt**************" + "\n";
                     System.out.println(wc);
                     writer.write(wc);
-
+                    writer.close();
                     for (int blocksize = 128; blocksize <= 1024; ) {
 
                         String block = "*************BLOCKSIZE: " + blocksize + "******************" + "\n";
-                        writer.write(block);
 
 
                         String wcCBC = "***********AES/CBC**************" + "\n";
                         System.out.println(wcCBC);
-                        writer.write(wcCBC);
 
                         WolfCrypt test = new WolfCrypt();
-                        int[] timesAES = test.AESCBC(blocksize, repetitions_aes);
-
-                        index_array = 0;
-                        for (int i = 0; i < timesAES.length / 2; i++) {
-                            System.out.println("Time to encrypt:" + timesAES[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAES[index_array] + "ms\n");
-
-
-                            System.out.println("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAES[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-
-                        writer.write(separate);
-
+                        test.AESCBC(blocksize, repetitions_aes,repetitions);
 
                         String mbedCTR = "***********AES/CTR**************" + "\n";
                         System.out.println(mbedCTR);
-                        writer.write(mbedCTR);
+
 
                         WolfCrypt testCTR = new WolfCrypt();
-                        int[] timesAESCTR = testCTR.AESCTR(blocksize, repetitions_aes);
-
-                        index_array = 0;
-                        for (int i = 0; i < timesAESCTR.length / 2; i++) {
-
-                            System.out.println("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAESCTR[index_array] + "ms\n");
+                        testCTR.AESCTR(blocksize, repetitions_aes,repetitions);
 
 
-                            System.out.println("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAESCTR[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-                        writer.write(separate);
+
 
                         String mbedGCM = "***********AES/GCM**************" + "\n";
                         System.out.println(mbedGCM);
-                        writer.write(mbedGCM);
+
 
 
                         WolfCrypt testGCM = new WolfCrypt();
 
-                        int[] timesAESGCM = testGCM.AESGCM(blocksize, repetitions_aes);
+                        testGCM.AESGCM(blocksize, repetitions_aes,repetitions);
 
-                        index_array = 0;
-                        for (int i = 0; i < timesAESGCM.length / 2; i++) {
-                            System.out.println("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
-                            writer.write("Time to encrypt:" + timesAESGCM[index_array] + "ms\n");
-
-
-                            System.out.println("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
-                            writer.write("Time to decrypt:" + timesAESGCM[index_array + 1] + "ms\n");
-                            index_array += 2;
-                        }
-
-                        writer.write(separate);
 
 
                         String wcmd5 = "***********MD5**************" + "\n";
                         System.out.println(wcmd5);
-                        writer.write(wcmd5);
 
                         WolfCrypt testmd5 = new WolfCrypt();
-                        int[] timesmd5 = testmd5.MD5(64, repetitions_hash);
-
-                        for (int i = 0; i < timesmd5.length; i++) {
-                            System.out.println("Time to generate hash:" + timesmd5[i] + "ms\n");
-                            writer.write("Time to generate hash: " + timesmd5[i] + "ms\n");
-                        }
-
-                        writer.write(separate);
-
+                        testmd5.MD5(blocksize, repetitions_hash,repetitions);
 
                         blocksize = blocksize * 2;
                     }
 
+
                     String wcdh = "***********DH**************" + "\n";
                     System.out.println(wcdh);
-                    writer.write(wcdh);
+
 
                     WolfCrypt testDHwc = new WolfCrypt();
-                    timesDH = testDHwc.DH(repetitions_agree);
-
-                    for (int i = 0; i < timesDH.length; i++) {
-
-                        System.out.println("Time to key agreement: " + timesDH[i] + "ms\n");
-                        writer.write("Time to key agreement: " + timesDH[i] + "ms\n");
-
-                    }
-                    writer.write(separate);
+                    testDHwc.DH(repetitions_agree,2);
 
                     String wcecdh = "***********ECDH**************" + "\n";
                     System.out.println(wcecdh);
-                    writer.write(wcecdh);
 
                     WolfCrypt testECDHwc = new WolfCrypt();
-                    timesECDH = testECDHwc.ECDH(repetitions_agree);
+                    testECDHwc.ECDH(repetitions_agree,repetitions);
 
-                    for (int i = 0; i < timesECDH.length; i++) {
-
-                        System.out.println("Time to key agreement: " + timesECDH[i] + "ms\n");
-                        writer.write("Time to key agreement: " + timesECDH[i] + "ms\n");
-
-                    }
-                    writer.write(separate);
-
-
-                    writer.write(separate);
 
                     String wcRSA = "***********RSA**************" + "\n";
                     System.out.println(wcRSA);
-                    writer.write(wcRSA);
 
                     WolfCrypt testRSAwc = new WolfCrypt();
-                    int[] timesRSAwc = testRSAwc.RSA(128, repetitions_rsa);
+                    testRSAwc.RSA(128, repetitions_rsa,repetitions);
 
-                    index_array = 0;
-                    for (int i = 0; i < timesRSAwc.length / 2; i++) {
-                        System.out.println("Time to encrypt:" + timesRSA[index_array] + "ms\n");
-                        writer.write("Time to encrypt:" + timesRSA[index_array] + "ms\n");
-
-
-                        System.out.println("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
-                        writer.write("Time to decrypt:" + timesRSA[index_array + 1] + "ms\n");
-                        index_array += 2;
-                    }
-
-                    writer.write(separate_lib);
+                    writer = new FileWriter("/sdcard/CryptoBench/Report.txt", true);
 
 
                     String openssl = "***********OpenSSL**************" + "\n";
