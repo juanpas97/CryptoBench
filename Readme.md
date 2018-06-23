@@ -47,7 +47,7 @@ Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL
 The adb commands can be chained with the "wait" to automatize all the tests.
 
 ```
- am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo AES-CBC -e min 3 -e  blocksize 128 -e key 1 && wait 8m && am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib WolfCrypt -e algo RSA -e min 3 -e  blocksize 128 -e key 1
+am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib BoringSSL -e algo DH -e min 1 -e  blocksize 128 -e key 1 -e rep 2
  ```
 
 As we are starting a new activity for every test, you have to take into account the time the test

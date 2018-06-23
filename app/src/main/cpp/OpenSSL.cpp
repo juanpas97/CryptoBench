@@ -90,10 +90,6 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa,jint rep_total) {
 
-    jintArray result;
-    int array_len = rep_rsa * 2;
-    result = env->NewIntArray(array_len);
-    jint fill[array_len];
 
     struct timeval st,et;
 
@@ -1636,15 +1632,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
 
     fprintf(report,"*****************************");
     fclose(report);
-
-    /* *//* Printing and Verifying *//*
-    print_data("\n Original ",aes_input, sizeof(aes_input)); // you can not print data as a string, because after Encryption its not ASCII
-
-    print_data("\n Encrypted",enc_out, sizeof(enc_out));
-
-    print_data("\n Decrypted",dec_out, sizeof(dec_out));*/
-
-
 
     return;
 

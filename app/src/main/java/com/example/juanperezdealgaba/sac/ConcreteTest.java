@@ -50,11 +50,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
             final EditText key_value = findViewById(R.id.key_text);
 
+            final EditText rep_value = findViewById(R.id.rep_text);
+
             results_special_test.setMovementMethod(new ScrollingMovementMethod());
 
         final int[] repetitions = new int[1];
         final int[] blocksize = new int[1];
         final int[] key_time = new int[1];
+        final int[] rep_total = new int[1];
         final Global global = new Global();
 
         final Storage storage = new Storage(getApplicationContext());
@@ -112,6 +115,13 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 key_rep = 1;
             }
 
+            if ( extras.containsKey ( "rep" ) ) {
+                String rep = extras.getString ( "rep" );
+                rep_total[0] = Integer.parseInt(rep);
+            } else {
+                rep_total[0] = 1;
+            }
+
             System.out.println("Shell function");
 
             RandomStringGenerator rand = new RandomStringGenerator();
@@ -138,7 +148,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
 
                 ConcreteTest context = ConcreteTest.this;
-                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,3);
+                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,rep_total[0]);
 
                 TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                 test.execute(TimeParamsTest);
@@ -267,9 +277,16 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                             }else{
                                 key_time[0] = Integer.parseInt(key_value.getText().toString());
                             }
+
+                            if (rep_value.getText().toString().equals("")) {
+                                rep_total[0] = 1;
+                            }else{
+                                rep_total[0] = Integer.parseInt(rep_value.getText().toString());
+                            }
+
                             ConcreteTest context = ConcreteTest.this;
                             if (library != null && algo != null && key_time[0] != 0 && blocksize[0] != 0 && repetitions[0] != 0) {
-                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title,2);
+                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title, rep_total[0]);
 
                                     TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                                     test.execute(TimeParamsTest);
