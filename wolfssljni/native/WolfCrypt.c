@@ -190,22 +190,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_DH(JNIEnv *env, jobject instanc
     (void) bytes;
 
 
-    /*int retrng = wc_InitRng(&rng);
-    if (retrng != 0) {
-        LOGD("Error at RNG"); //init of rng failed!
-        return error;
-    }
 
-    ret = wc_RNG_GenerateBlock(&rng, g, sizeof(g));
-    if (ret != 0) {
-        LOGD("Error generating block for key"); //generating block failed!
-        return error;
-    }
-
-    int sizeofg = sizeof(g);
-
-    LOGD("The size of g is + [%i]",sizeofg);
-*/
     ret = wc_InitDhKey_ex(&key, HEAP_HINT, devId);
     if (ret != 0) {
         LOGD("Error at InitDHKey 1");
@@ -426,7 +411,7 @@ JNIEXPORT void JNICALL
 Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTR(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
 
     FILE *report = create_file();
-    int print_Res = fprintf(report, "************WolfCrypt/AESGCM**************\n");
+    int print_Res = fprintf(report, "************WolfCrypt/AESCTR**************\n");
     if(print_Res < 0){
         LOGD("Error printing;");
     }
@@ -1565,7 +1550,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
         time_t now = time(NULL);
         repetitions = 0;
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_aes) {
+        while ((now - start) < rep_aes) {
             ret = wc_AesCbcEncrypt(&enc, cipher, msg, (int) sizeof(msg));
             if (ret != 0) {
                 LOGD("Error encrypting");
@@ -1591,7 +1576,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCBCTime(JNIEnv *env, jobject
         time_t start = time(NULL);
         time_t now = time(NULL);
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_aes) {
+        while ((now - start) < rep_aes) {
             ret = wc_AesCbcDecrypt(&dec, plain, cipher, (int) sizeof(cipher));
             if (ret != 0) {
                 LOGD("Error Decrypting");
@@ -1729,7 +1714,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESCTRTime(JNIEnv *env, jobject
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions * blocksize) / time;
+     result_agree = (repetitions * blocksize) / time;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -1842,6 +1827,7 @@ Java_com_example_juanperezdealgaba_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject
             0xab, 0xf7,
     };
     FILE* report = create_file_text(title);
+    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     fprintf(report,"************WolfCrypt/AESGCM**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);

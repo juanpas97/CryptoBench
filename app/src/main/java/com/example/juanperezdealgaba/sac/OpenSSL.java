@@ -7,37 +7,29 @@ public class OpenSSL {
     }
 
 
-    public native int[] RSA(int blocksize,int rep_rsa);
+    public native void RSA(int blocksize,int rep_rsa,int rep_total);
+    public native void RSATime(int blocksize,int rep_key,int rep_rsa,String title,int rep_total);
 
-    public native void RSATime(int blocksize,int rep_key,int rep_rsa,String title);
+    public native void AESCBC(int blocksize,int rep_aes,int rep_total);
+    public native void AESCBCTime(int blocksize,int rep_key,int rep_aes,String title,int rep_total);
 
-    public native int[] AESCBC(int blocksize,int rep_aes);
+    public native void DH(int rep_agree,int rep_total);
+    public native void DHTime(int rep_key ,int rep_agree,String title,int rep_total);
 
-    public native void AESCBCTime(int blocksize,int rep_key,int rep_aes,String title);
+    public native void ECDH(int rep_Agree,int rep_total);
+    public native void ECDHTime(int rep_key, int rep_Agree,String title,int rep_total);
 
-    public native int[] DH(int rep_agree);
+    public native void MD5(int blocksize,int rep_hash,int rep_total);
+    public native void MD5Time(int blocksize,int rep_hash,String title,int rep_total);
 
-    public native void DHTime(int rep_key ,int rep_agree,String title);
+    public native void AESCTR(int blocksize,int rep_aes,int rep_total);
+    public native void AESCTRTime(int blocksize,int rep_key,int rep_aes,String title,int rep_total);
 
-    public native int[] ECDH(int rep_Agree);
+    public native void AESGCM(int blocksize,int rep_aes,int rep_total);
+    public native void AESGCMTime(int blocksize,int rep_key,int rep_aes,String title,int rep_total);
 
-    public native void ECDHTime(int rep_key, int rep_Agree,String title);
-
-    public native int[] MD5(int blocksize,int rep_hash);
-
-    public native void MD5Time(int blocksize,int rep_hash,String title);
-
-    public native int[] AESCTR(int blocksize,int rep_aes);
-
-    public native void AESCTRTime(int blocksize,int rep_key,int rep_aes,String title);
-
-    public native int[] AESGCM(int blocksize,int rep_aes);
-
-    public native void AESGCMTime(int blocksize,int rep_key,int rep_aes,String title);
-
-    public native int[] AESOFB(int blocksize,int rep_aes);
-
-    public native void AESOFBTime(int blocksize,int rep_key,int rep_aes,String title);
+    public native void AESOFB(int blocksize,int rep_aes,int rep_total);
+    public native void AESOFBTime(int blocksize,int rep_key,int rep_aes,String title,int rep_total);
 
 }
 

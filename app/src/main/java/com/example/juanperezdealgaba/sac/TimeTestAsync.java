@@ -389,7 +389,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                 OpenSSL test = new OpenSSL();
-                test.RSATime(128,key_duration,sec_duration,title);
+                test.RSATime(128,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -400,7 +400,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESCBCTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCBCTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -411,7 +411,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESCTRTime(blocksize,key_duration,sec_duration,title);
+                    test.AESCTRTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -421,7 +421,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/AES-GCM**************");
 
                     OpenSSL test = new OpenSSL();
-                    test.AESGCMTime(blocksize,key_duration,sec_duration,title);
+                    test.AESGCMTime(blocksize,key_duration,sec_duration,title,2);
 
                 System.out.println("***********************\n");
             }
@@ -431,7 +431,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.AESOFBTime(blocksize,key_duration,sec_duration,title);
+                    test.AESOFBTime(blocksize,key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -442,7 +442,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.MD5Time(blocksize,sec_duration,title);
+                    test.MD5Time(blocksize,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");
@@ -453,7 +453,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
                     OpenSSL test = new OpenSSL();
-                    test.DHTime(key_duration,sec_duration,title);
+                    test.DHTime(key_duration,sec_duration,title,2);
 
 
 
@@ -466,7 +466,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/DH**************");
 
                     OpenSSL test = new OpenSSL();
-                    test.ECDHTime(key_duration,sec_duration,title);
+                    test.ECDHTime(key_duration,sec_duration,title,2);
 
 
                 System.out.println("***********************\n");

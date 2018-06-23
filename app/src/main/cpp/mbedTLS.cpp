@@ -958,7 +958,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
         result_agree = (repetitions_rsa * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions_rsa);
         fprintf(report, "Seconds: %f \n", time);
-        fprintf(report, "Time to decrypt: %f agreements/seconds \n", result_agree);
+        fprintf(report, "Time to decrypt: %f bytes/second \n", result_agree);
     }
     LOGD("We are good");
     fprintf(report,"********************");
