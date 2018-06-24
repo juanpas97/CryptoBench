@@ -84,16 +84,7 @@ RSA * createRSA(unsigned char * key,int value){
     return rsa;
 }
 
-
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa,jint rep_total) {
-
-
-    struct timeval st,et;
-
-    char publicKey[]="-----BEGIN PUBLIC KEY-----\n"\
+char publicKey[]="-----BEGIN PUBLIC KEY-----\n"\
 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy8Dbv8prpJ/0kKhlGeJY\n"\
 "ozo2t60EG8L0561g13R29LvMR5hyvGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+\n"\
 "vw1HocOAZtWK0z3r26uA8kQYOKX9Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQAp\n"\
@@ -103,7 +94,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 "wQIDAQAB\n"\
 "-----END PUBLIC KEY-----\n";
 
-    char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
+char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
 "MIIEowIBAAKCAQEAy8Dbv8prpJ/0kKhlGeJYozo2t60EG8L0561g13R29LvMR5hy\n"\
 "vGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+vw1HocOAZtWK0z3r26uA8kQYOKX9\n"\
 "Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQApfc9jB9nTzphOgM4JiEYvlV8FLhg9\n"\
@@ -130,6 +121,30 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
 "w6z2vEfRVQDq4Hm4vBzjdi3QfYLNkTiTqLcvgWZ+eX44ogXtdTDO7c+GeMKWz4XX\n"\
 "uJSUVL5+CVjKLjZEJ6Qc2WZLl94xSwL71E41H4YciVnSCQxVc4Jw\n"\
 "-----END RSA PRIVATE KEY-----\n";
+
+unsigned char aes_key[16] = {
+        0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
+        0x15, 0x88,
+        0x09, 0xcf, 0x4f, 0x3c
+};
+
+unsigned char iv[16] = {
+        0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
+        0xab, 0xf7,
+
+};
+
+
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa,jint rep_total) {
+
+
+    struct timeval st,et;
+
+
 
     char plainText[blocksize];
 
@@ -243,17 +258,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
     jint fill[array_len];
 
     struct timeval st, et;
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
 
-    unsigned char iv[16] = {
-            0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
-            0xab, 0xf7,
-
-    };
 
     unsigned char iv_to_use[16];
 
@@ -495,17 +500,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
     int plaintext_len;
 
     struct timeval st, et;
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
 
-    unsigned char iv[16] = {
-            0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
-            0xab, 0xf7,
-
-    };
 
     unsigned char iv_to_use[16];
     if (!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error creating CTX");
@@ -613,16 +608,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
 
     EVP_CIPHER_CTX *ctx;
 
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
-
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
 
     unsigned char plaintext[blocksize];
     RAND_bytes(plaintext, sizeof(plaintext));
@@ -755,16 +740,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
     EVP_CIPHER_CTX *ctx;
 
 
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
 
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
 
     unsigned char plaintext[blocksize];
     RAND_bytes(plaintext, sizeof(plaintext));
@@ -983,44 +959,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
 
     unsigned char  encrypted[4098]={};
     unsigned char decrypted[4098]={};
-
-    char publicKey[]="-----BEGIN PUBLIC KEY-----\n"\
-"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy8Dbv8prpJ/0kKhlGeJY\n"\
-"ozo2t60EG8L0561g13R29LvMR5hyvGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+\n"\
-"vw1HocOAZtWK0z3r26uA8kQYOKX9Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQAp\n"\
-"fc9jB9nTzphOgM4JiEYvlV8FLhg9yZovMYd6Wwf3aoXK891VQxTr/kQYoq1Yp+68\n"\
-"i6T4nNq7NWC+UNVjQHxNQMQMzU6lWCX8zyg3yH88OAQkUXIXKfQ+NkvYQ1cxaMoV\n"\
-"PpY72+eVthKzpMeyHkBn7ciumk5qgLTEJAfWZpe4f4eFZj/Rc8Y8Jj2IS5kVPjUy\n"\
-"wQIDAQAB\n"\
-"-----END PUBLIC KEY-----\n";
-
-    char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
-"MIIEowIBAAKCAQEAy8Dbv8prpJ/0kKhlGeJYozo2t60EG8L0561g13R29LvMR5hy\n"\
-"vGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+vw1HocOAZtWK0z3r26uA8kQYOKX9\n"\
-"Qt/DbCdvsF9wF8gRK0ptx9M6R13NvBxvVQApfc9jB9nTzphOgM4JiEYvlV8FLhg9\n"\
-"yZovMYd6Wwf3aoXK891VQxTr/kQYoq1Yp+68i6T4nNq7NWC+UNVjQHxNQMQMzU6l\n"\
-"WCX8zyg3yH88OAQkUXIXKfQ+NkvYQ1cxaMoVPpY72+eVthKzpMeyHkBn7ciumk5q\n"\
-"gLTEJAfWZpe4f4eFZj/Rc8Y8Jj2IS5kVPjUywQIDAQABAoIBADhg1u1Mv1hAAlX8\n"\
-"omz1Gn2f4AAW2aos2cM5UDCNw1SYmj+9SRIkaxjRsE/C4o9sw1oxrg1/z6kajV0e\n"\
-"N/t008FdlVKHXAIYWF93JMoVvIpMmT8jft6AN/y3NMpivgt2inmmEJZYNioFJKZG\n"\
-"X+/vKYvsVISZm2fw8NfnKvAQK55yu+GRWBZGOeS9K+LbYvOwcrjKhHz66m4bedKd\n"\
-"gVAix6NE5iwmjNXktSQlJMCjbtdNXg/xo1/G4kG2p/MO1HLcKfe1N5FgBiXj3Qjl\n"\
-"vgvjJZkh1as2KTgaPOBqZaP03738VnYg23ISyvfT/teArVGtxrmFP7939EvJFKpF\n"\
-"1wTxuDkCgYEA7t0DR37zt+dEJy+5vm7zSmN97VenwQJFWMiulkHGa0yU3lLasxxu\n"\
-"m0oUtndIjenIvSx6t3Y+agK2F3EPbb0AZ5wZ1p1IXs4vktgeQwSSBdqcM8LZFDvZ\n"\
-"uPboQnJoRdIkd62XnP5ekIEIBAfOp8v2wFpSfE7nNH2u4CpAXNSF9HsCgYEA2l8D\n"\
-"JrDE5m9Kkn+J4l+AdGfeBL1igPF3DnuPoV67BpgiaAgI4h25UJzXiDKKoa706S0D\n"\
-"4XB74zOLX11MaGPMIdhlG+SgeQfNoC5lE4ZWXNyESJH1SVgRGT9nBC2vtL6bxCVV\n"\
-"WBkTeC5D6c/QXcai6yw6OYyNNdp0uznKURe1xvMCgYBVYYcEjWqMuAvyferFGV+5\n"\
-"nWqr5gM+yJMFM2bEqupD/HHSLoeiMm2O8KIKvwSeRYzNohKTdZ7FwgZYxr8fGMoG\n"\
-"PxQ1VK9DxCvZL4tRpVaU5Rmknud9hg9DQG6xIbgIDR+f79sb8QjYWmcFGc1SyWOA\n"\
-"SkjlykZ2yt4xnqi3BfiD9QKBgGqLgRYXmXp1QoVIBRaWUi55nzHg1XbkWZqPXvz1\n"\
-"I3uMLv1jLjJlHk3euKqTPmC05HoApKwSHeA0/gOBmg404xyAYJTDcCidTg6hlF96\n"\
-"ZBja3xApZuxqM62F6dV4FQqzFX0WWhWp5n301N33r0qR6FumMKJzmVJ1TA8tmzEF\n"\
-"yINRAoGBAJqioYs8rK6eXzA8ywYLjqTLu/yQSLBn/4ta36K8DyCoLNlNxSuox+A5\n"\
-"w6z2vEfRVQDq4Hm4vBzjdi3QfYLNkTiTqLcvgWZ+eX44ogXtdTDO7c+GeMKWz4XX\n"\
-"uJSUVL5+CVjKLjZEJ6Qc2WZLl94xSwL71E41H4YciVnSCQxVc4Jw\n"\
-"-----END RSA PRIVATE KEY-----\n";
 
 
     RSA *rsa= NULL;
@@ -1381,16 +1319,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBCTime(JNIEnv *env, jobject i
     fprintf(report,"************OpenSSL/AESCBC**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
     struct timeval st,et;
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
 
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
 
     unsigned char iv_to_use[16];
 
@@ -1506,16 +1435,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
     int plaintext_len;
 
     struct timeval st,et;
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
-
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
 
     unsigned char iv_to_use[16];
 
@@ -1651,17 +1570,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
     EVP_CIPHER_CTX *ctx;
-
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
-
-    unsigned char iv[16] = {
-            0x09, 0xcf,0x15, 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,0xae,0x16, 0x28, 0xd2, 0xa6, 0xab, 0xf7,
-
-    };
 
     unsigned char plaintext[blocksize];
     RAND_bytes(plaintext, sizeof(plaintext));
@@ -1825,19 +1733,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject i
     int repetitions = 0;
 
     EVP_CIPHER_CTX *ctx = nullptr;
-
-
-    unsigned char aes_key[16] = {
-            0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7,
-            0x15, 0x88,
-            0x09, 0xcf, 0x4f, 0x3c
-    };
-
-    unsigned char iv[16] = {
-            0x09, 0xcf, 0x15, 0x88, 0x4f, 0x3c, 0x2b, 0x7e, 0x15, 0xae, 0x16, 0x28, 0xd2, 0xa6,
-            0xab, 0xf7,
-
-    };
 
     EVP_CIPHER_CTX *ctx_dec;
     int len_dec;

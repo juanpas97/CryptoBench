@@ -421,17 +421,14 @@ class CompleteTestAsync extends AsyncTask<CompleteTestParams, Void, TextView> {
 
                     String boringssl = "***********BoringSSL**************" + "\n";
                     System.out.println(boringssl);
-                    writer.write(boringssl);
 
 
                     for (int blocksize = 128; blocksize <= 1024; ) {
 
                         String block = "*************BLOCKSIZE: " + blocksize + "******************" + "\n";
-                        writer.write(block);
 
                         String wcmd5 = "***********MD5**************" + "\n";
                         System.out.println(wcmd5);
-                        writer.write(wcmd5);
 
                         BoringSSL testmd5 = new BoringSSL();
                         testmd5.MD5(blocksize,repetitions_hash,repetitions);
