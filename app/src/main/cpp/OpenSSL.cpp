@@ -30,6 +30,24 @@
 
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG ,__VA_ARGS__)
 
+bool time_var;
+
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_juanperezdealgaba_sac_OpenSSL_setTimer(JNIEnv *env, jobject instance) {
+
+    LOGD("Before TIME_VAR FALSE");
+    time_var = false;
+
+    LOGD("TIME_VAR FALSE");
+
+    return 1;
+
+}
+
+
 FILE *create_file()
 {
     FILE *report = NULL;
@@ -200,7 +218,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f bytes/second \n", result_agree);
@@ -226,7 +244,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSA(JNIEnv *env, jobject instance
     }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f bytes/second \n", result_agree);
@@ -293,7 +311,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -311,7 +329,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBC(JNIEnv *env, jobject insta
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -466,7 +484,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5(JNIEnv *env, jobject instance
         repetitions += 1;
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time hashing: %f bytes/second \n", result_agree);
@@ -551,7 +569,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
         repetitions +=1;
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -580,7 +598,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTR(JNIEnv *env, jobject insta
         repetitions += 1;
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -714,7 +732,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCM(JNIEnv *env, jobject insta
             repetitions += 1;
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        double result_agree = (repetitions * blocksize) / time;
+            double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -789,7 +807,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
             repetitions += 1;
             gettimeofday(&et, NULL);
             double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-            double result_agree = (repetitions * blocksize) / time;
+            double result_agree = ((double)repetitions * blocksize) / time;
             fprintf(report, "Repetitions: %i \n", repetitions);
             fprintf(report, "Seconds: %f \n", time);
             fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -821,8 +839,8 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
             repetitions += 1;
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions * blocksize) / time;
-    fprintf(report, "Repetitions: %i \n", repetitions);
+            double result_agree = ((double)repetitions * blocksize) / time;
+            fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
 
@@ -948,7 +966,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
 
     }
     fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    fprintf(report,"************BoringSSL/RSA**************\n");
+    fprintf(report,"************OpenSSL/RSA**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
     char plainText[blocksize];
@@ -960,6 +978,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
     unsigned char  encrypted[4098]={};
     unsigned char decrypted[4098]={};
 
+    time_var = true;
 
     RSA *rsa= NULL;
 
@@ -988,8 +1007,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
         {
             LOGD( "Failed to create RSA_priv");
         }
-        gettimeofday(&et, NULL);
-        int setting_key_time = ((et.tv_sec - st.tv_sec) * 1000000) + (et.tv_usec - st.tv_usec);
 
         now_key = time(NULL);
         repetitions_key +=1;
@@ -1011,58 +1028,60 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_RSATime(JNIEnv *env, jobject inst
         repetitions_rsa = 0;
 
         gettimeofday(&st, NULL);
-    while ((now - start) <= rep_rsa) {
+    while (time_var) {
 
         encrypted_length = RSA_public_encrypt(strlen(plainText),
                                               reinterpret_cast<const unsigned char *>(plainText),
                                               encrypted, rsa, RSA_PKCS1_OAEP_PADDING);
-        gettimeofday(&et, NULL);
 
         if (encrypted_length == -1) {
             LOGD("Public Encrypt failed ");
-            exit(0);
+            return;
         }
         repetitions_rsa +=1;
-        now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions_rsa * blocksize) / time;
-    fprintf(report, "Repetitions: %i \n", repetitions_rsa);
+        double result_agree = ((double)repetitions_rsa * blocksize) / time;
+
+        fprintf(report, "Repetitions: %i \n", repetitions_rsa);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f bytes/second \n", result_agree);
+        time_var = true;
+        LOGD("TIME_VAR TRUE");
 }
 
 
 
     for (int i = 0; i < rep_total; i++) {
 
-        time_t start = time(NULL);
-        time_t now = time(NULL);
         repetitions_rsa = 0;
         RSA *rsa_priv = createRSA(reinterpret_cast<unsigned char *>(privateKey), 0);
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_rsa) {
+        while (time_var) {
             int decrypted_length = RSA_private_decrypt(encrypted_length, encrypted, decrypted,
                                                        rsa_priv,
                                                        RSA_PKCS1_OAEP_PADDING);
 
             repetitions_rsa += 1;
-            now = time(NULL);
             if (decrypted_length == -1) {
                 LOGD("Private Decrypt failed ");
                 exit(0);
             }
             repetitions_rsa += 1;
-            now = time(NULL);
+
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = (repetitions_rsa * blocksize) / time;
+        double result_agree = ((double)repetitions_rsa * blocksize) / time;
+
         fprintf(report, "Repetitions: %i \n", repetitions_rsa);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f bytes/second \n", result_agree);
+        time_var = true;
+        LOGD("TIME_VAR TRUE");
     }
+
     LOGD("Finish decryption");
 
     LOGD("We are good");
@@ -1099,16 +1118,16 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5Time(JNIEnv *env, jobject inst
 
     size_t bytes = blocksize;
 
+    time_var = true;
+
     unsigned char data[blocksize];
     RAND_bytes(data, sizeof(data));
 
     for (int j = 0; j < rep_total ; j++) {
     int repetitions = 0;
 
-    time_t start = time(NULL);
-    time_t now = time(NULL);
         gettimeofday(&st, NULL);
-    while ((now - start) < rep_hash) {
+    while (time_var) {
 
         ret = MD5_Update(&ctx, data, blocksize);
 
@@ -1117,7 +1136,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5Time(JNIEnv *env, jobject inst
         }
 
         repetitions += 1;
-        now = time(NULL);
     }
 
         ret = MD5_Final(c, &ctx);
@@ -1127,11 +1145,12 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_MD5Time(JNIEnv *env, jobject inst
         repetitions +=1;
     gettimeofday(&et, NULL);
     double time_key = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions * blocksize) / time_key;
+    double result_agree = ((double)repetitions * blocksize) / time_key;
 
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Bytes/second \n", result_agree);
+        time_var = true;
 }
     fprintf(report,"*****************************");
     fclose(report);
@@ -1155,6 +1174,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DHTime(JNIEnv *env, jobject insta
     EVP_PKEY *dhkey2 = NULL;
     size_t keylen;
     unsigned char *skey;
+    time_var = true;
     FILE* report = create_file_text(title);
     struct timeval st,et;
     fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -1177,8 +1197,8 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DHTime(JNIEnv *env, jobject insta
         /* Generate the second key */
         if (1 != EVP_PKEY_keygen_init(kctx)) LOGD("Error at keygen init2");
         if (1 != EVP_PKEY_keygen(kctx, &dhkey2)) LOGD("Error at keygen2");
-        now = time(NULL);
         repetitions +=1;
+        now = time(NULL);
     }
 
     gettimeofday(&et, NULL);
@@ -1197,15 +1217,13 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DHTime(JNIEnv *env, jobject insta
     {LOGD("Error at key derive of secret context");}
     if (EVP_PKEY_derive_set_peer(secretctx, dhkey2) <= 0)
     {LOGD("Error at derive set peer");}
-    start = time(NULL);
-    now = time(NULL);
+
     gettimeofday(&st, NULL);
-    while ((now - start) <= rep_agree) {
+    while (time_var) {
 
         if (EVP_PKEY_derive(secretctx, NULL, &keylen) <= 0) { LOGD("Error at derive"); }
 
         repetitions += 1;
-        now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
@@ -1213,6 +1231,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_DHTime(JNIEnv *env, jobject insta
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);
+        time_var = true;
     }
     fprintf(report,"********************");
     fclose (report);
@@ -1252,7 +1271,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_ECDHTime(JNIEnv *env, jobject ins
     EC_KEY *lKey, *pKey;
     int lSecretLen, pSecretLen;
     unsigned char *lSecret, *pSecret;
-
+    time_var = true;
     time_t start = time(NULL);
     time_t now = time(NULL);
     gettimeofday(&st, NULL);
@@ -1261,8 +1280,8 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_ECDHTime(JNIEnv *env, jobject ins
         lKey = gen_key();
         pKey = gen_key();
 
-        now = time(NULL);
         repetitions +=1;
+        now = time(NULL);
     }
 
     gettimeofday(&et, NULL);
@@ -1276,13 +1295,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_ECDHTime(JNIEnv *env, jobject ins
     for (int i = 0; i < rep_total; ++i) {
 
     int repetitions_agree = 0;
-        start = time(NULL);
-         now = time(NULL);
+
     gettimeofday(&st, NULL);
-    while ((now - start) < rep_agree) {
+    while (time_var) {
 
         lSecretLen = EC_DH(&lSecret, lKey, EC_KEY_get0_public_key(pKey));
-        now = time(NULL);
         repetitions_agree += 1;
     }
     gettimeofday(&et, NULL);
@@ -1296,6 +1313,8 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_ECDHTime(JNIEnv *env, jobject ins
 
         if (memcmp(lSecret, pSecret, lSecretLen))
             LOGD("Secrets don't match.\n");
+     time_var = true;
+
 }
 
     LOGD("Elliptic Curve Diffie Hellman finished");
@@ -1320,6 +1339,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBCTime(JNIEnv *env, jobject i
     fprintf(report,"Blocksize is: %i  \n",blocksize);
     struct timeval st,et;
 
+    time_var = true;
 
     unsigned char iv_to_use[16];
 
@@ -1358,16 +1378,14 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBCTime(JNIEnv *env, jobject i
 
 
     for(int i = 0; i < rep_total; i++) {
-        time_t start = time(NULL);
-        time_t now = time(NULL);
+
         repetitions = 0;
         gettimeofday(&st, NULL);
-        while ((now - start) < rep_aes) {
+        while (time_var) {
 
         AES_cbc_encrypt(aes_input, enc_out, sizeof(aes_input), &enc_key, iv_to_use, AES_ENCRYPT);
 
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
@@ -1375,28 +1393,28 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBCTime(JNIEnv *env, jobject i
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
     }
 
 
 
     for(int i = 0; i < rep_total; i++) {
         repetitions = 0;
-        start = time(NULL);
-        now = time(NULL);
+
         gettimeofday(&st, NULL);
-        while ((now - start) < rep_aes) {
+        while (time_var) {
         memcpy(iv_to_use, iv, 16);
         AES_cbc_encrypt(enc_out, dec_out, sizeof(aes_input), &dec_key, iv_to_use, AES_DECRYPT);
 
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time_dec = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = (repetitions * blocksize) / time_dec;
+        double result_agree = ((double)repetitions * blocksize) / time_dec;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time_dec);
         fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
     }
 
     fclose(report);
@@ -1435,7 +1453,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
     int plaintext_len;
 
     struct timeval st,et;
-
+    time_var = true;
     unsigned char iv_to_use[16];
 
 
@@ -1461,9 +1479,10 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
     time_t start = time(NULL);
     time_t now = time(NULL);
     int repetitions = 0;
+    gettimeofday(&st,NULL);
     while ((now - start) <= rep_key) {
 
-        gettimeofday(&st,NULL);
+
         AES_set_encrypt_key(aes_key, sizeof(aes_key)*8, &enc_key);
 
 
@@ -1473,11 +1492,8 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
         if (1 != EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ctr(), NULL, aes_key, iv))
             LOGD("Error start decrypting");
 
-        gettimeofday(&et,NULL);
-
-
+        now = time(NULL);
         repetitions += 1;
-        now= time(NULL);
     }
     gettimeofday(&et, NULL);
     LOGD("Finished setkey / RSA");
@@ -1489,19 +1505,17 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
 
     for (int i = 0; i < rep_total; i++) {
 
-    start = time(NULL);
-    now = time(NULL);
+
     repetitions = 0;
     gettimeofday(&st, NULL);
 
-    while ((now - start) < rep_aes) {
+    while (time_var) {
 
         if (1 != EVP_EncryptUpdate(ctx, enc_out, &len, aes_input, sizeof(aes_input))) {
             LOGD("Error updating encryption");
         }
         ciphertext_len = len;
 
-        now = time(NULL);
         repetitions  += 1;
     }
         if (1 != EVP_EncryptFinal_ex(ctx, enc_out + len, &len)) LOGD("Error encrypt final");
@@ -1509,10 +1523,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
         repetitions +=1;
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
     }
 
     EVP_CIPHER_CTX_set_padding(ctx, 0);
@@ -1521,29 +1536,26 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject i
 
     for (int i = 0; i < rep_total; i++) {
 
-        start = time(NULL);
-        now = time(NULL);
         repetitions = 0;
         gettimeofday(&st, NULL);
 
-        while ((now - start) < rep_aes) {
+        while (time_var) {
 
         if (1 != EVP_DecryptUpdate(ctx_dec, dec_out, &len, enc_out, ciphertext_len))
             LOGD("Error updating Decryption");
-        plaintext_len = len;
 
         plaintext_len += len;
-            now = time(NULL);
             repetitions  += 1;
         }
         if (1 != EVP_DecryptFinal_ex(ctx_dec, dec_out + len, &len))LOGD("Error final");
         repetitions +=1;
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
     }
 
 
@@ -1577,6 +1589,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
     unsigned char ciphertext[blocksize];
     unsigned char tag[16];
 
+    time_var = true;
     unsigned char decrypted[blocksize];
 
     int len;
@@ -1618,7 +1631,6 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
 
         now = time(NULL);
         repetitions += 1;
-        LOGD("Set key");
     }
     gettimeofday(&et, NULL);
     double time_key = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
@@ -1653,29 +1665,29 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
 
 
         for(int i = 0; i < rep_total; i++) {
-            start = time(NULL);
-            now = time(NULL);
+
             repetitions = 0;
             gettimeofday(&st, NULL);
             if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, aes_key, iv)) LOGD("Error initializasing");
-            while ((now - start) < rep_aes) {
+            while (time_var) {
 
                 if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext))) {
                     LOGD("Error at encrypt updated");
                 }
                 ciphertext_len = len;
                 repetitions += 1;
-                now = time(NULL);
+
             }
             LOGD("Success encrypting ");
             if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
             repetitions +=1;
             gettimeofday(&et, NULL);
             double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-            result_agree = (repetitions * blocksize) / time;
+            double result_agree = ((double)repetitions * blocksize) / time;
             fprintf(report, "Repetitions: %i \n", repetitions);
             fprintf(report, "Seconds: %f \n", time);
             fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+            time_var = true;
         }
         LOGD("Finished encryption");
 
@@ -1686,12 +1698,11 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
             LOGD("Error getting tag");
 
     for(int i = 0; i <rep_total;i++){
-    start = time(NULL);
-    now = time(NULL);
+
     repetitions = 0;
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
         gettimeofday(&st, NULL);
-    while ((now - start) < rep_aes) {
+    while (time_var) {
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
 
         if (!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
@@ -1701,18 +1712,19 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
         if (!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_TAG, 16, tag))
             LOGD("Error at ctrl tag");
         repetitions += 1;
-        now = time(NULL);
+
     }
         EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
         repetitions +=1;
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
 }
-    LOGD("Finished encryption");
+    LOGD("Finished decryption");
     fprintf(report,"*****************************");
     fclose(report);
 
@@ -1731,7 +1743,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject i
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
     int repetitions = 0;
-
+    time_var = true;
     EVP_CIPHER_CTX *ctx = nullptr;
 
     EVP_CIPHER_CTX *ctx_dec;
@@ -1781,56 +1793,50 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject i
     fprintf(report, "Result: %f Times set key/seconds \n", result_agree);
 
     for(int i = 0; i <rep_total;i++){
-        start = time(NULL);
-        now = time(NULL);
+
         repetitions = 0;
         EVP_EncryptInit_ex(ctx, EVP_aes_128_ofb(), NULL, aes_key, iv);
         gettimeofday(&st, NULL);
-        while ((now - start) < rep_aes) {
+        while (time_var) {
 
         if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
             LOGD("Error at encrypt updated");
-        ciphertext_len = len;
-
         ciphertext_len += len;
-        now = time(NULL);
         repetitions  += 1;
         }
         if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
         repetitions += 1;
-        LOGD("Success encrypting ");
         gettimeofday(&et, NULL);
+        LOGD("Success encrypting ");
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
         result_agree = (repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
     }
 
     for(int i = 0; i <rep_total;i++){
         EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv);
-        start = time(NULL);
-        now = time(NULL);
         repetitions = 0;
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_aes) {
+        while (time_var) {
 
         if (!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
             LOGD("Error decryptupdate");
         plaintext_len_dec = len_dec;
-
-        now = time(NULL);
-        repetitions  += 1;
+            repetitions  += 1;
     }
     EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
     repetitions += 1;
     LOGD("Success decrypting ");
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions * blocksize) / time;
-    fprintf(report, "Repetitions: %i \n", repetitions);
+        double result_agree = ((double)repetitions * blocksize) / time;
+        fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+        time_var = true;
 }
     fprintf(report,"*****************************");
     fclose(report);

@@ -41,7 +41,7 @@ public class MD5Implementation {
             try {
                 writer.write("repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
-                writer.write("Time to hash: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                writer.write("Time to hash: " + String.format("%.4f", (repetitions * (blocksize)) / seconds) + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }

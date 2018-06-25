@@ -28,4 +28,5 @@ public class mbedTLS {
     public native void AESGCM(int blocksize,int rep_aes,int rep_total);
     public native void AESGCMTime(int blocksize,int rep_key,int rep_aes,String title,int rep_total);
 
+    public native int setTimer();
 }

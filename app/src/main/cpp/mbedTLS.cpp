@@ -57,7 +57,20 @@ unsigned char iv[16] = {
 
 };
 
+bool time_var;
 
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_juanperezdealgaba_sac_mbedTLS_setTimer(JNIEnv *env, jobject instance) {
+
+    LOGD("Before TIME_VAR FALSE");
+    time_var = false;
+
+    LOGD("TIME_VAR FALSE");
+
+    return 1;
+
+}
 
 FILE *create_file()
 {
@@ -828,7 +841,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
     mbedtls_entropy_context entropy;
     unsigned char label[1024] = "label";
     const char *pers = "rsa_genkey";
-
+    time_var = true;
     fprintf(report,
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     fprintf(report, "************mbedTLS/RSA**************\n");
@@ -901,11 +914,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
 
     for (int i = 0; i < rep_total ; i++) {
 
-    time_t start = time(NULL);
-    time_t now = time(NULL);
+
     int repetitions_rsa = 0;
         gettimeofday(&st, NULL);
-    while ((now - start) <= rep_rsa) {
+    while (time_var) {
 
         ret = mbedtls_rsa_rsaes_oaep_encrypt(mbedtls_pk_rsa(pk), mbedtls_ctr_drbg_random, &ctr_drbg,
                                              MBEDTLS_RSA_PUBLIC, label,
@@ -918,14 +930,14 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
         }
 
         repetitions_rsa += 1;
-        now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions_rsa * blocksize) / time;
+    double result_agree = ((double)repetitions_rsa * blocksize) / time;
     fprintf(report, "Repetitions: %i \n", repetitions_rsa);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f agreements/seconds \n", result_agree);
+        time_var = true;
 
 }
     LOGD("Finished encryption");
@@ -938,7 +950,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
         int repetitions_rsa = 0;
 
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_rsa) {
+        while (time_var) {
 
 
             ret = mbedtls_rsa_rsaes_oaep_decrypt(mbedtls_pk_rsa(privk), mbedtls_ctr_drbg_random,
@@ -950,7 +962,6 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
             }
 
             repetitions_rsa += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
@@ -958,6 +969,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
         fprintf(report, "Repetitions: %i \n", repetitions_rsa);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f bytes/second \n", result_agree);
+        time_var = true;
     }
     LOGD("We are good");
     fprintf(report,"********************");
@@ -986,7 +998,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5Time(JNIEnv *env, jobject inst
         LOGD("Error rediang the file");
 
     }
-
+    time_var = true;
     struct timeval st,et;
 
     fprintf(report,
@@ -1005,27 +1017,23 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5Time(JNIEnv *env, jobject inst
 
     for (int j = 0; j < total_rep; ++j) {
 
-    time_t start = time(NULL);
-    time_t now = time(NULL);
+
     int repetitions_rsa = 0;
         gettimeofday(&st, NULL);
-    while ((now - start) <= rep_hash) {
-
-
+    while (time_var) {
 
         if ((ret = mbedtls_md5_ret(Plaintext, sizeof(Plaintext), digest)) != 0) {
             return ;
         }
 
-
         repetitions_rsa += 1;
-        now = time(NULL);
+
     }
 
     gettimeofday(&et, NULL);
     double time_key = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
     double result_agree = (repetitions_rsa * blocksize) / time_key;
-
+        time_var = true;
     fprintf(report, "Repetitions: %i \n", repetitions_rsa);
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Bytes/second \n", result_agree);
@@ -1058,6 +1066,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject insta
             "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     fprintf(report, "************mbedTLS/DH**************\n");
 
+    time_var = true;
     int ret;
     size_t n1, buflen;
     size_t n2;
@@ -1168,7 +1177,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject insta
         now = time(NULL);
         repetitions = 0;
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_agree) {
+        while (time_var) {
 
             if ((ret = mbedtls_dhm_calc_secret(&dhm1, buf1, sizeof(buf1), &n1,
                                                mbedtls_ctr_drbg_random, &ctr_drbg1)) != 0) {
@@ -1176,7 +1185,6 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject insta
             }
 
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         if ((ret = mbedtls_dhm_calc_secret(&dhm2, buf2, sizeof(buf2), &n2,
@@ -1184,7 +1192,8 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject insta
             LOGD(" failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret);
         }
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = repetitions / time;
+        double result_agree = (double) repetitions / time;
+        time_var = true;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);
@@ -1223,7 +1232,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject ins
     mbedtls_entropy_init(&entropy);
     const char *pers = "ecdh_genkey";
 
-
+    time_var = true;
     mbedtls_ecp_group grp;
     mbedtls_ecp_point qA, qB;
     mbedtls_mpi dA, dB, zA, zB;
@@ -1277,11 +1286,10 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject ins
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Times set key/seconds \n", result_agree);
     for (int i = 0; i < rep_total; ++i) {
-        start = time(NULL);
-        now = time(NULL);
+
         repetitions = 0;
         gettimeofday(&st,NULL);
-        while ((now - start) <= rep_agree) {
+        while ( time_var ) {
 
             int ret = mbedtls_ecdh_compute_shared(&grp, &zB, &qA, &dB,
                                                   NULL, NULL);
@@ -1290,11 +1298,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject ins
                 LOGD("Error generating secret 2");
             }
             repetitions += 1;
-            now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
     double result_agree = repetitions / time;
+        time_var = true;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);
@@ -1342,7 +1350,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
     uint32_t i = 0, status = 0;
 
     mbedtls_aes_context ctx, ctx_dec;
-
+    time_var = true;
     time_t start = time(NULL);
     time_t now = time(NULL);
     int repetitions_key = 0;
@@ -1379,20 +1387,20 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
         now = time(NULL);
         int repetitions = 0;
         gettimeofday(&st,NULL);
-        while ((now - start) <= rep_aes) {
+        while (time_var) {
             status = mbedtls_aes_crypt_cbc(&ctx, MBEDTLS_AES_ENCRYPT, blocksize, iv, Plaintext,
                                            OutputMessage);
 
             if (status != 0) {
                 LOGD("\n mbedtls encryption failed");
             }
-
             repetitions += 1;
-            now = time(NULL);
+
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
         result_agree = (repetitions * blocksize) / time;
+        time_var = true;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -1402,10 +1410,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
         for (int j = 0; j < total_rep; j++) {
                 start = time(NULL);
                 now = time(NULL);
-                int repetitions = 0;
+            time_var = true;
+            int repetitions = 0;
                 /* Initialise the decryption operation. */
                 gettimeofday(&st,NULL);
-                while ((now - start) <= rep_aes) {
+                while (time_var) {
 
                 status = mbedtls_aes_crypt_cbc(&ctx_dec, MBEDTLS_AES_DECRYPT, blocksize, iv2, OutputMessage,
                                                compare);
@@ -1414,11 +1423,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
                 LOGD("\n mbedtls encryption failed");
                 }
                     repetitions += 1;
-                    now = time(NULL);
                 }
             gettimeofday(&et, NULL);
             double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
             result_agree = (repetitions * blocksize) / time;
+            time_var = true;
             fprintf(report, "Repetitions: %i \n", repetitions);
             fprintf(report, "Seconds: %f \n", time);
             fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -1469,7 +1478,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
         plaintext[i] = rand();
     }
 
-
+    time_var = true;
     size_t nc_off = 0;
     unsigned char stream_block[16] = {0};
     uint8_t enc_out[64];
@@ -1504,12 +1513,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
 
     for (int i = 0; i <rep_total ; ++i) {
 
-    time_t start = time(NULL);
-    time_t now = time(NULL);
+
     int repetitions = 0;
     int ret = 0;
         gettimeofday(&st, NULL);
-    while ((now - start) <= rep_aes) {
+    while (time_var) {
         ret = mbedtls_aes_crypt_ctr(&aes, sizeof(plaintext), &nc_off, iv, stream_block,
                                         plaintext,
                                         enc_out);
@@ -1519,11 +1527,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
         }
 
         repetitions += 1;
-        now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    double result_agree = (repetitions * blocksize) / time;
+    double result_agree = ((double)repetitions * blocksize) / time;
+        time_var = true;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -1547,11 +1555,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
         }
 
         repetitions += 1;
-        now = time(NULL);
     }
     gettimeofday(&et, NULL);
     double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-    result_agree = (repetitions * blocksize) / time;
+    double result_agree = ((double)repetitions * blocksize) / time;
+        time_var = true;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
@@ -1596,6 +1604,8 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
         plaintext[i] = rand();
     }
 
+    time_var = true;
+
     unsigned char encrypted[64];
     unsigned char decrypted[64];
 
@@ -1638,11 +1648,9 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
 
     for (int i = 0; i < total_rep; ++i) {
 
-        start = time(NULL);
-        now = time(NULL);
         int repetitions = 0;
         gettimeofday(&st, NULL);
-        while ((now - start) <= rep_aes) {
+        while (time_var) {
 
 
             //I use the "high-level" interface as explained in this post : https://tls.mbed.org/discussions/generic/aes-gcm-authenticated-encryption-example
@@ -1657,11 +1665,11 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
             }
 
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
+        time_var = true;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
@@ -1670,13 +1678,12 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
 
 
     for (int i = 0; i < total_rep; ++i) {
-        start = time(NULL);
-        now = time(NULL);
+
         int repetitions = 0;
         int ret = 0;
         /* Initialise the decryption operation. */
         gettimeofday(&st,NULL);
-        while ((now - start) <= rep_aes) {
+        while (time_var) {
 
 
             ret = mbedtls_gcm_auth_decrypt(&ctx, sizeof(encrypted), iv, sizeof(iv), NULL, 0, tag,
@@ -1688,14 +1695,15 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject i
             }
 
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        result_agree = (repetitions * blocksize) / time;
+        double result_agree = ((double)repetitions * blocksize) / time;
+        time_var = true;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+
     }
 
     fprintf(report, "*****************************");

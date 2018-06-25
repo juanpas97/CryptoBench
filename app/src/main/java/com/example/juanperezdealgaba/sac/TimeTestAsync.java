@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 class TimeTestParams {
@@ -54,6 +56,39 @@ class TimeTestParams {
     }
 }
 
+//Apparently all these classes should be only one, but it seems to have problems
+//changing the values of global variables. Fix this if I have Time
+class setTimer extends TimerTask{
+
+    @Override
+    public void run() {
+        System.out.println("Timer started");
+        OpenSSL timer_open = new OpenSSL();
+        int ret_value = timer_open.setTimer();
+    }
+}
+
+class setTimerBoring extends TimerTask{
+
+    @Override
+    public void run() {
+        System.out.println("Timer started");
+        BoringSSL timer_open = new BoringSSL();
+        int ret_value = timer_open.setTimer();
+    }
+}
+
+class setTimermbedTLS extends TimerTask{
+
+    @Override
+    public void run() {
+        System.out.println("Timer started");
+        mbedTLS timer_open = new mbedTLS();
+        int ret_value = timer_open.setTimer();
+    }
+}
+
+
 
 class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
@@ -84,6 +119,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
 
+        Timer timer = new Timer();
 
         FileWriter writer = params[0].writer_special;
         final FileWriter writer_temp = params[0].writer_temp;
@@ -126,6 +162,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
         int sec_duration = ((int) maxDurationInMilliseconds / 1000);
 
         long keymaxDurationInMilliseconds = time_key * 60 * 1000;
+
+        long time_for_timer = keymaxDurationInMilliseconds + maxDurationInMilliseconds + 500;
 
         int key_duration = ((int) keymaxDurationInMilliseconds / 1000) ;
 
@@ -299,7 +337,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/RSA**************");
 
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.RSATime(128,key_duration,sec_duration,title,total_rep);
 
 
@@ -310,7 +350,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/AES-CBC**************");
 
 
+                timer = new Timer();
                 BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                 test.AESCBCTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -320,7 +362,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("BoringSSL") && algo.equals("AES-CTR")) {
                 System.out.println("***********BoringSSL/AES-CTR**************");
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCTRTime(blocksize,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("***********************\n");
@@ -329,7 +373,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("BoringSSL") && algo.equals("AES-GCM")) {
                 System.out.println("***********BoringSSL/AES-GCM**************");
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.AESGCMTime(blocksize,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("***********************\n");
@@ -340,7 +386,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
 
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.AESOFBTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -353,7 +401,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/MD5**************");
 
 
+                timer = new Timer();
                 BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),maxDurationInMilliseconds + 100,maxDurationInMilliseconds);
                 test.MD5Time(blocksize,sec_duration,title,total_rep);
 
 
@@ -364,7 +414,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/DH**************");
 
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.DHTime(key_duration,sec_duration,title,total_rep);
 
 
@@ -376,7 +428,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********BoringSSL/ECDH**************");
 
 
-                    BoringSSL test = new BoringSSL();
+                timer = new Timer();
+                BoringSSL test = new BoringSSL();
+                timer.schedule(new setTimerBoring(),time_for_timer,maxDurationInMilliseconds);
                     test.ECDHTime(time_key,sec_duration,title,total_rep);
 
                 System.out.println("***********************\n");
@@ -386,9 +440,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("OpenSSL") && algo.equals("RSA")) {
                 System.out.println("***********OpenSSL/RSA**************");
 
-
-
+                timer = new Timer();
                 OpenSSL test = new OpenSSL();
+                timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                 test.RSATime(128,key_duration,sec_duration,title,total_rep);
 
 
@@ -399,7 +453,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/AES-CBC**************");
 
 
-                    OpenSSL test = new OpenSSL();
+                timer = new Timer();
+                OpenSSL test = new OpenSSL();
+                timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCBCTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -410,7 +466,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/AES-CTR**************");
 
 
-                    OpenSSL test = new OpenSSL();
+                timer = new Timer();
+                OpenSSL test = new OpenSSL();
+                timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCTRTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -420,7 +478,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("OpenSSL") && algo.equals("AES-GCM")) {
                 System.out.println("***********OpenSSL/AES-GCM**************");
 
-                    OpenSSL test = new OpenSSL();
+                timer = new Timer();
+                OpenSSL test = new OpenSSL();
+                timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.AESGCMTime(blocksize,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("***********************\n");
@@ -430,7 +490,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/AES-OFB**************");
 
 
+                    timer = new Timer();
                     OpenSSL test = new OpenSSL();
+                    timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.AESOFBTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -441,7 +503,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/MD5**************");
 
 
+                    timer = new Timer();
                     OpenSSL test = new OpenSSL();
+                    timer.schedule(new setTimer(),maxDurationInMilliseconds + 100,maxDurationInMilliseconds);
                     test.MD5Time(blocksize,sec_duration,title,total_rep);
 
 
@@ -452,7 +516,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********OpenSSL/DH**************");
 
 
+                    timer = new Timer();
                     OpenSSL test = new OpenSSL();
+                    timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.DHTime(key_duration,sec_duration,title,total_rep);
 
 
@@ -465,7 +531,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("OpenSSL") && algo.equals("ECDH")) {
                 System.out.println("***********OpenSSL/DH**************");
 
+                    timer = new Timer();
                     OpenSSL test = new OpenSSL();
+                    timer.schedule(new setTimer(),time_for_timer,maxDurationInMilliseconds);
                     test.ECDHTime(key_duration,sec_duration,title,total_rep);
 
 
@@ -475,8 +543,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("RSA")) {
                 System.out.println("***********mbedTLS/RSA**************");
 
-
+                    timer = new Timer();
                     mbedTLS test = new mbedTLS();
+                    timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
                     test.RSATime(128,key_duration,sec_duration,title,total_rep);
 
 
@@ -487,8 +556,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
             if (library.equals("mbedTLS") && algo.equals("AES-CBC")) {
 
-
-                    mbedTLS test = new mbedTLS();
+                timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCBCTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -498,7 +568,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("AES-CTR")) {
                 System.out.println("***********mbedTLS/AES**************");
 
-                    mbedTLS test = new mbedTLS();
+                timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
 
                     test.AESCTRTime(blocksize,key_duration,sec_duration,title,total_rep);
 
@@ -510,7 +582,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("AES-GCM")) {
                 System.out.println("***********mbedTLS/AES-GCM**************");
 
-                    mbedTLS test = new mbedTLS();
+                timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
 
                     test.AESGCMTime(blocksize,key_duration,sec_duration,title,total_rep);
 
@@ -521,7 +595,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("MD5")) {
                 System.out.println("***********mbedTLS/MD5**************");
 
-                    mbedTLS test = new mbedTLS();
+                timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),maxDurationInMilliseconds + 100,maxDurationInMilliseconds);
                     test.MD5Time(blocksize,sec_duration,title,total_rep);
 
 
@@ -531,7 +607,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("mbedTLS") && algo.equals("ECDH")) {
                 System.out.println("***********mbedTLS/ECDH**************");
 
-                    mbedTLS test = new mbedTLS();
+                    timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
                     test.ECDHTime(key_duration, sec_duration,title,total_rep);
 
                 System.out.println("***********************\n");
@@ -541,7 +619,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("***********mbedTLS/DH**************");
 
 
-                    mbedTLS test = new mbedTLS();
+                timer = new Timer();
+                mbedTLS test = new mbedTLS();
+                timer.schedule(new setTimermbedTLS(),time_for_timer,maxDurationInMilliseconds);
                     test.DHTime(key_duration,sec_duration,title,total_rep);
 
 
@@ -622,7 +702,7 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             }
 
             context.unregisterReceiver(broadcastreceiver);
-
+            timer.cancel();
         }catch (IOException i){
             throw new RuntimeException(i);
         }
