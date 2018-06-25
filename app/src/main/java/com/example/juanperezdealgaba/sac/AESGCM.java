@@ -146,7 +146,7 @@ public class AESGCM {
             e.printStackTrace();
         }
 
-
+        bool_value.value = true;
         byte[] enc = new byte[0];
         for (int i = 0; i < total_rep; i++) {
             in.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
@@ -154,7 +154,7 @@ public class AESGCM {
             repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_aes;
             start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
                 enc = in.update(plaintext);
                 repetitions += 1;
             }
@@ -165,7 +165,8 @@ public class AESGCM {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("repetitions encrypt:" + repetitions + "\n" );
+                bool_value.value = true;
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
             } catch (IOException e) {
@@ -176,8 +177,7 @@ public class AESGCM {
         for (int i = 0; i < total_rep; i++) {
             repetitions = 0;
             start = System.nanoTime();
-            finishTime = System.currentTimeMillis() + rep_aes;
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
                 dec = out.update(enc);
                 repetitions += 1;
             }
@@ -187,7 +187,8 @@ public class AESGCM {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("repetitions decrypt:" + repetitions + "\n" );
+                bool_value.value = true;
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
 

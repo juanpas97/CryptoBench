@@ -157,17 +157,20 @@ public class AESCTR {
                 double seconds_key = (double)elapsedTime_key / 1000000000.0;
 
                 try {
+                        writer.write("Repetitions: " + repetitions + "\n");
+                        writer.write("Seconds: " + seconds_key + "\n");
                         writer.write("Time setting key: " + (repetitions/seconds_key) + " times/second" + "\n");
                 } catch (IOException e) {
                         e.printStackTrace();
                 }
                 ByteArrayOutputStream bOut;
+                bool_value.value = true;
                 byte[] cipherText = new byte[0];
                 for (int i = 0; i < total_rep; i++) {
                         repetitions = 0;
                         finishTime = System.currentTimeMillis() + rep_aes;
                         long start = System.nanoTime();
-                        while (System.currentTimeMillis() <= finishTime) {
+                        while (bool_value.value) {
 
                                 ByteArrayInputStream bIn = new ByteArrayInputStream(input);
                                 CipherInputStream cIn = new CipherInputStream(bIn, cipher);
@@ -189,7 +192,8 @@ public class AESCTR {
                         double seconds = (double) elapsedTime / 1000000000.0;
 
                         try {
-                            writer.write("repetitions:" + repetitions + "\n" );
+                                bool_value.value = true;
+                            writer.write("Repetitions:" + repetitions + "\n" );
                             writer.write("Seconds:" + seconds + "\n" );
                                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
                         } catch (IOException e) {
@@ -199,9 +203,8 @@ public class AESCTR {
 
                 for (int i = 0; i < total_rep; i++) {
                         repetitions = 0;
-                        finishTime = System.currentTimeMillis() + rep_aes;
                         long start = System.nanoTime();
-                        while (System.currentTimeMillis() <= finishTime) {
+                        while (bool_value.value) {
                                 // decryption pass
 
 
@@ -216,7 +219,8 @@ public class AESCTR {
                         long elapsedTime = end - start;
                         double seconds = (double) elapsedTime / 1000000000.0;
                         try {
-                                writer.write("repetitions decrypt:" + repetitions + "\n" );
+                                bool_value.value = true;
+                                writer.write("Repetitions:" + repetitions + "\n" );
                                 writer.write("Seconds:" + seconds + "\n" );
                                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
 

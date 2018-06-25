@@ -123,7 +123,7 @@ public class AESCBC {
     public void testCBCTime(FileWriter writer, TextView Results, int blocksize, long rep_key,long rep_aes,int total_rep) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IllegalBlockSizeException,
             BadPaddingException,DecoderException {
 
-
+        bool_value.value = true;
 
             Security.addProvider(new BouncyCastleProvider());
 
@@ -170,18 +170,18 @@ public class AESCBC {
                 repetitions = 0;
                 finishTime = System.currentTimeMillis() + rep_aes;
                 start = System.nanoTime();
-                while (System.currentTimeMillis() <= finishTime) {
+                while (bool_value.value) {
                     enc = in.update(plaintext);
                     repetitions += 1;
                 }
-
                 enc = in.doFinal(plaintext);
                 end = System.nanoTime();
                 elapsedTime = end - start;
                 seconds = (double) elapsedTime / 1000000000.0;
 
                 try {
-                    writer.write("repetitions:" + repetitions + "\n" );
+                    bool_value.value = true;
+                    writer.write("Repetitions:" + repetitions + "\n" );
                     writer.write("Seconds:" + seconds + "\n" );
                     writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
                 } catch (IOException e) {
@@ -193,7 +193,7 @@ public class AESCBC {
             repetitions = 0;
             start = System.nanoTime();
             finishTime = System.currentTimeMillis() + rep_aes;
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
                 dec = out.update(enc);
                 repetitions += 1;
             }
@@ -203,7 +203,8 @@ public class AESCBC {
             seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("repetitions:" + repetitions + "\n" );
+                bool_value.value = true;
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
 

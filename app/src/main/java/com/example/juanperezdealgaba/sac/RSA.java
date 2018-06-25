@@ -140,6 +140,8 @@ public class RSA {
 
             private_key_ready = getPrivateKeyFromByte();
 
+            bool_value.value = true;
+
             byte[] input = string.generateRandomString(blocksize).getBytes();
             byte[] encrypted = new byte[0];
             for (int i = 0; i < total_rep; i++) {
@@ -149,7 +151,7 @@ public class RSA {
                 Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "SC");
                 cipher.init(Cipher.ENCRYPT_MODE, public_key_ready);
                  start = System.nanoTime();
-                while (System.currentTimeMillis() <= finishTime) {
+                while (bool_value.value) {
 
                     encrypted = cipher.doFinal(input);
                     repetitions += 1;
@@ -160,6 +162,7 @@ public class RSA {
                 seconds = (double) elapsedTime / 1000000000.0;
 
                 try {
+                    bool_value.value = true;
                     writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
                     writer.write("Repetitions decrypt: " + repetitions + "\n");
                 } catch (IOException e) {
@@ -174,6 +177,8 @@ public class RSA {
                 e.printStackTrace();
             }
 
+            bool_value.value = true;
+
             for (int i = 0; i < total_rep; i++) {
                 byte[] decryptedText = null;
                 repetitions = 0;
@@ -182,7 +187,7 @@ public class RSA {
                 finishTime = System.currentTimeMillis()+rep_key;
                 cipher.init(Cipher.DECRYPT_MODE, private_key_ready);
                 start = System.nanoTime();
-                while (System.currentTimeMillis() <= finishTime) {
+                while (bool_value.value) {
                     decryptedText = cipher.doFinal(encrypted);
                     repetitions += 1;
                 }
@@ -190,10 +195,13 @@ public class RSA {
                  end = System.nanoTime();
                 elapsedTime = end - start;
                 seconds = (double) elapsedTime / 1000000000.0;
-
+                double result = ((double)repetitions * (blocksize)) / seconds;
                 try {
-                    writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                    writer.write("Repetitions decrypt: " + repetitions + "\n");
+                    bool_value.value = true;
+                    writer.write("Seconds: " + seconds + "\n");
+                    writer.write("Repetitions: " + repetitions + "\n");
+                    writer.write("Time to decrypt: " + result + " byte/seconds" + "\n");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

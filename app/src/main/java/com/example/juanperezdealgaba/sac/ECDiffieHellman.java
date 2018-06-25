@@ -130,11 +130,12 @@ public class ECDiffieHellman {
             aKeyAgree.doPhase(bKeyPair.getPublic(), true);
             bKeyAgree.doPhase(aKeyPair.getPublic(), true);
 
+            bool_value.value = true;
+
             for (int i = 0; i < rep_total; i++){
                 repetitions = 0;
-            finishTime = System.currentTimeMillis() + rep_agree;
             start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
 
                 aSecret = aKeyAgree.generateSecret();
 
@@ -151,8 +152,11 @@ public class ECDiffieHellman {
              elapsedTime = end - start;
              seconds = (double) elapsedTime / 1000000000.0;
             try {
-                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
+                bool_value.value = true;
                 writer.write("Repetitions: " + repetitions + "\n");
+                writer.write("Seconds: " + seconds + "\n");
+                writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

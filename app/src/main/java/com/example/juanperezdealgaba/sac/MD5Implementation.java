@@ -57,7 +57,7 @@ public class MD5Implementation {
         writer.write("\n**********Bouncy Castle/MD-5********\n");
 
         int repetitions = 0;
-
+        bool_value.value = true;
         RandomStringGenerator string = new RandomStringGenerator();
         for (int i = 0; i < total_rep; i++) {
             MD5Digest examplemd5 = new MD5Digest();
@@ -65,7 +65,7 @@ public class MD5Implementation {
             String input = RandomStringGenerator.generateRandomString(blocksize);
             long finishTime = System.currentTimeMillis() + rep_aes;
             long start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
 
                 byte[] inputBytes = input.getBytes();
                 examplemd5.update(inputBytes, 0, inputBytes.length);
@@ -76,18 +76,15 @@ public class MD5Implementation {
             long end = System.nanoTime();
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
-
+            double result = ((double)repetitions * (blocksize)) / seconds;
+            bool_value.value = true;
             try {
-                writer.write("repetitions:" + repetitions + "\n" );
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
-                writer.write("Time to hasht: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                writer.write("Time to hash: " + result + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            System.out.println("***********************\n");
-            writer.write("********************************\n");
-
         }
     }
 }

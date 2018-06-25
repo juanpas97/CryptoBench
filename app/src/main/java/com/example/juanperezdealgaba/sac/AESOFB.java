@@ -129,6 +129,8 @@ public class AESOFB {
 
         byte[] ivBytes = key_st.returnIV();
 
+        bool_value.value = true;
+
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
         Cipher cipher = Cipher.getInstance("AES/OFB/NoPadding", "BC");
@@ -160,7 +162,7 @@ public class AESOFB {
             repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_aes;
             long start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
 
                 ByteArrayInputStream bIn = new ByteArrayInputStream(input);
                 CipherInputStream cIn = new CipherInputStream(bIn, cipher);
@@ -182,10 +184,10 @@ public class AESOFB {
             double seconds = (double) elapsedTime / 1000000000.0;
 
             try {
-                writer.write("repetitions:" + repetitions + "\n" );
+                bool_value.value = true;
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions encrypt: " + repetitions + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -195,7 +197,7 @@ public class AESOFB {
             repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_aes;
             long start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
                 // decryption pass
 
 
@@ -210,10 +212,10 @@ public class AESOFB {
             long elapsedTime = end - start;
             double seconds = (double) elapsedTime / 1000000000.0;
             try {
-                writer.write("repetitions:" + repetitions + "\n" );
+                bool_value.value = true;
+                writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                writer.write("Repetitions decrypt: " + repetitions + "\n");
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -172,12 +172,13 @@ public class DiffieHellman {
             aKeyAgree.doPhase(kp2.getPublic(), true);
             bKeyAgree.doPhase(kp.getPublic(), true);
 
+            bool_value.value = true;
 
             for (int i = 0; i < rep_total; i++){
                 repetitions = 0;
             finishTime = System.currentTimeMillis() + rep_agree;
             start = System.nanoTime();
-            while (System.currentTimeMillis() <= finishTime) {
+            while (bool_value.value) {
                 byte[] ASharedSecret = aKeyAgree.generateSecret();
                     end = System.nanoTime();
                 long result = (end - start) / 1000;
@@ -191,6 +192,7 @@ public class DiffieHellman {
             elapsedTime = end - start;
             seconds = (double) elapsedTime / 1000000000.0;
             try {
+                bool_value.value = true;
                 writer.write("Seconds:" + seconds + "\n" );
                 writer.write("Repetitions: " + repetitions + "\n");
                 writer.write("Key Agreements: " + repetitions / seconds + " key agreement/second" + "\n");
