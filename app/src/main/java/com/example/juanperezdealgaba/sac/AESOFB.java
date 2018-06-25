@@ -35,12 +35,11 @@ public class AESOFB {
         RandomStringGenerator string = new RandomStringGenerator();
         String text = string.generateRandomString(blocksize);
         byte[] input = text.getBytes();
-        byte[] keyBytes = new byte[] { 0x2b, 0x7e, 0x15, 0x16, 0x28, (byte)0xae,(byte) 0xd2, (byte)0xa6,(byte) 0xab, (byte)0xf7,
-                0x15, (byte) 0x88,
-                0x09, (byte)0xcf, 0x4f, 0x3c};
+        Keys key_st = new Keys();
 
-        byte[] ivBytes = new byte[] {  0x09, (byte) 0xcf,0x15,(byte) 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,(byte)0xae,0x16, 0x28,(byte) 0xd2,(byte) 0xa6,(byte) 0xab,(byte) 0xf7 };
+        byte[] keyBytes = key_st.returnAesKey();
 
+        byte[] ivBytes = key_st.returnIV();
 
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
@@ -124,12 +123,11 @@ public class AESOFB {
         RandomStringGenerator string = new RandomStringGenerator();
         String text = string.generateRandomString(blocksize);
         byte[] input = text.getBytes();
-        byte[] keyBytes = new byte[] { 0x2b, 0x7e, 0x15, 0x16, 0x28, (byte)0xae,(byte) 0xd2, (byte)0xa6,(byte) 0xab, (byte)0xf7,
-                0x15, (byte) 0x88,
-                0x09, (byte)0xcf, 0x4f, 0x3c};
+        Keys key_st = new Keys();
 
-        byte[] ivBytes = new byte[] {  0x09, (byte) 0xcf,0x15,(byte) 0x88, 0x4f, 0x3c,0x2b, 0x7e, 0x15,(byte)0xae,0x16, 0x28,(byte) 0xd2,(byte) 0xa6,(byte) 0xab,(byte) 0xf7 };
+        byte[] keyBytes = key_st.returnAesKey();
 
+        byte[] ivBytes = key_st.returnIV();
 
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
