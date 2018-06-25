@@ -29,4 +29,6 @@ public class WolfCrypt {
     public native void ECDH(int rep_agree,int rep_total);
     public native void ECDHTime(int rep_key,int rep_agree,String title,int rep_total);
 
+    public native int setTimer();
+
 }

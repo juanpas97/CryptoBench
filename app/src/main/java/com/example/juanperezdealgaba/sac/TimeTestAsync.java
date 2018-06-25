@@ -88,6 +88,16 @@ class setTimermbedTLS extends TimerTask{
     }
 }
 
+class setTimerWolfCrypt extends TimerTask{
+
+    @Override
+    public void run() {
+        System.out.println("Timer started");
+        WolfCrypt timer_open = new WolfCrypt();
+        int ret_value = timer_open.setTimer();
+    }
+}
+
 
 
 class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
@@ -631,7 +641,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("RSA")) {
                 System.out.println("************WolfCrypt/RSA**************");
 
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.RSATime(128,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("Times executed:" + algo_repet + "\n");
@@ -644,7 +656,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("AES-CBC")) {
                 System.out.println("************WolfCrypt/AES-CBC**************");
 
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCBCTime(blocksize,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("********************************");
@@ -653,7 +667,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("AES-GCM")) {
                 System.out.println("************WolfCrypt/AES-GCM**************");
 
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.AESGCMTime(blocksize,key_duration,sec_duration,title,total_rep);
 
                 System.out.println("********************************");
@@ -663,7 +679,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/AES-CTR**************");
 
 
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.AESCTRTime(blocksize,key_duration,sec_duration,title,total_rep);
 
 
@@ -674,7 +692,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
                 System.out.println("************WolfCrypt/MD5**************");
 
 
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),maxDurationInMilliseconds,maxDurationInMilliseconds);
                     test.MD5Time(blocksize,sec_duration,title,total_rep);
 
 
@@ -684,7 +704,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             if (library.equals("WolfCrypt") && algo.equals("DH")) {
 
                 System.out.println("************WolfCrypt/DH**************");
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.DHTime(key_duration,sec_duration,title,total_rep);
 
                 System.out.println("********************************");
@@ -692,9 +714,9 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
 
             if (library.equals("WolfCrypt") && algo.equals("ECDH")) {
                 System.out.println("************WolfCrypt/ECDH**************");
-                writer.write("\n");
-                writer.write("\n");
-                    WolfCrypt test = new WolfCrypt();
+                timer = new Timer();
+                WolfCrypt test = new WolfCrypt();
+                timer.schedule(new setTimerWolfCrypt(),time_for_timer,maxDurationInMilliseconds);
                     test.ECDHTime(sec_duration,key_duration,title,total_rep);
 
 
