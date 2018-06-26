@@ -146,9 +146,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 final FileWriter writer_special = new FileWriter(report_special);
                 global.writer_temp = new FileWriter(report_temperature);
 
+                int id = 0;
+                String model = Build.MODEL;
+                if(model.equals("XT1572")){
+                    id = 1;
+                }
 
                 ConcreteTest context = ConcreteTest.this;
-                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,rep_total[0]);
+                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,rep_total[0],id);
 
                 TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                 test.execute(TimeParamsTest);
@@ -284,9 +289,14 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                                 rep_total[0] = Integer.parseInt(rep_value.getText().toString());
                             }
 
+                            int id = 0;
+                            String model = Build.MODEL;
+                            if(model.equals("XT1572")){
+                                id = 1;
+                            }
                             ConcreteTest context = ConcreteTest.this;
                             if (library != null && algo != null && key_time[0] != 0 && blocksize[0] != 0 && repetitions[0] != 0) {
-                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title, rep_total[0]);
+                                    TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title, rep_total[0],id);
 
                                     TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                                     test.execute(TimeParamsTest);
