@@ -148,7 +148,9 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                 int id = 0;
                 String model = Build.MODEL;
-                if(model.equals("XT1572")){
+
+                //If I have time later, change this condition for a general array with all the phones
+                if(model.equals("XT1572") || model.equals("One X")){
                     id = 1;
                 }
 
@@ -291,7 +293,7 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
 
                             int id = 0;
                             String model = Build.MODEL;
-                            if(model.equals("XT1572")){
+                            if(model.equals("XT1572")|| model.equals("One X")){
                                 id = 1;
                             }
                             ConcreteTest context = ConcreteTest.this;
