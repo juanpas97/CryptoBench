@@ -160,11 +160,13 @@ public class RSA {
                  end = System.nanoTime();
                 elapsedTime = end - start;
                 seconds = (double) elapsedTime / 1000000000.0;
+                bool_value.value = true;
+                System.out.println("Value of rep: " + i);
 
                 try {
-                    bool_value.value = true;
+                    writer.write("Seconds: " + seconds + "\n");
                     writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
-                    writer.write("Repetitions decrypt: " + repetitions + "\n");
+                    writer.write("Repetitions encrypt: " + repetitions + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -178,7 +180,7 @@ public class RSA {
             }
 
             bool_value.value = true;
-
+            System.out.println("Finish encrypting");
             for (int i = 0; i < total_rep; i++) {
                 byte[] decryptedText = null;
                 repetitions = 0;
@@ -196,12 +198,13 @@ public class RSA {
                 elapsedTime = end - start;
                 seconds = (double) elapsedTime / 1000000000.0;
                 double result = ((double)repetitions * (blocksize)) / seconds;
+                bool_value.value = true;
+                System.out.println("Value of rep: " + i);
                 try {
-                    bool_value.value = true;
+
                     writer.write("Seconds: " + seconds + "\n");
                     writer.write("Repetitions: " + repetitions + "\n");
                     writer.write("Time to decrypt: " + result + " byte/seconds" + "\n");
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

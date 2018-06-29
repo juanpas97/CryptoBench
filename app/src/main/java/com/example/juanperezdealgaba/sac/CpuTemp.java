@@ -18,7 +18,7 @@ public class CpuTemp {
             String line = reader.readLine();
             float temp = Float.parseFloat(line);
             Date currentTime = Calendar.getInstance().getTime();
-            writer_temp.write("Time: " + currentTime + "");
+            writer_temp.write("Time: " + currentTime + ": \n");
             if (id == 1) {
                 temp = Float.parseFloat(line) / 1000.0f;
                 writer_temp.write("The temperature is:" + temp + "\n");

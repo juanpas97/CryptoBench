@@ -144,7 +144,7 @@ class setTimerBC extends TimerTask{
     @Override
     public void run() {
         System.out.println("Value changed");
-    bool_value.value = false;
+        bool_value.value = false;
         CpuTemp gettemp = new CpuTemp();
         gettemp.getCpuTemp(id,writer_temp);
     }
