@@ -1368,7 +1368,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESCBCTime(JNIEnv *env, jobject i
         now = time(NULL);
     }
     gettimeofday(&et, NULL);
-    LOGD("Finished setkey / RSA");
+    LOGD("Finished setkey / AESCBC");
     double time_result = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
     double result_agree = repetitions / time_result;
     fprintf(report, "Repetitions: %i \n", repetitions);
@@ -1629,6 +1629,10 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
 
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
 
+        //Structures are freed just to be able to assign them again. If not, it will crash
+        //due to a memory problem
+        EVP_CIPHER_CTX_free(ctx);
+        EVP_CIPHER_CTX_free(ctx_dec);
         now = time(NULL);
         repetitions += 1;
     }
@@ -1644,7 +1648,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
         if(!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
 
         if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_gcm(), NULL, NULL, NULL))
-            LOGD("Error at encryptInit");
+            LOGD("Error at encryptInit 2");
 
         /* Set IV length if default 12 bytes (96 bits) is not appropriate */
         if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
@@ -1655,7 +1659,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESGCMTime(JNIEnv *env, jobject i
 
 
         if(!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_gcm(), NULL, NULL, NULL))
-            LOGD("Error at DecryptaInit");
+            LOGD("Error at DecryptaInit 2");
 
         if(!EVP_CIPHER_CTX_ctrl(ctx_dec, EVP_CTRL_GCM_SET_IVLEN, sizeof(iv), NULL))
             LOGD("Error at CTX control");

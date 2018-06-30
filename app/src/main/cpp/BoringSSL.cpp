@@ -1632,6 +1632,10 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
 
         if(!EVP_DecryptInit_ex(ctx_dec, NULL, NULL, aes_key, iv)) LOGD("Error at decryptinit");
 
+        //Structures are freed just to be able to assign them again. If not, it will crash
+        //due to a memory problem.
+        EVP_CIPHER_CTX_free(ctx);
+        EVP_CIPHER_CTX_free(ctx_dec);
         now = time(NULL);
         repetitions += 1;
     }
