@@ -178,12 +178,12 @@ public class AESCBC {
                 end = System.nanoTime();
                 elapsedTime = end - start;
                 seconds = (double) elapsedTime / 1000000000.0;
-
+                double result = ((double)repetitions * (blocksize)) / seconds;
                 try {
                     bool_value.value = true;
                     writer.write("Repetitions:" + repetitions + "\n" );
                     writer.write("Seconds:" + seconds + "\n" );
-                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Time to encrypt: " + result + " byte/seconds" + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -201,12 +201,13 @@ public class AESCBC {
             end = System.nanoTime();
             elapsedTime = end - start;
             seconds = (double) elapsedTime / 1000000000.0;
+            double result = ((double)repetitions * (blocksize)) / seconds;
 
             try {
                 bool_value.value = true;
                 writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
-                writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                writer.write("Time to decrypt: " + result + " byte/seconds" + "\n");
 
             } catch (IOException e) {
                 e.printStackTrace();
