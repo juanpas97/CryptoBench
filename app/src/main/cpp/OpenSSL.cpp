@@ -807,7 +807,7 @@ Java_com_example_juanperezdealgaba_sac_OpenSSL_AESOFB(JNIEnv *env, jobject insta
             repetitions += 1;
             gettimeofday(&et, NULL);
             double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-            float result_agree = ((float)repetitions * blocksize) / time;
+            float result_agree = static_cast<float>((repetitions * blocksize) / time);
             fprintf(report, "Repetitions: %i \n", repetitions);
             fprintf(report, "Seconds: %f \n", time);
             fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
