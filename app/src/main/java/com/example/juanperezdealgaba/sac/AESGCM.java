@@ -8,6 +8,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -66,11 +67,13 @@ public class AESGCM {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 double seconds = (double) elapsedTime / 1000000000.0;
+            double result = ((double)repetitions * (blocksize)) / seconds;
 
-                try {
+
+            try {
                     writer.write("repetitions encrypt:" + repetitions + "\n");
                     writer.write("Seconds:" + seconds + "\n");
-                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Time to encrypt: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -90,11 +93,13 @@ public class AESGCM {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 double seconds = (double) elapsedTime / 1000000000.0;
+            double result = ((double)repetitions * (blocksize)) / seconds;
 
-                try {
+
+            try {
                     writer.write("repetitions decrypt:" + repetitions + "\n");
                     writer.write("Seconds:" + seconds + "\n");
-                    writer.write("Time to decrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Time to decrypt: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
 
                 } catch (IOException e) {
                     e.printStackTrace();
