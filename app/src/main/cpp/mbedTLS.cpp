@@ -61,7 +61,7 @@ bool time_var;
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_setTimer(JNIEnv *env, jobject instance) {
+Java_com_example_CryptoBench_sac_mbedTLS_setTimer(JNIEnv *env, jobject instance) {
 
     LOGD("Before TIME_VAR FALSE");
     time_var = false;
@@ -103,7 +103,7 @@ FILE *create_file_text(const char *title)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESCBC(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
 
     FILE *report = create_file();
     fprintf(report, "************mbedTLS/AESCBC**************\n");
@@ -196,7 +196,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBC(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_MD5(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jint rep_total) {
 
     FILE *report = create_file();
     fprintf(report, "************mbedTLS/MD5**************\n");
@@ -247,7 +247,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_DH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
 
     jintArray result;
     result = env->NewIntArray(rep_agree);
@@ -382,7 +382,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DH(JNIEnv *env, jobject instance,
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance, jint blocksize, jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESCTR(JNIEnv *env, jobject instance, jint blocksize, jint rep_aes,jint rep_total) {
 
 
     FILE *report = create_file();
@@ -475,7 +475,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTR(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
 
     FILE *report = create_file();
     fprintf(report, "************mbedTLS/AESGCM**************\n");
@@ -574,7 +574,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCM(JNIEnv *env, jobject insta
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instance, jint rep_agree,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_ECDH(JNIEnv *env, jobject instance, jint rep_agree,jint rep_total) {
 
 
     FILE *report = create_file();
@@ -665,7 +665,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDH(JNIEnv *env, jobject instanc
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
 
 
     FILE *report = create_file();
@@ -812,7 +812,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSA(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
 
@@ -988,7 +988,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_RSATime(JNIEnv *env, jobject inst
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5Time(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jstring title_rand,jint total_rep) {
+Java_com_example_CryptoBench_sac_mbedTLS_MD5Time(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jstring title_rand,jint total_rep) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
     LOGD("rep_hash is: %i", rep_hash);
@@ -1050,7 +1050,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_MD5Time(JNIEnv *env, jobject inst
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_DHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
 
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
@@ -1209,7 +1209,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_DHTime(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject instance, jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject instance, jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
 
@@ -1319,7 +1319,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_ECDHTime(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint total_rep) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint total_rep) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
     FILE *report = create_file_text(title);
@@ -1448,7 +1448,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCBCTime(JNIEnv *env, jobject i
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject instance, jint blocksize, jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject instance, jint blocksize, jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
 
@@ -1575,7 +1575,7 @@ Java_com_example_juanperezdealgaba_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject i
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint total_rep) {
+Java_com_example_CryptoBench_sac_mbedTLS_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint total_rep) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
 

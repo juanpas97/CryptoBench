@@ -7,7 +7,7 @@ extern "C"
 JNIEXPORT jstring
 
 JNICALL
-Java_com_example_juanperezdealgaba_sac_MainActivity_stringFromJNI(
+Java_com_example_CryptoBench_sac_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";

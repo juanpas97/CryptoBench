@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.example.juanperezdealgaba.sac"
+        applicationId "com.example.CryptoBench.sac"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1

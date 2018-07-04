@@ -30,7 +30,7 @@ CryptoBench supports 2 different types of test, Complete Test and Special Test:
  If the user wants, once the app is installed, this test can be triggered through the ADB terminal running the following command:
  
  ```
- am start -n com.example.juanperezdealgaba.sac/.CompleteTestActivity -e test 1 -e aes 20 -e hash 7 -e dh 5 -e rsa 15
+ am start -n com.example.CryptoBench.sac/.CompleteTestActivity -e test 1 -e aes 20 -e hash 7 -e dh 5 -e rsa 15
  ```
  
  This will start an activity with the desired values.
@@ -40,14 +40,14 @@ CryptoBench supports 2 different types of test, Complete Test and Special Test:
  This test can also be started directly from the ADB terminal using the command: 
 
  ```
-am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib BoringSSL -e algo DH -e min 1 -e  blocksize 128 -e key 1 -e rep 2
+am start -n com.example.CryptoBench.sac/.ConcreteTest -e lib BoringSSL -e algo DH -e min 1 -e  blocksize 128 -e key 1 -e rep 2
  ```
 Possible values for "lib" are: WolfCrypt, Bouncy, mbedTLS, BoringSSL and OpenSSL. Possible values for "algo" are: RSA, AES-CBC,AES-OFB,AES-GCM,AES-CTR,DH,ECDH and MD5.
 
 The adb commands can be chained with the "wait" to automatize all the tests.
 
 ```
-am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib BoringSSL -e algo DH -e min 1 -e  blocksize 128 -e key 1 -e rep 2 & wait 4m & am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib BoringSSL -e algo RSA -e min 1 -e  blocksize 128 -e key 1 -e rep 2
+am start -n com.example.CryptoBench.sac/.ConcreteTest -e lib BoringSSL -e algo DH -e min 1 -e  blocksize 128 -e key 1 -e rep 2 & wait 4m & am start -n com.example.juanperezdealgaba.sac/.ConcreteTest -e lib BoringSSL -e algo RSA -e min 1 -e  blocksize 128 -e key 1 -e rep 2
  ```
 
 As we are starting a new activity for every test, you have to take into account the time the test

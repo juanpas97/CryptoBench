@@ -90,7 +90,7 @@ bool time_var;
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_setTimer(JNIEnv *env, jobject instance) {
+Java_com_example_CryptoBench_sac_BoringSSL_setTimer(JNIEnv *env, jobject instance) {
 
     LOGD("Before TIME_VAR FALSE");
     time_var = false;
@@ -156,7 +156,7 @@ RSA * createRSA(unsigned char * key,int value){
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_RSA(JNIEnv *env, jobject instance,jint blocksize,jint rep_rsa,jint rep_total) {
 
     struct timeval st,et;
 
@@ -259,7 +259,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSA(JNIEnv *env, jobject instan
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject instance, jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESCBC(JNIEnv *env, jobject instance, jint blocksize,jint rep_aes,jint rep_total) {
 
     LOGD("AES/CBC");
 
@@ -342,7 +342,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBC(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESCTR(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
     LOGD("AES/CTR");
     FILE *report = create_file();
     fprintf(report, "************BoringSSL/AESCTR**************\n");
@@ -452,7 +452,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTR(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESGCM(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
     LOGD("AES/GCM");
 
     FILE *report = create_file();
@@ -585,7 +585,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCM(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_MD5(JNIEnv *env, jobject instance,jint blocksize,jint rep_hash,jint rep_total) {
 
     FILE *report = create_file();
     int print_Res = fprintf(report, "************BoringSSL/MD5**************\n");
@@ -647,7 +647,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5(JNIEnv *env, jobject instan
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_DH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_DH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
 
     jintArray result;
     result = env->NewIntArray(rep_agree);
@@ -735,7 +735,7 @@ fclose(report);
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFB(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESOFB(JNIEnv *env, jobject instance,jint blocksize,jint rep_aes,jint rep_total) {
     LOGD("AES/OFB");
 
     FILE *report = create_file();
@@ -880,7 +880,7 @@ EC_KEY* gen_key(void)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_ECDH(JNIEnv *env, jobject instance,jint rep_agree,jint rep_total) {
 
     FILE *report = create_file();
     fprintf(report, "************BoringSSL/ECDH**************\n");
@@ -943,7 +943,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDH(JNIEnv *env, jobject insta
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa, jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_RSATime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_rsa, jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
     struct timeval st,et;
@@ -1084,7 +1084,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_RSATime(JNIEnv *env, jobject in
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5Time(JNIEnv *env, jobject instance,
+Java_com_example_CryptoBench_sac_BoringSSL_MD5Time(JNIEnv *env, jobject instance,
                                                          jint blocksize, jint rep_hash,jstring title_rand,jint rep_total) {
 
 
@@ -1154,7 +1154,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_MD5Time(JNIEnv *env, jobject in
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_DHTime(JNIEnv *env, jobject instance,jint rep_key,
+Java_com_example_CryptoBench_sac_BoringSSL_DHTime(JNIEnv *env, jobject instance,jint rep_key,
                                                         jint rep_agree,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
@@ -1271,7 +1271,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_DHTime(JNIEnv *env, jobject ins
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instance,jint rep_key,jint rep_agree,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
     FILE* report = create_file_text(title);
@@ -1340,7 +1340,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject i
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
 
     LOGD("AES/CBC");
 
@@ -1441,7 +1441,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCBCTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
 
     const char *title = env->GetStringUTFChars(title_rand, 0);
     FILE* report = create_file_text(title);
@@ -1574,7 +1574,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESCTRTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
 
     LOGD("AES/GCM");
 
@@ -1742,7 +1742,7 @@ Java_com_example_juanperezdealgaba_sac_BoringSSL_AESGCMTime(JNIEnv *env, jobject
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_juanperezdealgaba_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
+Java_com_example_CryptoBench_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject instance,jint blocksize,jint rep_key,jint rep_aes,jstring title_rand,jint rep_total) {
 
     LOGD("AES/OFB");
     const char *title = env->GetStringUTFChars(title_rand, 0);
