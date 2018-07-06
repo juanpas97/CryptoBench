@@ -1545,7 +1545,7 @@ Java_com_example_CryptoBench_sac_mbedTLS_AESCTRTime(JNIEnv *env, jobject instanc
     int repetitions = 0;
         gettimeofday(&st, NULL);
     /* Initialise the decryption operation. */
-    while ((now - start) <= rep_aes) {
+    while (time_var) {
 
         int ret = mbedtls_aes_crypt_ctr(&aes, sizeof(enc_out), &nc_off, iv, stream_block, enc_out,
                                     plain_out);
