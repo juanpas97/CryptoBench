@@ -1450,7 +1450,7 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject instanc
     const char *title = env->GetStringUTFChars(title_rand, 0);
     FILE* report = create_file_text(title);
     fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-    fprintf(report,"************BoringSSL/AESCTR**************\n");
+    fprintf(report,"************OpenSSL/AESCTR**************\n");
     fprintf(report,"Blocksize is: %i  \n",blocksize);
 
 
