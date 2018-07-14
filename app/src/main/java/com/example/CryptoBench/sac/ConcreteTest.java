@@ -155,7 +155,8 @@ public class ConcreteTest extends AppCompatActivity implements AdapterView.OnIte
                 }
 
                 ConcreteTest context = ConcreteTest.this;
-                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_rep, library, algo, blocksize[0],title,rep_total[0],id);
+                System.out.println("Library is" + library + "\n" + "Algo is:" + algo +"\n" + "Repetitions is" + repetitions[0] + "\n" + "Total repetitions is" +rep_total[0]);
+                TimeTestParams TimeParamsTest = new TimeTestParams(writer_special, global.writer_temp, storage, context, results_special_test, repetitions[0], key_time[0], library, algo, blocksize[0],title, rep_total[0],id);
 
                 TimeTestAsync test = new TimeTestAsync(ConcreteTest.this);
                 test.execute(TimeParamsTest);

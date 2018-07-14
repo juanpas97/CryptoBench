@@ -1867,7 +1867,7 @@ Java_com_example_CryptoBench_sac_WolfCrypt_AESGCMTime(JNIEnv *env, jobject insta
         time_var_wc = 1;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
-    fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+    fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
     }
     fprintf(report,"*****************************");
     fclose(report);
