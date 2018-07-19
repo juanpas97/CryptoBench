@@ -1025,6 +1025,8 @@ Java_com_example_CryptoBench_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,
 
     const char *title = (*env)->GetStringUTFChars(env, title_rand, 0);
     FILE *report = create_file_text(title);
+    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
     fprintf(report, "************WolfCrypt/DH**************\n");
 
     struct timeval st, et;
@@ -1111,11 +1113,9 @@ Java_com_example_CryptoBench_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,
 
 
     for(int i = 0; i< rep_total; i++){
-    start = time(NULL);
-    now = time(NULL);
     repetitions = 0;
     gettimeofday(&st, NULL);
-    while ((now - start) <= rep_agree) {
+    while (time_var_wc == 1) {
 
         ret = wc_DhAgree(&key, agree, &agreeSz, priv, privSz, pub2, pubSz2);
 
@@ -1125,7 +1125,7 @@ Java_com_example_CryptoBench_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,
         } else {
             LOGD("Success at 1st agreeing");
         }
-        now = time(NULL);
+
         repetitions += 1;
     }
     gettimeofday(&et, NULL);
@@ -1134,7 +1134,7 @@ Java_com_example_CryptoBench_sac_WolfCrypt_DHTime(JNIEnv *env, jobject instance,
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time);
     fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);
-
+        time_var_wc = 1;
 
     ret = wc_DhAgree(&key2, agree2, &agreeSz2, priv2, privSz2, pub, pubSz);
     if (ret != 0) {
@@ -1202,7 +1202,7 @@ Java_com_example_CryptoBench_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject instance
     time_t now = time(NULL);
 
     gettimeofday(&st, NULL);
-    while ((now - start) <= rep_hash) {
+    while (time_var_wc == 1) {
         printf("\n");
         ret = wc_InitMd5(&md5);
         if (ret != 0) {
@@ -1227,14 +1227,15 @@ Java_com_example_CryptoBench_sac_WolfCrypt_MD5Time(JNIEnv *env, jobject instance
             }
 
         }
-        now = time(NULL);
+
         repetitions += 1;
     }
 
     gettimeofday(&et, NULL);
+
     double time_key = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
         float result_agree = ((float)repetitions * blocksize) / time_key;
-
+        time_var_wc = 1;
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Bytes/second \n", result_agree);
@@ -1967,7 +1968,6 @@ Java_com_example_CryptoBench_sac_WolfCrypt_ECDHTime(JNIEnv *env, jobject instanc
                 LOGD("Error sharing secret");
                 LOGD("Error is : %i", ret);
             }
-            now = time(NULL);
             repetitions += 1;
         }
         gettimeofday(&et, NULL);

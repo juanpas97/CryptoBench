@@ -139,6 +139,11 @@ public class ECDiffieHellman {
 
                 aSecret = aKeyAgree.generateSecret();
 
+                repetitions += 1;
+            }
+            end = System.nanoTime();
+             elapsedTime = end - start;
+             seconds = (double) elapsedTime / 1000000000.0;
 
                 //bSecret = bKeyAgree.generateSecret();
 
@@ -146,11 +151,7 @@ public class ECDiffieHellman {
 //        System.out.println(Arrays.toString(bSecret));
 
                 //System.out.println(MessageDigest.isEqual(aSecret, bSecret));
-                repetitions += 1;
-            }
-            end = System.nanoTime();
-             elapsedTime = end - start;
-             seconds = (double) elapsedTime / 1000000000.0;
+
             try {
                 bool_value.value = true;
                 writer.write("Repetitions: " + repetitions + "\n");

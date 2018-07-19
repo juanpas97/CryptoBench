@@ -366,6 +366,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("DH")) {
+                System.out.println("************Bouncy Castle/DH**************");
+                writer.write("\n************Bouncy Castle/DH***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     DiffieHellman test = new DiffieHellman();
                     try {
@@ -379,6 +381,8 @@ class TimeTestAsync extends AsyncTask<TimeTestParams, Void, TextView> {
             }
 
             if (library.equals("Bouncy Castle") && algo.equals("ECDH")) {
+                System.out.println("************Bouncy Castle/ECDH**************");
+                writer.write("\n************Bouncy Castle/ECDH***************\n");
                 while (System.currentTimeMillis() < startTime + maxDurationInMilliseconds) {
                     ECDiffieHellmanImplementation test = new ECDiffieHellmanImplementation();
                     try {
