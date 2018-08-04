@@ -1173,27 +1173,25 @@ Java_com_example_CryptoBench_sac_mbedTLS_DHTime(JNIEnv *env, jobject instance,ji
 
     for (int i = 0; i <rep_total ; ++i) {
 
-        start = time(NULL);
-        now = time(NULL);
+
         repetitions = 0;
         gettimeofday(&st, NULL);
         while (time_var) {
-
             if ((ret = mbedtls_dhm_calc_secret(&dhm1, buf1, sizeof(buf1), &n1,
                                                mbedtls_ctr_drbg_random, &ctr_drbg1)) != 0) {
                 LOGD(" failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret);
             }
-
             repetitions += 1;
         }
         gettimeofday(&et, NULL);
+
+        double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
+        float result_agree = (float)repetitions / time;
+        time_var = true;
         if ((ret = mbedtls_dhm_calc_secret(&dhm2, buf2, sizeof(buf2), &n2,
                                            mbedtls_ctr_drbg_random, &ctr_drbg2)) != 0) {
             LOGD(" failed\n  ! mbedtls_dhm_calc_secret returned %d\n\n", ret);
         }
-        double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        float result_agree = (float)repetitions / time;
-        time_var = true;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);

@@ -125,6 +125,7 @@ public class AESOFB {
     }
 
     public void testOFBTime(FileWriter writer, TextView results, int blocksize,long rep_key ,long rep_aes,int total_rep) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IOException,DecoderException {
+        writer.write("Size of blocksize is : " + blocksize );
         RandomStringGenerator string = new RandomStringGenerator();
         String text = string.generateRandomString(blocksize);
         byte[] input = text.getBytes();

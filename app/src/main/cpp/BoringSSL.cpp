@@ -1162,7 +1162,7 @@ Java_com_example_CryptoBench_sac_BoringSSL_DHTime(JNIEnv *env, jobject instance,
     struct timeval st, et;
 
     LOGD("Starting");
-    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     fprintf(report,"************BoringSSL/DH**************\n");
 
@@ -1250,7 +1250,6 @@ Java_com_example_CryptoBench_sac_BoringSSL_DHTime(JNIEnv *env, jobject instance,
             secret_size = DH_compute_key(secret, publico, privkey);
             if(0 > secret_size){ LOGD("Error computing first secret");}
             repetitions += 1;
-            now = time(NULL);
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
@@ -1278,7 +1277,7 @@ Java_com_example_CryptoBench_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instanc
     struct timeval st,et;
     int repetitions = 0;
     //Temporary solution, there is somewhere something that writes the document
-    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    fprintf(report, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     fprintf(report,"************BoringSSL/ECDH**************\n");
 
     EC_KEY *lKey, *pKey;
@@ -1317,7 +1316,7 @@ Java_com_example_CryptoBench_sac_BoringSSL_ECDHTime(JNIEnv *env, jobject instanc
         }
         gettimeofday(&et, NULL);
         double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
-        float result_agree = (float)repetitions / time;
+        float result_agree = ((float)repetitions_agree) / time;
         fprintf(report, "Repetitions: %i \n", repetitions_agree);
         fprintf(report, "Seconds: %f \n", time);
         fprintf(report, "Key agreement: %f agreements/seconds \n", result_agree);
@@ -1754,7 +1753,7 @@ Java_com_example_CryptoBench_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject insta
 
     int repetitions = 0;
     time_var = true;
-    EVP_CIPHER_CTX *ctx = nullptr;
+    EVP_CIPHER_CTX *ctx;
 
     EVP_CIPHER_CTX *ctx_dec;
     int len_dec;
@@ -1791,7 +1790,8 @@ Java_com_example_CryptoBench_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject insta
         if (!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv))
             LOGD("Error at decryptinit");
 
-        LOGD("Set key");
+        EVP_CIPHER_CTX_free(ctx);
+        EVP_CIPHER_CTX_free(ctx_dec);
         repetitions  += 1;
         now = time(NULL);
     }
@@ -1801,6 +1801,10 @@ Java_com_example_CryptoBench_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject insta
     fprintf(report, "Repetitions: %i \n", repetitions);
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Times set key/seconds \n", result_agree);
+
+    if (!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error at ctx new");
+
+    if (!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
 
     for(int i = 0; i <rep_total;i++){
 
@@ -1826,14 +1830,17 @@ Java_com_example_CryptoBench_sac_BoringSSL_AESOFBTime(JNIEnv *env, jobject insta
         time_var = true;
     }
 
+    int bytes_decrypted = 0;
     for(int i = 0; i <rep_total;i++){
-        EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv);
+        if (!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv))
+            LOGD("Error at decryptinit");
         repetitions = 0;
         gettimeofday(&st, NULL);
         while (time_var) {
 
-            if (!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
-                LOGD("Error decryptupdate");
+            if (1 != EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, bytes_decrypted)) {
+                LOGD("Error decrypt update");
+            }
             plaintext_len_dec = len_dec;
             repetitions  += 1;
         }

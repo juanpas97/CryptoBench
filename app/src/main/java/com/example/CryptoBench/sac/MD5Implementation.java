@@ -8,6 +8,7 @@ import org.spongycastle.util.encoders.Hex;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Random;
 
 
@@ -55,7 +56,7 @@ public class MD5Implementation {
 
         System.out.println("***********Bouncy Castle/MD-5**************");
         writer.write("\n**********Bouncy Castle/MD-5********\n");
-
+        writer.write("Size of blocksize is : " + blocksize );
         int repetitions = 0;
         bool_value.value = true;
         RandomStringGenerator string = new RandomStringGenerator();
@@ -81,7 +82,7 @@ public class MD5Implementation {
             try {
                 writer.write("Repetitions:" + repetitions + "\n" );
                 writer.write("Seconds:" + seconds + "\n" );
-                writer.write("Time to hash: " + result + " byte/seconds" + "\n");
+                writer.write("Time to hash: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }

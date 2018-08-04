@@ -113,7 +113,11 @@ public class AESGCM {
     public  void testGCMTime(FileWriter writer, TextView results, int blocksize,long rep_key ,long rep_aes,int total_rep) throws NoSuchAlgorithmException,NoSuchProviderException,NoSuchPaddingException,InvalidKeyException,InvalidAlgorithmParameterException,IllegalBlockSizeException,
             BadPaddingException,DecoderException{
         Security.addProvider(new BouncyCastleProvider());
-
+        try {
+            writer.write("Size of blocksize is : " + blocksize );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Keys key_st = new Keys();
 
         byte[] keyBytes = key_st.returnAesKey();

@@ -8,6 +8,7 @@ import org.spongycastle.jce.provider.BouncyCastleProvider;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.math.BigDecimal;
 import java.security.Key;
 import java.security.KeyFactory;
 
@@ -67,10 +68,13 @@ public class RSA {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
                 double seconds = (double) elapsedTime / 1000000000.0;
+                double result = ((double)repetitions * (blocksize)) / seconds;
 
                 try {
-                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Seconds" + seconds + "\n");
                     writer.write("Repetitions encrypt: " + repetitions + "\n");
+                    writer.write("Time to encrypt: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -162,11 +166,12 @@ public class RSA {
                 seconds = (double) elapsedTime / 1000000000.0;
                 bool_value.value = true;
                 System.out.println("Value of rep: " + i);
-
+                double result = ((double)repetitions * (blocksize)) / seconds;
                 try {
-                    writer.write("Seconds: " + seconds + "\n");
-                    writer.write("Time to encrypt: " + (repetitions * (blocksize)) / seconds + " byte/seconds" + "\n");
+                    writer.write("Seconds" + seconds + "\n");
                     writer.write("Repetitions encrypt: " + repetitions + "\n");
+                    writer.write("Time to encrypt: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -202,9 +207,11 @@ public class RSA {
                 System.out.println("Value of rep: " + i);
                 try {
 
-                    writer.write("Seconds: " + seconds + "\n");
-                    writer.write("Repetitions: " + repetitions + "\n");
-                    writer.write("Time to decrypt: " + result + " byte/seconds" + "\n");
+                    writer.write("Seconds" + seconds + "\n");
+                    writer.write("Repetitions encrypt: " + repetitions + "\n");
+                    writer.write("Time to de" +
+                            "crypt: " + new BigDecimal(result).toPlainString() + " byte/seconds" + "\n");
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

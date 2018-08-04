@@ -1562,7 +1562,7 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESCTRTime(JNIEnv *env, jobject instanc
         float result_agree = ((float)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
         fprintf(report, "Seconds: %f \n", time);
-        fprintf(report, "Time to encrypt: %f byte/seconds \n", result_agree);
+        fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
         time_var = true;
     }
 
@@ -1756,7 +1756,7 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject instanc
 
     int repetitions = 0;
     time_var = true;
-    EVP_CIPHER_CTX *ctx = nullptr;
+    EVP_CIPHER_CTX *ctx;
 
     EVP_CIPHER_CTX *ctx_dec;
     int len_dec;
@@ -1793,7 +1793,8 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject instanc
         if (!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv))
             LOGD("Error at decryptinit");
 
-        LOGD("Set key");
+        EVP_CIPHER_CTX_free(ctx);
+        EVP_CIPHER_CTX_free(ctx_dec);
         repetitions  += 1;
         now = time(NULL);
     }
@@ -1804,6 +1805,10 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject instanc
     fprintf(report, "Seconds: %f \n", time_key);
     fprintf(report, "Result: %f Times set key/seconds \n", result_agree);
 
+    if (!(ctx = EVP_CIPHER_CTX_new())) LOGD("Error at ctx new");
+
+    if (!(ctx_dec = EVP_CIPHER_CTX_new())) LOGD("Error init new 2");
+
     for(int i = 0; i <rep_total;i++){
 
         repetitions = 0;
@@ -1811,10 +1816,10 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject instanc
         gettimeofday(&st, NULL);
         while (time_var) {
 
-        if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
-            LOGD("Error at encrypt updated");
-        ciphertext_len += len;
-        repetitions  += 1;
+            if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, sizeof(plaintext)))
+                LOGD("Error at encrypt updated");
+            ciphertext_len += len;
+            repetitions  += 1;
         }
         if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len)) LOGD("Error at encrypt final");
         repetitions += 1;
@@ -1828,28 +1833,31 @@ Java_com_example_CryptoBench_sac_OpenSSL_AESOFBTime(JNIEnv *env, jobject instanc
         time_var = true;
     }
 
+    int bytes_decrypted = 0;
     for(int i = 0; i <rep_total;i++){
-        EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv);
+        if (!EVP_DecryptInit_ex(ctx_dec, EVP_aes_128_ofb(), NULL, aes_key, iv))
+            LOGD("Error at decryptinit");
         repetitions = 0;
         gettimeofday(&st, NULL);
         while (time_var) {
 
-        if (!EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, ciphertext_len))
-            LOGD("Error decryptupdate");
-        plaintext_len_dec = len_dec;
+            if (1 != EVP_DecryptUpdate(ctx_dec, decrypted, &len_dec, ciphertext, bytes_decrypted)) {
+                LOGD("Error decrypt update");
+            }
+            plaintext_len_dec = len_dec;
             repetitions  += 1;
-    }
-    EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
-    repetitions += 1;
-    LOGD("Success decrypting ");
-    gettimeofday(&et, NULL);
-    double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
+        }
+        EVP_DecryptFinal_ex(ctx_dec, decrypted + len_dec, &len_dec);
+        repetitions += 1;
+        LOGD("Success decrypting ");
+        gettimeofday(&et, NULL);
+        double time = (et.tv_sec - st.tv_sec) + ((et.tv_usec - st.tv_usec) / 1000000);
         float result_agree = ((float)repetitions * blocksize) / time;
         fprintf(report, "Repetitions: %i \n", repetitions);
-    fprintf(report, "Seconds: %f \n", time);
-    fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
+        fprintf(report, "Seconds: %f \n", time);
+        fprintf(report, "Time to decrypt: %f byte/seconds \n", result_agree);
         time_var = true;
-}
+    }
     fprintf(report,"*****************************");
     fclose(report);
 

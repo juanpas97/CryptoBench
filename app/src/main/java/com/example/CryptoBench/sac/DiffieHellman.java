@@ -180,8 +180,7 @@ public class DiffieHellman {
             start = System.nanoTime();
             while (bool_value.value) {
                 byte[] ASharedSecret = aKeyAgree.generateSecret();
-                    end = System.nanoTime();
-                long result = (end - start) / 1000;
+
                 //byte[] BSharedSecret = bKeyAgree.generateSecret();
 
                 //System.out.println(MessageDigest.isEqual(ASharedSecret, BSharedSecret));
